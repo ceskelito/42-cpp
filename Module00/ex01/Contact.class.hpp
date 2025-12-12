@@ -1,7 +1,8 @@
 #pragma once
 
 #include <string>
-#include "type_definitions.hpp"
+
+typedef std::string string;
 
 class Contact {
 	
@@ -13,11 +14,11 @@ private:
 	string _dark_secret;
 
 public:
-	Contact();
+	Contact(void);
 
 	Contact(string first_name, string last_name, string nick_name, string phone_number, string dark_secret);
 
-	~Contact();
+	~Contact(void);
 
 	Contact(const Contact &other);
 

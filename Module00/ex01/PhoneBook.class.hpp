@@ -3,7 +3,7 @@
 #include <string>
 #include "Contact.class.hpp"
 
-typedef std::string str;
+typedef std::string string;
 
 static const int n_cnt = 8;
 
@@ -13,20 +13,11 @@ private:
 	Contact contacts[n_cnt];
 
 public:
-	void add(str first_name,
-			str last_name,
-			str nick_name,
-			str phone_number,
-			str secret
-		  );
+	void add_contact(void);
 
-	void search(str first_name,
-				str last_name
-			 );
+	void search_contact(void);
 
-	void search(str nick_name);
+	void program_loop(void);
 
-	void start();
-
-	void exit();
+	void exit(void);
 };
