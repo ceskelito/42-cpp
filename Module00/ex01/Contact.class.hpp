@@ -1,31 +1,25 @@
 #pragma once
 
 #include <string>
+#include "type_definitions.hpp"
 
 class Contact {
 	
 private:
-	std::string _name;
-	std::string _prefix;
-	std::string _number;
+	string _first_name;
+	string _last_name;
+	string _nick_name;
+	string _phone_number;
+	string _dark_secret;
 
 public:
 	Contact();
 
-	Contact(std::string name, std::string prefix, std::string number);
+	Contact(string first_name, string last_name, string nick_name, string phone_number, string dark_secret);
 
 	~Contact();
 
 	Contact(const Contact &other);
 
-	Contact &operator=(const Contact &other) {
-		// Assignment Operator
-		if (this != &other)
-		{
-			_name = other._name;
-			_prefix = other._prefix;
-			_number = other._number;
-		}
-		return (*this);
-	}
+	Contact &operator=(const Contact &other);// {
 };
