@@ -45,3 +45,23 @@ Contact &Contact::operator=(const Contact &other) {
 	}
 	return (*this);
 };
+
+string Contact::get_first(void) {
+	return this->_first_name;
+}
+
+string Contact::get_last(void) {
+	return this->_last_name;
+}
+
+string Contact::get_nick(void) {
+	return this->_nick_name;
+}
+
+string Contact::get_number(void) {
+	return this->_phone_number;
+}
+
+string Contact::get_secret(void) {
+	return this->_dark_secret;
+}

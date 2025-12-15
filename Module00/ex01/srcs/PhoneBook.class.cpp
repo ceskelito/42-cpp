@@ -1,5 +1,6 @@
 #include "PhoneBook.class.hpp"
 #include <iostream>
+#include <iomanip>
 #include <stdlib.h>
 
 static std::ostream &bold_on(std::ostream &os) {
@@ -39,7 +40,7 @@ void PhoneBook::add_contact(void) {
 	if (this->_index == this->_max_index)
 		this->_index = 0;
 
-	if (this->_count < this->_max_index)
+	if (this->_count < this->_max_index + 1)
 		this->_count++;
 
 	get_field("First Name", f_name);
@@ -54,6 +55,7 @@ void PhoneBook::add_contact(void) {
 	} while(number.length() != 10 || number.find_first_not_of("0123456789") != string::npos);
 	get_field("Dark Secret", secret);
 	this->_contacts[this->_index] = Contact(f_name, l_name, n_name, number, secret);
+	this->_index++;
 };
 
 void PhoneBook::exit(void) {
@@ -61,28 +63,58 @@ void PhoneBook::exit(void) {
 	std::cout << "Say goodbye to your contacts!" << std::endl;
 	std::cout << "What, didn't I warn you that you'll lose all the contact once you close the PhoneBook?" << std::endl;
 	std::cout << "Oh... I hope you have a good memory." << std::endl;
-	::exit(EXIT_SUCCESS);
+	std::exit(EXIT_SUCCESS);
 };
 
 void PhoneBook::search_contact()
 {
+	using	std::cout;
+	Contact *curr;
+	
+	cout << std::right;
+
+	cout << std::setw(10) << "index";
+	cout << "|";
+	cout << std::setw(10) << "first name";
+	cout << "|";
+	cout << std::setw(10) << "last name";
+	cout << "|";
+	cout << std::setw(10) << "nickname" << std::endl;
+	for (int i = 0; i < this->_count; i++)
+	{
+		curr = &this->_contacts[i];
+		cout << std::setw(10) << i;
+		cout << "|";
+		cout << std::setw(10) << curr->get_first();
+		cout << "|";
+		cout << std::setw(10) << curr->get_last();
+		cout << "|";
+		cout << std::setw(10) << curr->get_nick();
+		cout << "|";
+		cout << std::endl;
+	}
+	cout << std::left;
 	return ;
 }
 
 void PhoneBook::program_loop(void) {
 
 	using std::cout;
+	using std::endl;
 
 	string	input;
 
 	while (1)
 	{
-		cout << bold_on << "ADD" << bold_off << " - Add a contact" << std::endl;
-		cout << bold_on << "SEARCH" << bold_off << " - Search for a saved contact" << std::endl;
-		cout << bold_on << "EXIT" << bold_off <<" - Close the PhoneBook and exit the program" << std::endl << std::endl;
-		cout << "Option: ";
-
+		cout << endl;
+		cout << bold_on << "ADD" << bold_off << " - Add a contact" << endl;
+		cout << bold_on << "SEARCH" << bold_off << " - Search for a saved contact" << endl;
+		cout << bold_on << "EXIT" << bold_off <<" - Close the PhoneBook and exit the program" << endl;
+		cout << endl << "Option: ";
+		
 		getline(std::cin, input);
+		if (std::cin.eof())
+			std::exit(EXIT_FAILURE);
 
 		if (input == "ADD") {
 			this->add_contact();

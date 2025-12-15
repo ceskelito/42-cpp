@@ -9,8 +9,8 @@ class PhoneBook {
 
 private:
 
-	static const int	_max_index = 8;
-	Contact				_contacts[_max_index];
+	static const int	_max_index = 7;
+	Contact				_contacts[_max_index + 1];
 	int					_index;
 	int					_count;
 

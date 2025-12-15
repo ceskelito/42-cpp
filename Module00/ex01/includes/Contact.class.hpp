@@ -15,12 +15,15 @@ private:
 
 public:
 	Contact(void);
-
 	Contact(string first_name, string last_name, string nick_name, string phone_number, string dark_secret);
-
 	~Contact(void);
-
 	Contact(const Contact &other);
+	Contact &operator=(const Contact &other);
 
-	Contact &operator=(const Contact &other);// {
+	string get_first(void);
+	string get_last(void);
+	string get_nick(void);
+	string get_number(void);
+	string get_secret(void);
+	
 };
