@@ -2,16 +2,16 @@
 
 #include <string>
 
-typedef std::string string;
+using std::string;
 
 class Contact {
 	
 private:
-	string _first_name;
-	string _last_name;
-	string _nick_name;
-	string _phone_number;
-	string _dark_secret;
+	string	_first_name;
+	string	_last_name;
+	string	_nick_name;
+	string	_phone_number;
+	string	_dark_secret;
 
 public:
 	Contact(void);

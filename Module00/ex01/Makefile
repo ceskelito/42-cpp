@@ -1,12 +1,13 @@
-NAME = PhoneBook
-CC = g++
-MKDIR = mkdir -p
-RM = rm -f
-CFLAGS = -Wall -Wextra -Werror
-IFLAGS = -Iincludes
+NAME	= PhoneBook
+CC		= g++
+MKDIR	= mkdir -p
+RM		= rm -f
+CFLAGS	= -Wall -Wextra -Werror --std=c++98
+IFLAGS	= -Iincludes
 
-FILES = PhoneBook.class \
-		Contact.class
+FILES = Contact.class \
+		PhoneBook.class	\
+		main
 
 SRCS = $(addsuffix .cpp, $(FILES))
 OBJS = $(addprefix $(OBJS_DIR)/, $(addsuffix .o, $(FILES)))
@@ -22,7 +23,7 @@ $(OBJS_DIR)/%.o: %.cpp $(OBJS_DIR)
 	$(CC) -c $(IFLAGS) $(CFLAGS) $< -o $@
 
 $(NAME): $(OBJS)
-	$(CC) $< -o $@
+	$(CC) $^ -o $@
 
 $(OBJS_DIR):
 	$(MKDIR) $@
