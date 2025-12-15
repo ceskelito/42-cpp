@@ -1,6 +1,7 @@
 #include "PhoneBook.class.hpp"
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 #include <stdlib.h>
 
 static std::ostream &bold_on(std::ostream &os) {
@@ -11,8 +12,7 @@ static std::ostream &bold_off(std::ostream &os) {
 	return os << "\e[0m";
 }
 
-static void get_field(string field_name, string &field)
-{
+void PhoneBook::get_field(string field_name, string &field) {
 	using std::cin;
 	using std::cout;
 	
@@ -26,6 +26,41 @@ static void get_field(string field_name, string &field)
 		}
 	} while(field.empty());
 
+}
+
+void PhoneBook::print_column(string column_name, char delimiter) {
+	using std::cout;
+	using std::setw;
+
+	cout << std::right;
+
+	if (column_name.length() > this->_column_width)
+	{
+		column_name.resize(this->_column_width - 1);
+		column_name.append(".");
+	}
+
+	cout << std::setw(10) << column_name;
+	cout << delimiter;
+
+	cout << std::left;
+}
+
+void PhoneBook::print_column(string column_name) {
+	using std::cout;
+	using std::setw;
+
+	cout << std::right;
+
+	if (column_name.length() > this->_column_width)
+	{
+		column_name.resize(this->_column_width - 1);
+		column_name.append(".");
+	}
+
+	cout << std::setw(10) << column_name;
+
+	cout << std::left;
 }
 
 void PhoneBook::add_contact(void) {
@@ -43,11 +78,11 @@ void PhoneBook::add_contact(void) {
 	if (this->_count < this->_max_index + 1)
 		this->_count++;
 
-	get_field("First Name", f_name);
-	get_field("Last Name", l_name);
-	get_field("Nick Name", n_name);
+	this->get_field("First Name", f_name);
+	this->get_field("Last Name", l_name);
+	this->get_field("Nick Name", n_name);
 	do {
-		get_field("Phone Number", number);
+		this->get_field("Phone Number", number);
 		if (number.find_first_not_of("0123456789") != string::npos)
 			std::cout<< std::endl << "The 'Phone Number' field must contain only digits";
 		else if (number.length() != 10)
@@ -69,31 +104,27 @@ void PhoneBook::exit(void) {
 void PhoneBook::search_contact()
 {
 	using	std::cout;
+		
+	std::stringstream ss;
+	string index;
 	Contact *curr;
-	
-	cout << std::right;
 
-	cout << std::setw(10) << "index";
-	cout << "|";
-	cout << std::setw(10) << "first name";
-	cout << "|";
-	cout << std::setw(10) << "last name";
-	cout << "|";
-	cout << std::setw(10) << "nickname" << std::endl;
+	this->print_column("index", '|');
+	this->print_column("last name", '|');
+	this->print_column("nick name", '|');
+	this->print_column("nickname");
+	cout << std::endl;
 	for (int i = 0; i < this->_count; i++)
 	{
+		ss << i;
+		index = ss.str();
 		curr = &this->_contacts[i];
-		cout << std::setw(10) << i;
-		cout << "|";
-		cout << std::setw(10) << curr->get_first();
-		cout << "|";
-		cout << std::setw(10) << curr->get_last();
-		cout << "|";
-		cout << std::setw(10) << curr->get_nick();
-		cout << "|";
+		this->print_column(index, '|');
+		this->print_column(curr->get_last(), '|');
+		this->print_column(curr->get_first(), '|');
+		this->print_column(curr->get_nick());
 		cout << std::endl;
 	}
-	cout << std::left;
 	return ;
 }
 
@@ -117,10 +148,13 @@ void PhoneBook::program_loop(void) {
 			std::exit(EXIT_FAILURE);
 
 		if (input == "ADD") {
+			cout << std::endl;
 			this->add_contact();
 		} else if (input == "SEARCH") {
+			cout << std::endl;
 			this->search_contact();
 		} else if (input == "EXIT"){
+			cout << std::endl;
 			this->exit();
 		} else {
 			cout << "Unknown option: " << input << std::endl;
