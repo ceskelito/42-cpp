@@ -1,0 +1,26 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.hpp                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/16 13:54:53 by rceschel          #+#    #+#             */
+/*   Updated: 2025/12/16 15:53:33 by rceschel         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+#include <ostream>
+
+#define GET_LINE(input, str) {		\
+	getline(input, str);			\
+	if (input.eof())				\
+		std::exit(EXIT_FAILURE);	\
+}
+
+std::ostream	&bold(std::ostream &os);
+std::ostream	&red(std::ostream &os);
+std::ostream	&blue(std::ostream &os);
+std::ostream	&reset(std::ostream &os);
+std::string		itostr(int n);
+void wait_for_input(void);

@@ -15,9 +15,11 @@ private:
 	int					_index;
 	int					_count;
 
-	void				get_field(string field_name, string &field);
-	void				print_column(string column_name);
-	void				print_column(string column_name, char delimiter);
+	void				_input_field(string field_name, string &field);
+	void				_print_column(string column_name, char delimiter);
+	void				_print_column(string column_name);
+	void				_print_table(void);
+	void				_print_info(Contact &contact);
 
 public:
 

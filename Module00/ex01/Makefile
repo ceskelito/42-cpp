@@ -5,8 +5,9 @@ RM		= rm -f
 CFLAGS	= -Wall -Wextra -Werror --std=c++98
 IFLAGS	= -Iincludes
 
-FILES = Contact.class \
+FILES = Contact.class 	\
 		PhoneBook.class	\
+		utils 			\
 		main
 
 SRCS = $(addsuffix .cpp, $(FILES))
