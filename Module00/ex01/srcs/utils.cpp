@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/16 13:51:00 by rceschel          #+#    #+#             */
-/*   Updated: 2025/12/16 16:32:13 by rceschel         ###   ########.fr       */
+/*   Updated: 2025/12/16 16:44:48 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void wait_for_input(void) {
 
 void press_enter_to_continue(void) {
 
-	std::cout << std::endl << "\e[5m" << "Press Enter to continue" << reset;
+	std::cout << std::endl << "\e[5m" << "Press Enter to continue..." << reset;
 	wait_for_input();
 	std::cout << clear;
 }

@@ -15,6 +15,8 @@ void PhoneBook::_input_field(string field_name, string &field) {
 		GET_LINE(cin, field);
 		if (field.empty()) {
 			cout << red << "The field '" << field_name << "' can not be empty" << reset << endl;
+			wait_for_input();
+			clear_lines(std::cout, 5);
 			continue;
 		}
 	} while(field.empty());
@@ -65,10 +67,9 @@ void PhoneBook::add_contact(void) {
 	string	number;
 	string	secret;
 
-	std::cout << clear;
-	std::cout << std::endl << blue << "Adding a new contact" << reset << std::endl;
+	std::cout << blue << "Adding a new contact" << reset << std::endl;
 
-	if (this->_index == this->_max_index)
+	if (this->_index > this->_max_index)
 		this->_index = 0;
 
 	if (this->_count < this->_max_index + 1)
@@ -81,24 +82,26 @@ void PhoneBook::add_contact(void) {
 		this->_input_field("Phone Number", number);
 		if (number.find_first_not_of("0123456789") != string::npos) {
 			std::cout << red << "The 'Phone Number' field must contain only digits" << reset << std::endl;
-			wait_for_input();
-			clear_lines(std::cout, 5);
 		}
 		else if (number.length() != 10) {
 			std::cout << red << "The 'Phone Number' field must be of length 10" << reset << std::endl;
 		}
 		else break;
+		wait_for_input();
+		clear_lines(std::cout, 5);
 	} while(true);
 	this->_input_field("Dark Secret", secret);
 	this->_contacts[this->_index] = Contact(f_name, l_name, n_name, number, secret);
 	this->_index++;
+	std::cout <<std::endl << blue << "Contact saved succesfully!" << reset << std::endl;
+	press_enter_to_continue();
 };
 
 void PhoneBook::exit(void) {
 
-	std::cout << "Say goodbye to your contacts!" << std::endl;
+	std::cout << bold << "Say goodbye to your contacts!" << reset << std::endl <<std::endl;
 	std::cout << "What, didn't I warn you that you'll lose all the contact once you close the PhoneBook?" << std::endl;
-	std::cout << "Oh... I hope you have a good memory." << std::endl;
+	std::cout << "Oh... I hope you have a good memory..." << std::endl << std::endl;
 	std::exit(EXIT_SUCCESS);
 };
 
@@ -106,6 +109,7 @@ void PhoneBook::_print_table(void) {
 
 	Contact *curr;
 
+	std::cout << std::endl;
 	this->_print_column("index", '|');
 	this->_print_column("First Name", '|');
 	this->_print_column("Last Name", '|');
@@ -126,14 +130,14 @@ void PhoneBook::_print_info(Contact &contact) {
 	using std::cout;
 	using std::endl;
 
-	cout << endl;
-	cout << bold << "Contact Information" << reset << endl;
-	cout << std::setw(15) << std::right << "First Name: " << contact.get_first() << endl;
-	cout << std::setw(15) << std::right << "Last Name: " << contact.get_last() << endl;
-	cout << std::setw(15) << std::right << "Nick Name: " << contact.get_nick() << endl;
-	cout << std::setw(15) << std::right << "Phone Number: " << contact.get_number() << endl;
-	cout << std::setw(15) << std::right << "Dark Secret: " << contact.get_secret() << endl;
-	std::cin.get();
+	cout << clear << endl;
+	cout << bold << blue << "Contact Information" << reset << endl << endl;
+	cout << std::right << bold << std::setw(15) << "First Name: " << reset << contact.get_first() << endl;
+	cout << std::right << bold << std::setw(15) << "Last Name: " << reset << contact.get_last() << endl;
+	cout << std::right << bold << std::setw(15) << "Nick Name: "<< reset << contact.get_nick() << endl;
+	cout << std::right << bold << std::setw(15) << "Phone Number: " << reset << contact.get_number() << endl;
+	cout << std::right << bold << std::setw(15) << "Dark Secret: " << reset << contact.get_secret() << endl;
+	press_enter_to_continue();
 }
 
 void PhoneBook::search_contact()
@@ -143,25 +147,27 @@ void PhoneBook::search_contact()
 	int		index;
 
 	if (this->_count == 0) {
-		cout << std::endl << blue << "There are no saved contacts yet" << reset;
+		cout << blue << "There are no saved contacts yet" << reset;
 		press_enter_to_continue();
 		return ;
 	}
 
+	cout << blue << "Searching for a contact" << std::endl;
+	cout << std::endl << green << "Select an index" << reset << std::endl;
 	this->_print_table();
 
 	do {
-		cout << std::endl << "Select an index: ";
+		cout << std::endl << "> ";
 		GET_LINE(std::cin, input);
 		index = std::atoi(input.c_str());
 		if (input.find_first_not_of("0123456789") != std::string::npos) {
 			cout << red << "The index has to be an integer" << reset << std::endl;
-			continue;
 		} else if (index < 0 || index > this->_count - 1) {
 			cout << red << "Index out of range" << reset << std::endl;
-			continue;
 		}
 		else break;
+		wait_for_input();
+		clear_lines(std::cout, 5);
 	} while (true);
 
 	this->_print_info(this->_contacts[index]);	
@@ -175,28 +181,34 @@ void PhoneBook::program_loop(void) {
 
 	string	input;
 
-	cout << clear;
 	while (1)
 	{
+		cout << clear;
 		cout << endl << green << "Select an option from below" << reset << endl << endl;
-		cout << bold << "ADD" << reset << " - Add a new contact" << endl;
-		cout << bold << "SEARCH" << reset << " - Search for a saved contact" << endl;
-		cout << bold << "EXIT" << reset <<" - Close the PhoneBook and exit the program" << endl;
+		cout << bold << std::left << std::setw(7) << "ADD" << reset << " - Add a new contact" << endl;
+		cout << bold << std::left << std::setw(7) << "SEARCH" << reset << " - Search for a saved contact" << endl;
+		cout << bold << std::left << std::setw(7) << "EXIT" << reset <<" - Close the PhoneBook and exit the program" << endl;
 		cout << endl << "> ";
 
 		GET_LINE(std::cin, input);
 
 		if (input == "ADD") {
+			cout << clear;
+			cout << std::endl;
 			this->add_contact();
 		} else if (input == "SEARCH") {
+			cout << clear;
+			cout << std::endl;
 			this->search_contact();
 		} else if (input == "EXIT"){
+			cout << clear;
+			cout << std::endl;
 			this->exit();
 		} else {
 			cout << std::endl;
-			cout << red << "Unknown option: `" << bold << input << reset << red << "'" << reset << std::endl;
+			cout << red << "Unknown option: `" << bold << input << reset << red << "'" << reset;// << std::endl;
+			wait_for_input();
 		}
-		
 	}
 }
 
