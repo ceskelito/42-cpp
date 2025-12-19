@@ -1,21 +1,47 @@
 #include "Account.hpp"
+#include <iostream>
+#include <ctime>
 
-int Account::_nbAccounts;
-int Account::_totalAmount;
-int Account::_totalNbDeposits;
-int Account::_totalNbWithdrawals;
+using std::cout;
+using std::endl;
+
+int Account::_nbAccounts = 0;
+int Account::_totalAmount = 0;
+int Account::_totalNbDeposits = 0;
+int Account::_totalNbWithdrawals = 0;
 
 Account::Account(int initial_deposit):
 
-	_accountIndex(++Account::_nbAccounts),
+	_accountIndex(Account::_nbAccounts++),
 	_amount(initial_deposit),
 	_nbDeposits(0),
 	_nbWithdrawals(0) {
+
+	time_t	timestamp;
+
+	_totalAmount += _amount;
+
+	time(&timestamp);
 	
-	//print info in log
+	cout << '[' << timestamp << "] " <<
+		"index:"	<< _accountIndex	<< ";" <<
+		"amount:"	<< _amount			<< ";" <<
+		"created"	<< endl;
+		
 };
 
-Account::~Account(void) {};
+Account::~Account(void) {
+	time_t	timestamp;
+
+	_totalAmount -= _amount;
+
+	time(&timestamp);
+	
+	cout << '[' << timestamp << "] " <<
+		"index:"	<< _accountIndex	<< ";" <<
+		"amount:"	<< _amount			<< ";" <<
+		"closed"	<< endl;
+};
 
 
 // ************************ //
@@ -39,7 +65,16 @@ int Account::getNbWithdrawals(void) {
 }
 
 void Account::displayAccountsInfos(void) {
-	// logic for diplaying every acc info
+
+	time_t	timestamp;
+
+	time(&timestamp);
+	cout << '[' << timestamp << "] " <<
+		"accounts:"		<< _nbAccounts			<< ';' <<
+		"total:"		<< _totalAmount			<< ';' <<
+		"deposits:"		<< _totalNbDeposits		<< ';' <<
+		"withdrawals:"	<< _totalNbWithdrawals	<< endl;
+
 }
 
 // ****************************** //
@@ -48,15 +83,27 @@ void Account::displayAccountsInfos(void) {
 
 void Account::makeDeposit(int deposit) {
 
+	int	p_am = _amount;
+	time_t	timestamp;
+
 	this->_amount += deposit;
 	this->_nbDeposits++;
 	Account::_totalAmount += deposit;
 	Account::_totalNbDeposits++;
+
+	time(&timestamp);
+	cout << '[' << timestamp << "] " <<
+		"index:"		<< _accountindex		<< ';' <<
+		"accounts:"		<< _nbAccounts			<< ';' <<
+		"total:"		<< _totalAmount			<< ';' <<
+		"deposits:"		<< _totalNbDeposits		<< ';' <<
+		"withdrawals:"	<< _totalNbWithdrawals	<< endl;
+
 }
 
 bool Account::makeWithdrawal(int withdrawal) {
 
-	if (withdrawal > _amount)
+	if (withdrawal > this->_amount)
 		return false;
 
 	this->_amount -= withdrawal;
@@ -72,5 +119,13 @@ int Account::checkAmount(void) const {
 }
 
 void Account::displayStatus(void) const {
-	//logic to diplaying account status
+	time_t	timestamp;
+
+	time(&timestamp);
+	
+	cout << '[' << timestamp << "] " <<
+		"index:"		<< _accountIndex	<< ';' <<
+		"amount:"		<< _amount			<< ';' <<
+		"deposits:"		<< _nbDeposits		<< ';' <<
+		"withdrawals:"	<< _nbWithdrawals	<< endl;
 }
