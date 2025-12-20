@@ -1,8 +1,8 @@
 #include "Account.hpp"
 #include <iostream>
-#include <strstream>
+#include <strstream> // questo e' deprecato - trova altro
 #include <fstream>
-#include <ctime>
+#include <ctime>	// queste librearia e' di C: e' il modo giusto in c++?
 
 using std::cout;
 using std::endl;
@@ -12,12 +12,19 @@ int Account::_totalAmount = 0;
 int Account::_totalNbDeposits = 0;
 int Account::_totalNbWithdrawals = 0;
 
+
+// Dividere la funzione in calcolo dell'orario, creazione del file, e stampa nel file
+// Eventualmente creare funzioni che ritornino:
+//		- il file stream del log_file (uno per tutti)
+//		- l'orario da inserire nella stampa (uno per tutti o calcolato al momento?)
+//
 static void	print_time(void) {
 	
 	time_t				timestamp = time(NULL);
 	struct tm			*t = localtime(&timestamp);
 	std::strstream		ss;
 
+	// Forse l'orario andrebbe salvato a mai ricalcolato?
 	ss << '[' <<
 		t->tm_year + 1900	<<
 		t->tm_mon + 1		<<
@@ -27,7 +34,8 @@ static void	print_time(void) {
 		t->tm_sec			<<
 		']' ;
 
-	std::ofstream		log_file(ss.str());
+	// NO: il log file va creato una sola volta - e andrebbe passato ai metodi per stampare
+	std::ofstream		log_file(ss.str()); 
 	log_file << ss.str();
 }
 
@@ -109,6 +117,8 @@ void Account::makeDeposit(int deposit) {
 			"nb_deposits:"	<< _nbDeposits		<< endl;
 }
 
+// Questa funzione evita le rindondanze ma si rende poco leggibile.
+// Dovremmo forse accettare una duplicazione di codice se rende tutto più chiro?
 bool Account::makeWithdrawal(int withdrawal) {
 
 	int		p_amount = _amount;
