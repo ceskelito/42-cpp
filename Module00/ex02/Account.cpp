@@ -1,5 +1,7 @@
 #include "Account.hpp"
 #include <iostream>
+#include <strstream>
+#include <fstream>
 #include <ctime>
 
 using std::cout;
@@ -10,6 +12,25 @@ int Account::_totalAmount = 0;
 int Account::_totalNbDeposits = 0;
 int Account::_totalNbWithdrawals = 0;
 
+static void	print_time(void) {
+	
+	time_t				timestamp = time(NULL);
+	struct tm			*t = localtime(&timestamp);
+	std::strstream		ss;
+
+	ss << '[' <<
+		t->tm_year + 1900	<<
+		t->tm_mon + 1		<<
+		t->tm_mday << '_'	<<
+		t->tm_hour			<<
+		t->tm_min			<<
+		t->tm_sec			<<
+		']' ;
+
+	std::ofstream		log_file(ss.str());
+	log_file << ss.str();
+}
+
 Account::Account(int initial_deposit):
 
 	_accountIndex(Account::_nbAccounts++),
@@ -17,30 +38,23 @@ Account::Account(int initial_deposit):
 	_nbDeposits(0),
 	_nbWithdrawals(0) {
 
-	time_t	timestamp;
+	Account::_totalAmount += _amount;
 
-	_totalAmount += _amount;
-
-	time(&timestamp);
-	
-	cout << '[' << timestamp << "] " <<
-		"index:"	<< _accountIndex	<< ";" <<
-		"amount:"	<< _amount			<< ";" <<
-		"created"	<< endl;
+	print_time();
+	cout << "index:"	<< _accountIndex	<< ";" <<
+			"amount:"	<< _amount			<< ";" <<
+			"created"	<< endl;
 		
 };
 
 Account::~Account(void) {
-	time_t	timestamp;
 
-	_totalAmount -= _amount;
+	Account::_totalAmount -= _amount;
 
-	time(&timestamp);
-	
-	cout << '[' << timestamp << "] " <<
-		"index:"	<< _accountIndex	<< ";" <<
-		"amount:"	<< _amount			<< ";" <<
-		"closed"	<< endl;
+	print_time();
+	cout << "index:"	<< _accountIndex	<< ";" <<
+			"amount:"	<< _amount			<< ";" <<
+			"closed"	<< endl;
 };
 
 
@@ -66,14 +80,11 @@ int Account::getNbWithdrawals(void) {
 
 void Account::displayAccountsInfos(void) {
 
-	time_t	timestamp;
-
-	time(&timestamp);
-	cout << '[' << timestamp << "] " <<
-		"accounts:"		<< _nbAccounts			<< ';' <<
-		"total:"		<< _totalAmount			<< ';' <<
-		"deposits:"		<< _totalNbDeposits		<< ';' <<
-		"withdrawals:"	<< _totalNbWithdrawals	<< endl;
+	print_time();
+	cout << "accounts:"		<< _nbAccounts			<< ';' <<
+			"total:"		<< _totalAmount			<< ';' <<
+			"deposits:"		<< _totalNbDeposits		<< ';' <<
+			"withdrawals:"	<< _totalNbWithdrawals	<< endl;
 
 }
 
@@ -83,33 +94,44 @@ void Account::displayAccountsInfos(void) {
 
 void Account::makeDeposit(int deposit) {
 
-	int	p_am = _amount;
-	time_t	timestamp;
+	int		p_amount = _amount;
 
-	this->_amount += deposit;
-	this->_nbDeposits++;
+	_amount += deposit;
+	_nbDeposits++;
 	Account::_totalAmount += deposit;
 	Account::_totalNbDeposits++;
 
-	time(&timestamp);
-	cout << '[' << timestamp << "] " <<
-		"index:"		<< _accountindex		<< ';' <<
-		"accounts:"		<< _nbAccounts			<< ';' <<
-		"total:"		<< _totalAmount			<< ';' <<
-		"deposits:"		<< _totalNbDeposits		<< ';' <<
-		"withdrawals:"	<< _totalNbWithdrawals	<< endl;
-
+	print_time();
+	cout << "index:"		<< _accountIndex	<< ';' <<
+			"p_amount:"		<< p_amount				<< ';' <<
+			"deposit:"		<< deposit			<< ';' <<
+			"amount:"		<< _amount			<< ';' <<
+			"nb_deposits:"	<< _nbDeposits		<< endl;
 }
 
 bool Account::makeWithdrawal(int withdrawal) {
 
-	if (withdrawal > this->_amount)
-		return false;
+	int		p_amount = _amount;
 
-	this->_amount -= withdrawal;
-	this->_nbWithdrawals++;
+	print_time();
+
+	cout << "index:"		<< _accountIndex	<< ';' <<
+			"p_amount:"		<< p_amount			<< ';';
+
+	if (withdrawal > _amount)
+	{
+		cout << "withdrawal:refused" << endl;
+		return false;
+	}
+
+	_amount -= withdrawal;
+	_nbWithdrawals++;
 	Account::_totalAmount -= withdrawal;
 	Account::_totalNbWithdrawals++;
+
+	cout << "withdrawal:"		<< withdrawal		<< ';' <<
+			"amount:"			<< _amount			<< ';' <<
+			"nb_withdrawals:"	<< _nbWithdrawals	<< endl;
 
 	return true;
 }
@@ -119,13 +141,10 @@ int Account::checkAmount(void) const {
 }
 
 void Account::displayStatus(void) const {
-	time_t	timestamp;
-
-	time(&timestamp);
 	
-	cout << '[' << timestamp << "] " <<
-		"index:"		<< _accountIndex	<< ';' <<
-		"amount:"		<< _amount			<< ';' <<
-		"deposits:"		<< _nbDeposits		<< ';' <<
-		"withdrawals:"	<< _nbWithdrawals	<< endl;
+	print_time();
+	cout <<	"index:"		<< _accountIndex	<< ';' <<
+			"amount:"		<< _amount			<< ';' <<
+			"deposits:"		<< _nbDeposits		<< ';' <<
+			"withdrawals:"	<< _nbWithdrawals	<< endl;
 }
