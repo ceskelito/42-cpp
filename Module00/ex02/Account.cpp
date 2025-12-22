@@ -132,14 +132,13 @@ bool Account::makeWithdrawal(int withdrawal) {
 	int		p_amount = _amount;
 
 	_displayTimestamp();
-	get_logfile_stream(std::string()) << ' ' <<
-		"index:"		<< _accountIndex	<< ';' <<
-		"p_amount:"		<< p_amount			<< ';';
 
 	if (withdrawal > _amount)
 	{
-		get_logfile_stream(std::string()) <<
-			"withdrawal:refused" << endl;
+		get_logfile_stream(std::string()) << ' ' <<
+			"index:"		<< _accountIndex	<< ';' <<
+			"p_amount:"		<< p_amount			<< ';' <<
+			"withdrawal:"	<< "refused" << endl;
 		return false;
 	}
 
@@ -148,7 +147,9 @@ bool Account::makeWithdrawal(int withdrawal) {
 	Account::_totalAmount -= withdrawal;
 	Account::_totalNbWithdrawals++;
 
-	get_logfile_stream(std::string()) << ' ' <<
+	get_logfile_stream(std::string()) << ' '	<<
+		"index:"			<< _accountIndex	<< ';' <<
+		"p_amount:"			<< p_amount			<< ';' <<
 		"withdrawal:"		<< withdrawal		<< ';' <<
 		"amount:"			<< _amount			<< ';' <<
 		"nb_withdrawals:"	<< _nbWithdrawals	<< endl;
