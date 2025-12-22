@@ -13,7 +13,7 @@ int Account::_totalNbWithdrawals = 0;
 
 static std::ofstream &get_logfile_stream(std::string filename) {
 
-	static std::ofstream logfile_output_stream(filename);
+	static std::ofstream logfile_output_stream(filename.c_str());
 
 	return logfile_output_stream;
 }
