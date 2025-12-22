@@ -1,10 +1,9 @@
 #include "Account.hpp"
 #include <iostream>
-#include <strstream> // questo e' deprecato - trova altro
+#include <sstream>
 #include <fstream>
 #include <ctime>	// queste librearia e' di C: e' il modo giusto in c++?
 
-using std::cout;
 using std::endl;
 
 int Account::_nbAccounts = 0;
@@ -12,31 +11,36 @@ int Account::_totalAmount = 0;
 int Account::_totalNbDeposits = 0;
 int Account::_totalNbWithdrawals = 0;
 
+static std::ofstream &get_logfile_stream(std::string filename) {
 
-// Dividere la funzione in calcolo dell'orario, creazione del file, e stampa nel file
-// Eventualmente creare funzioni che ritornino:
-//		- il file stream del log_file (uno per tutti)
-//		- l'orario da inserire nella stampa (uno per tutti o calcolato al momento?)
-//
-static void	print_time(void) {
-	
-	time_t				timestamp = time(NULL);
-	struct tm			*t = localtime(&timestamp);
-	std::strstream		ss;
+	static std::ofstream logfile_output_stream(filename);
 
-	// Forse l'orario andrebbe salvato a mai ricalcolato?
-	ss << '[' <<
-		t->tm_year + 1900	<<
-		t->tm_mon + 1		<<
-		t->tm_mday << '_'	<<
-		t->tm_hour			<<
-		t->tm_min			<<
-		t->tm_sec			<<
-		']' ;
+	return logfile_output_stream;
+}
 
-	// NO: il log file va creato una sola volta - e andrebbe passato ai metodi per stampare
-	std::ofstream		log_file(ss.str()); 
-	log_file << ss.str();
+void Account::_displayTimestamp(void) {
+
+	static std::string		timestring;
+	static std::ofstream	logfile;
+
+	if (timestring.empty())
+	{
+		std::stringstream	ss;
+		time_t				timestamp = time(NULL);
+		struct tm			*t = localtime(&timestamp);
+
+		ss <<
+			t->tm_year + 1900	<<
+			t->tm_mon + 1		<<
+			t->tm_mday << '_'	<<
+			t->tm_hour			<<
+			t->tm_min			<<
+			t->tm_sec;
+
+		timestring = ss.str();
+	}
+
+	 get_logfile_stream(timestring + ".log") << '[' << timestring << ']';
 }
 
 Account::Account(int initial_deposit):
@@ -48,8 +52,9 @@ Account::Account(int initial_deposit):
 
 	Account::_totalAmount += _amount;
 
-	print_time();
-	cout << "index:"	<< _accountIndex	<< ";" <<
+	_displayTimestamp();
+	get_logfile_stream(std::string()) << ' ' <<
+			"index:"	<< _accountIndex	<< ";" <<
 			"amount:"	<< _amount			<< ";" <<
 			"created"	<< endl;
 		
@@ -59,8 +64,9 @@ Account::~Account(void) {
 
 	Account::_totalAmount -= _amount;
 
-	print_time();
-	cout << "index:"	<< _accountIndex	<< ";" <<
+	_displayTimestamp();
+	get_logfile_stream(std::string()) << ' ' <<
+			"index:"	<< _accountIndex	<< ";" <<
 			"amount:"	<< _amount			<< ";" <<
 			"closed"	<< endl;
 };
@@ -88,8 +94,9 @@ int Account::getNbWithdrawals(void) {
 
 void Account::displayAccountsInfos(void) {
 
-	print_time();
-	cout << "accounts:"		<< _nbAccounts			<< ';' <<
+	_displayTimestamp();
+	get_logfile_stream(std::string()) << ' ' <<
+			"accounts:"		<< _nbAccounts			<< ';' <<
 			"total:"		<< _totalAmount			<< ';' <<
 			"deposits:"		<< _totalNbDeposits		<< ';' <<
 			"withdrawals:"	<< _totalNbWithdrawals	<< endl;
@@ -109,12 +116,13 @@ void Account::makeDeposit(int deposit) {
 	Account::_totalAmount += deposit;
 	Account::_totalNbDeposits++;
 
-	print_time();
-	cout << "index:"		<< _accountIndex	<< ';' <<
-			"p_amount:"		<< p_amount				<< ';' <<
-			"deposit:"		<< deposit			<< ';' <<
-			"amount:"		<< _amount			<< ';' <<
-			"nb_deposits:"	<< _nbDeposits		<< endl;
+	_displayTimestamp();
+	get_logfile_stream(std::string()) << ' ' <<
+		"index:"		<< _accountIndex	<< ';' <<
+		"p_amount:"		<< p_amount			<< ';' <<
+		"deposit:"		<< deposit			<< ';' <<
+		"amount:"		<< _amount			<< ';' <<
+		"nb_deposits:"	<< _nbDeposits		<< endl;
 }
 
 // Questa funzione evita le rindondanze ma si rende poco leggibile.
@@ -123,14 +131,15 @@ bool Account::makeWithdrawal(int withdrawal) {
 
 	int		p_amount = _amount;
 
-	print_time();
-
-	cout << "index:"		<< _accountIndex	<< ';' <<
-			"p_amount:"		<< p_amount			<< ';';
+	_displayTimestamp();
+	get_logfile_stream(std::string()) << ' ' <<
+		"index:"		<< _accountIndex	<< ';' <<
+		"p_amount:"		<< p_amount			<< ';';
 
 	if (withdrawal > _amount)
 	{
-		cout << "withdrawal:refused" << endl;
+		get_logfile_stream(std::string()) <<
+			"withdrawal:refused" << endl;
 		return false;
 	}
 
@@ -139,9 +148,10 @@ bool Account::makeWithdrawal(int withdrawal) {
 	Account::_totalAmount -= withdrawal;
 	Account::_totalNbWithdrawals++;
 
-	cout << "withdrawal:"		<< withdrawal		<< ';' <<
-			"amount:"			<< _amount			<< ';' <<
-			"nb_withdrawals:"	<< _nbWithdrawals	<< endl;
+	get_logfile_stream(std::string()) << ' ' <<
+		"withdrawal:"		<< withdrawal		<< ';' <<
+		"amount:"			<< _amount			<< ';' <<
+		"nb_withdrawals:"	<< _nbWithdrawals	<< endl;
 
 	return true;
 }
@@ -152,9 +162,10 @@ int Account::checkAmount(void) const {
 
 void Account::displayStatus(void) const {
 	
-	print_time();
-	cout <<	"index:"		<< _accountIndex	<< ';' <<
-			"amount:"		<< _amount			<< ';' <<
-			"deposits:"		<< _nbDeposits		<< ';' <<
-			"withdrawals:"	<< _nbWithdrawals	<< endl;
+	_displayTimestamp();
+	get_logfile_stream(std::string()) << ' ' <<
+		"index:"		<< _accountIndex	<< ';' <<
+		"amount:"		<< _amount			<< ';' <<
+		"deposits:"		<< _nbDeposits		<< ';' <<
+		"withdrawals:"	<< _nbWithdrawals	<< endl;
 }
