@@ -6,7 +6,7 @@
 /*   By: rceschel <rceschel@student.42roma.it>      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 15:03:20 by rceschel          #+#    #+#             */
-/*   Updated: 2025/12/23 15:05:10 by rceschel         ###   ########.fr       */
+/*   Updated: 2025/12/23 15:21:58 by rceschel         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,12 @@
 class Zombie {
 
 private:
-	std::string	name;
+	std::string	_name;
 	
 public:
+	Zombie(std::string name);
+	~Zombie(void);
+
 	void	announce(void);
 };
 
