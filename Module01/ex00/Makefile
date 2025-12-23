@@ -1,3 +1,4 @@
+NAME 	= zombie
 CC 		= g++
 RM 		= rm -f
 MKDIR 	= mkdir -p
@@ -13,12 +14,14 @@ SRCS = 	Zombie.cpp		\
 		newZombie.cpp	\
 		randomChump.cpp
 
-# OBJS = $(SRCS:.cpp=.o)
 OBJS = $(addprefix $(O_DIR)/, $(SRCS:.cpp=.o))
 
 vpath %.cpp $(S_DIR)
 
-all: $(OBJS)
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	$(CC) $^ -o $@
 
 $(O_DIR)/%.o: %.cpp | $(O_DIR)
 	$(CC) -c $(CFLAGS) $(IFLAGS) $^ -o $@
