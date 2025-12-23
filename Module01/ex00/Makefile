@@ -21,7 +21,7 @@ vpath %.cpp $(S_DIR)
 all: $(OBJS)
 
 $(O_DIR)/%.o: %.cpp | $(O_DIR)
-	$(CC) $(CFLAGS) $(IFLAGS) $^ -o $@
+	$(CC) -c $(CFLAGS) $(IFLAGS) $^ -o $@
 
 $(O_DIR):
 	$(MKDIR) $@
@@ -29,5 +29,7 @@ $(O_DIR):
 clean:
 	$(RM) $(OBJS)
 	$(RM) -r $(O_DIR)
+
+re: clean all
 
 .PHONY: all clean re
