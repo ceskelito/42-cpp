@@ -13,14 +13,15 @@ SRCS = 	Zombie.cpp		\
 		newZombie.cpp	\
 		randomChump.cpp
 
+# OBJS = $(SRCS:.cpp=.o)
 OBJS = $(addprefix $(O_DIR)/, $(SRCS:.cpp=.o))
 
-vpath %.c $(S_DIR)
+vpath %.cpp $(S_DIR)
 
 all: $(OBJS)
 
 $(O_DIR)/%.o: %.cpp | $(O_DIR)
-	$(CC) $(CFLAGS) $(IFLAGS) $< -o $@
+	$(CC) $(CFLAGS) $(IFLAGS) $^ -o $@
 
 $(O_DIR):
 	$(MKDIR) $@
