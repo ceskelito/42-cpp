@@ -1,11 +1,20 @@
-#include "Zombie.hpp"
 #include "Zombie.h"
+#include "Zombie.hpp"
 
-int main()
+static const int			N_ZOMBIES = 10;
+static const std::string	NAME = "John Ceena";
+
+int	main(void)
 {
-    Zombie  *zombie1 = newZombie("Heap zombie");
-    zombie1->announce();
-    randomChump("Stack zombie");
-    delete (zombie1);
-    return (0);
+	Zombie	*horde = zombieHorde(N_ZOMBIES, NAME);
+
+	for (int i = 0; i < N_ZOMBIES; i++) {
+		horde[i].announce();
+	}
+
+	for (int i = 0; i < N_ZOMBIES; i++) {
+		horde[i].~Zombie();
+	}
+
+	delete [] horde;
 }
