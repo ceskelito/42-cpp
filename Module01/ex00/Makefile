@@ -33,6 +33,9 @@ clean:
 	$(RM) $(OBJS)
 	$(RM) -r $(O_DIR)
 
+fclean: clean
+	$(RM) $(NAME)
+
 re: clean all
 
 .PHONY: all clean re
