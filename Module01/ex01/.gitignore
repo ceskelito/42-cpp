@@ -1,0 +1,6 @@
+zombie
+
+*.o
+*.json
+
+objs/
