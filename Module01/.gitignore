@@ -1,0 +1,9 @@
+.*
+.*/
+
+*.o
+
+objs/
+
+!.gitignore
+!.git/
