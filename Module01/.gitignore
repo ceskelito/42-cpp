@@ -3,7 +3,7 @@
 
 *.o
 
-objs/
+*/objs/
 
 !.gitignore
 !.git/
