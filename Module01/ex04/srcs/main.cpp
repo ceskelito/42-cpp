@@ -29,13 +29,13 @@ int main(int ac, char **av) {
 
 	if (ac != 4)
 	{
-		std::cout << "Usage: ./sed [input-file] <old_string> <new_string>" << std::endl;
+		std::cout << "Usage: ./sed <old_string> <new_string> [input-file]" << std::endl;
 		return (1);
 	}
 
-	const string	filename = av[1];
-	const string	s1 = av[2];
-	const string	s2 = av[3];
+	const string	s1 = av[1];
+	const string	s2 = av[2];
+	const string	filename = av[3];
 	ifstream		source;
 	ofstream		target;
 
