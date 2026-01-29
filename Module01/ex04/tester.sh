@@ -2,7 +2,6 @@
 
 exec_name='./sed'
 filename=$3
-output_name="$filename.tester"
 
 compare () {
 
@@ -26,9 +25,9 @@ main () {
 		echo "Usage: ./tester.sh <old_string> <new_string> [input-file]"
 	fi
 
-	run_cpp $@
-	# run_sed $@
-	compare "$filename.replace" "$(run_sed $@)"
+	if run_cpp $@ ; then
+		compare "$filename.replace" "$(run_sed $@)"
+	fi
 }
 
 main $@
