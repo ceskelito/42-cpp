@@ -8,9 +8,9 @@ compare() {
     local expected="$2"
 
     if diff -q "${output_file}" <(echo "${expected}") >/dev/null ; then
-        echo "OK - Files match for $output_file"
+        echo "OK - Files match for \`$output_file'"
     else
-        echo "KO - Files differ for $output_file"
+        echo "KO - Files differ for \`$output_file'"
 		echo
 		diff "${output_file}" <(echo "${expected}")
     fi
