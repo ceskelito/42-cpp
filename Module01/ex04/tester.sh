@@ -1,7 +1,8 @@
 #!/bin/bash
 
-exec_name='./sed'
-filename="$3"
+set -euo pipefail
+
+EXEC_NAME='./sed'
 
 compare() {
     local output_file="$1"
@@ -13,15 +14,21 @@ compare() {
         echo "KO - Files differ for \`$output_file'"
 		echo
 		diff "${output_file}" <(echo "${expected}")
+		return 1
     fi
 }
 
 run_sed() {
-    sed "s/$1/$2/g" "$filename"
+	
+	local old="$1"
+	local new="$2"
+	local input_file="$3"
+
+    sed "s|${old}|${new}|g" "${input_file}"
 }
 
 run_cpp() {
-    "$exec_name" "$@"
+    "$EXEC_NAME" "$@"
 }
 
 main() {
@@ -29,20 +36,25 @@ main() {
         echo "Usage: $0 <old_string> <new_string> [input-file]"
         exit 1
     fi
+	
+	local old="$1"
+	local new="$2"
+	local input_file="$3"
+	local result_file="${input_file}.replace"
 
-    if [ ! -f "$filename" ]; then
-        echo "Error: File '$filename' not found"
+    if [ ! -f "$input_file" ]; then
+        echo "Error: File '$input_file' not found"
         exit 1
     fi
 
-    if [ ! -x "$exec_name" ]; then
-        echo "Error: Executable '$exec_name' not found or not executable"
+    if [ ! -x "$EXEC_NAME" ]; then
+        echo "Error: Executable '$EXEC_NAME' not found or not executable"
         exit 1
     fi
 
     # Run C++ sed simulation
     if run_cpp "$@"; then
-        compare "${filename}.replace" "$(run_sed "$1" "$2")"
+        compare "${result_file}" "$(run_sed "$old" "$new" "$input_file")"
     else
         echo "Error: C++ sed simulation failed"
         exit 1
