@@ -18,7 +18,7 @@ vpath %.cpp $(SRCS_DIR)
 
 all: $(NAME)
 
-$(OBJS_DIR)/%.o: %.cpp $(OBJS_DIR)
+$(OBJS_DIR)/%.o: %.cpp | $(OBJS_DIR)
 	$(CC) -c $(IFLAGS) $(CFLAGS) $< -o $@
 
 $(NAME): $(OBJS)
