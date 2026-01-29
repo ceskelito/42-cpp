@@ -42,6 +42,11 @@ int main(int ac, char **av) {
 	ifstream		source;
 	ofstream		target;
 
+	if (s1.length() <= 0) {
+		std::cout << "ft_sed: Error: <old_string> can't be void" << std::endl;
+		return (1);
+	}
+
 	source.open(filename.c_str());
 	if (!source.is_open()) {
 		std::cerr << "ft_sed: Cannot open file `" << filename << "`: " <<
