@@ -1,35 +1,34 @@
 #!/bin/bash
 
-exec_name='sed'
-filename=$1
-output_name="$exec_name.tester"
+exec_name='./sed'
+filename=$3
+output_name="$filename.tester"
 
 compare () {
 
-	if [diff -q $@] ; then
-		echo "KO - Files differ"
-	else
+	if diff -q "$1" <(echo "$2") >/dev/null ; then
 		echo "OK - Files match"
+	else
+		echo "KO - Files differ"
 	fi
-
 }
 
 run_sed () {
-	sed $@ > $output_name
+	sed "s/$1/$2/g" $filename
 }
 
 run_cpp () {
-	exec $exec_name $@
+	$exec_name $@
 }
 
 main () {
 	if [ $# -ne 3 ] ; then
-		echo "Usage: [input-file] <s1> <s2>"
+		echo "Usage: ./tester.sh <old_string> <new_string> [input-file]"
 	fi
 
 	run_cpp $@
-	run_sed $@
-	compare "$filename.replace" $output_name
+	# run_sed $@
+	compare "$filename.replace" "$(run_sed $@)"
 }
 
 main $@

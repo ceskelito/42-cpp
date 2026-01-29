@@ -23,6 +23,7 @@ void	sed(ifstream &src, ofstream &tgt, const string s1, const string s2) {
 		}
 		tgt << buff;
 	}
+	tgt << '\n';
 }
 
 int main(int ac, char **av) {
