@@ -3,22 +3,26 @@
 #include <iostream>
 
 void	Harl::_debug(void) {
-	std::cout << "I love having extra bacon for my 7XL-double-cheese-triple-pickle-special-ketchup burger. I really do!";
+	std::cout << "[DEBUG]" << std::endl;
+	std::cout << "I love having extra bacon for my 7XL-double-cheese-triple-pickle-special-ketchup burger.\nI really do!";
 	std::cout << std::endl;
 }
 
 void	Harl::_info(void) {
-	std::cout << "I cannot believe adding extra bacon costs more money. You didn’t put enough bacon in my burger! If you did, I wouldn’t be asking for more!";
+	std::cout << "[INFO]" << std::endl;
+	std::cout << "I cannot believe adding extra bacon costs more money. You didn’t put enough bacon in my burger!\nIf you did, I wouldn’t be asking for more!";
 	std::cout << std::endl;
 }
 
 void	Harl::_warning(void) {
-	std::cout << "I think I deserve to have some extra bacon for free. I’ve been coming for years, whereas you started working here just last month.";
+	std::cout << "[WARNING]" << std::endl;
+	std::cout << "I think I deserve to have some extra bacon for free.\nI’ve been coming for years, whereas you started working here just last month.";
 	std::cout << std::endl;
 }
 
 void	Harl::_error(void) {
-	std::cout << "This is unacceptable! I want to speak to the manager now.";
+	std::cout << "[ERROR]" << std::endl;
+	std::cout << "This is unacceptable!\nI want to speak to the manager now.";
 	std::cout << std::endl;
 }
 
