@@ -1,3 +1,5 @@
+#include <cerrno>
+#include <cstring>
 #include <iostream>
 #include <ostream>
 #include <string>
@@ -42,7 +44,8 @@ int main(int ac, char **av) {
 
 	source.open(filename.c_str());
 	if (!source.is_open()) {
-		std::cout << "Failed opening the file `" << filename << '\'' << std::endl;
+		std::cerr << "ft_sed: Cannot open file `" << filename << "`: " <<
+			strerror(errno) << '\n';
 		return (1);
 	}
 	target.open((filename + ".replace").c_str());
