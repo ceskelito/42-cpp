@@ -15,6 +15,9 @@ OBJS      = $(addprefix $(OBJS_DIR)/, $(addsuffix .o, $(FILES)))
 
 vpath %.cpp $(SRCS_DIR)
 
+tester:
+	$(CC) $(CFLAGS) $(SRCS_DIR)/tester.cpp -o tester
+
 all: $(NAME)
 
 $(OBJS_DIR)/%.o: %.cpp $(OBJS_DIR)
