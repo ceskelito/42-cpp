@@ -5,7 +5,8 @@ RM        = rm -f
 CFLAGS    = -Wall -Wextra -Werror --std=c++98
 IFLAGS    = -Iincludes
 
-FILES     = main
+FILES     = main \
+			Fixed.class
 
 SRCS_DIR  = srcs
 OBJS_DIR  = objs

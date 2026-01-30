@@ -1,7 +1,8 @@
 #include <iostream>
 #include "../includes/Fixed.class.hpp"
 
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 
 Fixed::Fixed(void) : _rawBits(0) {
 	cout << "Default constructor called" << endl;
