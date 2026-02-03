@@ -24,10 +24,3 @@ int Fixed::toInt(void) const {
 float Fixed::toFloat(void) const {
 	return ((float)_rawBits / (1 << _numFractional));
 }
-
-/* External functions */
-
-std::ostream &operator<<(std::ostream &os, const Fixed &f) {
-	os << f.toFloat();
-	return (os);
-}

@@ -5,6 +5,16 @@
 using std::cout;
 using std::endl;
 
+
+/* Output Stream operator */
+
+std::ostream &operator<<(std::ostream &os, const Fixed &f) {
+	os << f.toFloat();
+	return (os);
+}
+
+/* Assignement operator */
+
 Fixed &Fixed::operator=(const Fixed &other) {
 	cout << "Copy assignement operator calld" << endl;
 	if (this != &other)
