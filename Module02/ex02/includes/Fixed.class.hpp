@@ -46,10 +46,10 @@ public:
 	bool	operator!=(const Fixed &other) const;
 
 	// Arithmetic operators
-	Fixed	&operator+(const Fixed &other) const;
-	Fixed	&operator-(const Fixed &other) const;
-	Fixed	&operator*(const Fixed &other) const;
-	Fixed	&operator/(const Fixed &other) const;
+	Fixed	operator+(const Fixed &other) const;
+	Fixed	operator-(const Fixed &other) const;
+	Fixed	operator*(const Fixed &other) const;
+	Fixed	operator/(const Fixed &other) const;
 
 	// Increment/Decrement operators
 
