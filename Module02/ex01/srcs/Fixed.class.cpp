@@ -27,7 +27,7 @@ Fixed::Fixed(const float value) : _rawBits(roundf(value * (1 << _numFractional))
 //
 //	In example:
 //	  Decimal: 5.25
-//	  Mathematical binary form: 101.01
+//	  Mathematical binary form: 0..10101
 //
 //	We'll dig down in this example later.
 //
@@ -80,11 +80,6 @@ Fixed &Fixed::operator=(const Fixed &other) {
 	return (*this);
 }
 
-std::ostream &Fixed::operator<<(std::ostream &os) {
-	os << this->toFloat();
-	return (os);
-}
-
 // Public member functions
 
 int Fixed::getRawBits(void) const {
@@ -97,12 +92,18 @@ void Fixed::setRawBits(const int raw) {
 	this->_rawBits = raw;
 }
 
-int Fixed::toInt(void) {
+int Fixed::toInt(void) const {
 	return (_rawBits >> _numFractional);
 }
 
 //  1 << X == 2 ^ X
-float Fixed::toFloat(void) {
+float Fixed::toFloat(void) const {
 	return ((float)_rawBits / (1 << _numFractional));
 }
 
+// External function
+
+std::ostream &operator<<(std::ostream &os, const Fixed &f) {
+	os << f.toFloat();
+	return (os);
+}
