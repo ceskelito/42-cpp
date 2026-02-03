@@ -72,38 +72,3 @@ Fixed::Fixed(const float value) : _rawBits(roundf(value * (1 << _numFractional))
 Fixed::~Fixed(void) {
 	cout << "Destructor called" << endl;
 }
-
-Fixed &Fixed::operator=(const Fixed &other) {
-	cout << "Copy assignement operator calld" << endl;
-	if (this != &other)
-		this->_rawBits = other._rawBits;
-	return (*this);
-}
-
-// Public member functions
-
-int Fixed::getRawBits(void) const {
-	cout << "getRawBits member function called" << endl;
-	return (this->_rawBits);
-}
-
-void Fixed::setRawBits(const int raw) {
-	cout << "setRawBits member function called" << endl;
-	this->_rawBits = raw;
-}
-
-int Fixed::toInt(void) const {
-	return (_rawBits >> _numFractional);
-}
-
-//  1 << X == 2 ^ X
-float Fixed::toFloat(void) const {
-	return ((float)_rawBits / (1 << _numFractional));
-}
-
-// External function
-
-std::ostream &operator<<(std::ostream &os, const Fixed &f) {
-	os << f.toFloat();
-	return (os);
-}

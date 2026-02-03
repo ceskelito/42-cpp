@@ -7,8 +7,8 @@ IFLAGS    = -Iincludes
 
 FILES     = main 				\
 			 Fixed.class		\
-			 Fixed.methods		\
 			 Fixed.operators	\
+			 Fixed.methods		\
 			 Fixed.static
 
 SRCS_DIR  = srcs
