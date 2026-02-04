@@ -5,11 +5,11 @@ RM        = rm -f
 CFLAGS    = -Wall -Wextra -Werror --std=c++98
 IFLAGS    = -Iincludes
 
-FILES     = main 				\
-			 Fixed.class		\
-			 Fixed.operators	\
-			 Fixed.methods		\
-			 Fixed.static
+FILES     = main 					\
+			 Fixed.class			\
+			 Fixed.class.functions	\
+			 Fixed.operators		\
+			 Fixed.member.functions
 
 SRCS_DIR  = srcs
 OBJS_DIR  = objs

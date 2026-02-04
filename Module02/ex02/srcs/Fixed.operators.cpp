@@ -2,8 +2,8 @@
 #include <cmath>
 #include "Fixed.class.hpp"
 
-using std::cout;
-using std::endl;
+// using std::cout;
+// using std::endl;
 
 
 /* Output Stream operator */
@@ -16,9 +16,9 @@ std::ostream &operator<<(std::ostream &os, const Fixed &f) {
 /* Assignement operator */
 
 Fixed &Fixed::operator=(const Fixed &other) {
-	cout << "Copy assignement operator calld" << endl;
+	//cout << "Copy assignement operator calld" << endl;
 	if (this != &other)
-		this->_rawBits = other._rawBits;
+		_rawBits = other._rawBits;
 	return (*this);
 }
 
@@ -51,28 +51,28 @@ bool	Fixed::operator!=(const Fixed &other) const {
 
 Fixed	Fixed::operator+(const Fixed &other) const {
 	Fixed result;
-	result.setRawBits(this->_rawBits + other._rawBits);
+	result.setRawBits(_rawBits + other._rawBits);
 	return (result);
 }
 
 Fixed	Fixed::operator-(const Fixed &other) const {
 	Fixed result;
-	result.setRawBits(this->_rawBits - other._rawBits);
+	result.setRawBits(_rawBits - other._rawBits);
 	return (result);
 }
 
 Fixed	Fixed::operator*(const Fixed &other) const {
 	Fixed		result;
-	long long	this_tmp = this->_rawBits;
-	long long	other_tmp = other._rawBits;
+	long long	this_raw = _rawBits;
+	long long	other_raw = other._rawBits;
 
-	result.setRawBits((this_tmp * other_tmp) >> 8);
+	result.setRawBits((this_raw * other_raw) >> 8);
 	return (result);
 }
 
 Fixed	Fixed::operator/(const Fixed &other) const {
 	Fixed		result;
-	long long	tmp = this->_rawBits << 8;
+	long long	tmp = _rawBits << 8;
 
 	result.setRawBits((int)(tmp / other._rawBits));
 	return (result);
@@ -82,11 +82,11 @@ Fixed	Fixed::operator/(const Fixed &other) const {
 
 	// Pre
 Fixed	&Fixed::operator++(void) {
-	this->_rawBits++;
+	_rawBits++;
 	return (*this);
 }
 Fixed	&Fixed::operator--(void) {
-	this->_rawBits--;
+	_rawBits--;
 	return (*this);
 }
 
@@ -94,13 +94,13 @@ Fixed	&Fixed::operator--(void) {
 Fixed	Fixed::operator++(int) {
 	Fixed tmp(*this);
 
-	this->_rawBits++;
+	_rawBits++;
 	return (tmp);
 }
 Fixed	Fixed::operator--(int) {
 
 	Fixed tmp(*this);
 
-	this->_rawBits--;
+	_rawBits--;
 	return (tmp);
 }
