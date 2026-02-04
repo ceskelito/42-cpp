@@ -1,4 +1,5 @@
 sed
+tester
 *txt*
 !tester.sh
 
