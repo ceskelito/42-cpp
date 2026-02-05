@@ -14,11 +14,11 @@ class Point {
 	// Constructors / Destructor
 	Point(void);
 	Point(const float x, const float y);
-	Point(Point &other);
+	Point(Point const &other);
 	~Point(void);
 
 	// Operators overload
-	Point	&operator=(Point &other);
+	Point	&operator=(Point const &other);
 
 	// Public methods
 	Fixed	x(void) const;

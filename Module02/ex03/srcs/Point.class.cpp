@@ -8,16 +8,18 @@ Point::Point(const float x, const float y) :
 	_x(x),
 	_y(y) {};
 
-Point::Point(Point &other) : 
+Point::Point(Point const &other) : 
 	_x(other._x),
 	_y(other._y) {};
 
 Point::~Point(void) {};
 
-Point	&Point::operator=(Point &other) {
-	if (this != &other) {
-		_x = other._x;
-		_y = other._y;
-	}
+// Since _x and _y are const, this operator will do nothing.
+Point	&Point::operator=(Point const &other) {
+	// if (this != &other) {
+	// 	_x = other._x;
+	// 	_y = other._y;
+	// }
+	(void)other;
 	return (*this);
 };
