@@ -1,4 +1,4 @@
-NAME      = fixed
+NAME      = pointInTriangle
 CC        = g++
 MKDIR     = mkdir -p
 RM        = rm -f
