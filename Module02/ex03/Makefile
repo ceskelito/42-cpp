@@ -10,7 +10,8 @@ FILES     = main 					\
 			Fixed.memb.public		\
 			Fixed.memb.static		\
 			Fixed.memb.operators	\
-			Point.class
+			Point.class				\
+			Point.memb.public
 
 SRCS_DIR  = srcs
 OBJS_DIR  = objs

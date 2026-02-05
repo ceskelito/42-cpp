@@ -6,8 +6,8 @@ class Point {
 
 	private:
 
-	Fixed	_x;
-	Fixed	_y;
+	Fixed const	_x;
+	Fixed const	_y;
 
 	public:
 
@@ -20,6 +20,9 @@ class Point {
 	// Operators overload
 	Point	&operator=(Point &other);
 
+	// Public methods
+	Fixed	x(void) const;
+	Fixed	y(void) const;
 
 
 };
