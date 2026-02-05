@@ -52,12 +52,12 @@ bool	bsp(Point const a, Point const b, Point const c, Point const point) {
  * @note
  * The function assumes that the points are in a 2D plane and that the triangle is non-degenerate.
  */
-	if (sign(a, b, c) != 0 &&
-		sign(a, b, c) == sign(a, b, point) != 0 &&
-		sign(a, c, b) == sign(a, c, point) != 0 &&
-		sign(b, c, a) == sign(b, c, point) != 0) {
-		return (true);
-	}
+	if (sign(a, b, c) == 0)
+		return (false);
+		
+	bool same_side_ab = (sign(a, b, c) == sign(a, b, point) && sign(a, b, point) != 0);
+	bool same_side_ac = (sign(a, c, b) == sign(a, c, point) && sign(a, c, point) != 0);
+	bool same_side_bc = (sign(b, c, a) == sign(b, c, point) && sign(b, c, point) != 0);
 
-	return (false);
+	return ( same_side_ab && same_side_ac && same_side_bc );
 }
