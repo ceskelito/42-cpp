@@ -6,6 +6,7 @@ CFLAGS    = -Wall -Wextra -Werror --std=c++98
 IFLAGS    = -Iincludes
 
 FILES     = main 					\
+			bsp						\
 			Fixed.class				\
 			Fixed.memb.public		\
 			Fixed.memb.static		\
