@@ -2,10 +2,6 @@
 #include <cmath>
 #include "Fixed.class.hpp"
 
-// using std::cout;
-// using std::endl;
-
-
 /* Output Stream operator */
 
 std::ostream &operator<<(std::ostream &os, const Fixed &f) {
@@ -16,7 +12,6 @@ std::ostream &operator<<(std::ostream &os, const Fixed &f) {
 /* Assignement operator */
 
 Fixed &Fixed::operator=(const Fixed &other) {
-	//cout << "Copy assignement operator calld" << endl;
 	if (this != &other)
 		_rawBits = other._rawBits;
 	return (*this);

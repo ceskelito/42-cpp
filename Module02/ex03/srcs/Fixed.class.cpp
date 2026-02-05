@@ -1,21 +1,11 @@
-#include <iostream>
 #include <cmath>
 #include "Fixed.class.hpp"
 
-using std::cout;
-using std::endl;
+Fixed::Fixed(void) : _rawBits(0) {}
 
-Fixed::Fixed(void) : _rawBits(0) {
-	cout << "Default constructor called" << endl;
-}
+Fixed::Fixed(const Fixed &other) : _rawBits(other._rawBits) {}
 
-Fixed::Fixed(const Fixed &other) : _rawBits(other._rawBits) {
-	cout << "Copy constructor called" << endl;
-}
-
-Fixed::Fixed(const int value) : _rawBits(value << _numFractional) {
-	cout << "Integer constructor called" << endl;
-}
+Fixed::Fixed(const int value) : _rawBits(value << _numFractional) {}
 
 Fixed::Fixed(const float value) : _rawBits(roundf(value * (1 << _numFractional))) {
 // To undestand the conversion
@@ -66,9 +56,6 @@ Fixed::Fixed(const float value) : _rawBits(roundf(value * (1 << _numFractional))
 //
 //	We know where to place the point -> 101.01000000 ==> 5.25
 //
-	cout << "Float constructor called" << endl;
 }
 
-Fixed::~Fixed(void) {
-	cout << "Destructor called" << endl;
-}
+Fixed::~Fixed(void) {}
