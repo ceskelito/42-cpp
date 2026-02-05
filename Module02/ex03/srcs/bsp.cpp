@@ -1,5 +1,7 @@
 #include "Point.class.hpp"
 
+static int	sign(Point const &v1, Point const &v2, Point const &test) {
+
 /**
  * @brief Computes the orientation sign of a point relative to a line segment.
  *
@@ -22,8 +24,6 @@
  * The function uses fixed-point arithmetic (Fixed type) to ensure precision and avoid floating-point errors,
  * which is critical for geometric computations where accuracy is paramount.
  */
-int		sign(Point const &v1, Point const &v2, Point const &test) {
-
 	Fixed sign	= (v2.y() - v1.y()) * test.x()
 				- (v2.x() - v1.x()) * test.y()
 				+ (v2.x() - v1.x()) * v1.y()
@@ -31,6 +31,8 @@ int		sign(Point const &v1, Point const &v2, Point const &test) {
 
 	return (sign == 0) ? 0 : (sign > 0) ? 1 : -1;
 }
+
+bool	bsp(Point const a, Point const b, Point const c, Point const point) {
 
 /**
  * @brief Checks if a point lies inside a triangle using the barycentric coordinate method.
@@ -50,8 +52,6 @@ int		sign(Point const &v1, Point const &v2, Point const &test) {
  * @note
  * The function assumes that the points are in a 2D plane and that the triangle is non-degenerate.
  */
-bool	bsp(Point const a, Point const b, Point const c, Point const point) {
-
 	if (sign(a, b, c) != 0 &&
 		sign(a, b, c) == sign(a, b, point) != 0 &&
 		sign(a, c, b) == sign(a, c, point) != 0 &&
