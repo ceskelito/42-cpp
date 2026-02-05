@@ -1,6 +1,13 @@
 #include <iostream>
 #include "Point.class.hpp"
 
+static void displayTriangleInfo(Point const a, Point const b, Point const c) {
+    std::cout << "\n[Triangle Configuration]" << std::endl;
+    std::cout << "  Vertex A: (" << a.x() << ", " << a.y() << ")" << std::endl;
+    std::cout << "  Vertex B: (" << b.x() << ", " << b.y() << ")" << std::endl;
+    std::cout << "  Vertex C: (" << c.x() << ", " << c.y() << ")" << std::endl;
+}
+
 bool	bsp( Point const a, Point const b, Point const c, Point const point);
 
 int main(void) {
@@ -10,6 +17,8 @@ int main(void) {
     Point a(0.0f, 0.0f);
     Point b(4.0f, 0.0f);
     Point c(2.0f, 4.0f);
+
+	displayTriangleInfo(a, b, c);
 
     // Test cases
     std::cout << "\n--- Test 1: Point inside the triangle ---" << std::endl;
@@ -32,8 +41,13 @@ int main(void) {
     Point d(0.0f, 0.0f);
     Point e(2.0f, 2.0f);
     Point f(4.0f, 4.0f);  // Collinear: degenerate triangle
+	
+	displayTriangleInfo(d, e ,f);
+	std::cout << std::endl;
+
     Point p5(1.0f, 1.0f);  // On the line
-    std::cout << "Is point (1.0, 1.0) inside the degenerate triangle? " << (bsp(d, e, f, p5) ? "Yes" : "No") << std::endl;
+    
+	std::cout << "Is point (1.0, 1.0) inside the degenerate triangle? " << (bsp(d, e, f, p5) ? "Yes" : "No") << std::endl;
 
     std::cout << "\n--- Test 6: Point outside but close ---" << std::endl;
     Point p6(3.0f, -0.1f);  // Just below the edge
