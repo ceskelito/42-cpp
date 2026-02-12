@@ -4,6 +4,8 @@
 using std::cout;
 using std::endl;
 
+// Constructors / Destructor
+
 ClapTrap::ClapTrap(string name) : 
 	_name(name),
 	_hitPoints(10),
@@ -21,8 +23,8 @@ ClapTrap::ClapTrap(const ClapTrap &other) :
 	_name(other._name),
     _hitPoints(other._hitPoints),
     _energyPoints(other._energyPoints),
-    _attackDamage(other._attackDamage)
-{
+    _attackDamage(other._attackDamage) {
+
     cout << "[ ClapTrap ] - " << _name << " has been copied with copy constructor." << endl;
 }
 
@@ -31,6 +33,7 @@ ClapTrap&   ClapTrap::operator=(const ClapTrap& other) {
     _hitPoints		= other._hitPoints;
     _energyPoints	= other._energyPoints;
     _attackDamage	= other._attackDamage;
+
     cout << "[ ClapTrap ] - " << _name << " has been copied with copy assignment operator." << endl;
     return (*this);
 }
