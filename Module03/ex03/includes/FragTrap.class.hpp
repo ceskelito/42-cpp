@@ -2,7 +2,7 @@
 
 #include "ClapTrap.class.hpp"
 
-class FragTrap : public ClapTrap {
+class FragTrap : virtual public ClapTrap {
 
 private:
 	FragTrap(void);
