@@ -5,6 +5,7 @@ using std::cout;
 using std::endl;
 
 ScavTrap::ScavTrap(void) : 
+	ClapTrap(),
 	_name("defaultName"),
 	_hitPoints(100),
 	_energyPoints(50),
