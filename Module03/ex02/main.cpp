@@ -1,12 +1,12 @@
-#include "ScavTrap.class.hpp"
+#include "FragTrap.class.hpp"
 
-int main (void) {
-
-    ScavTrap ash( "Ash" );
-    ScavTrap ash2( ash );
+int main( void )
+{
+    FragTrap ash( "Ash" );
+    FragTrap ash2( ash );
 
     ash.attack( "the air" );
     ash.takeDamage( 10 );
     ash.beRepaired( 10 );
-    ash.guardGate();
+    ash.highFivesGuys();
 }

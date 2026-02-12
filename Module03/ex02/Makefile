@@ -7,7 +7,8 @@ IFLAGS    = -Iincludes
 
 FILES     = main \
 			ClapTrap.class \
-			ScavTrap.class
+			ScavTrap.class \
+			FragTrap.class
 
 SRCS_DIR  = srcs
 OBJS_DIR  = objs
