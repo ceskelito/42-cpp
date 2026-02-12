@@ -1,4 +1,4 @@
-NAME      = clapTrap
+NAME      = ScavTrap
 CC        = g++
 MKDIR     = mkdir -p
 RM        = rm -f
