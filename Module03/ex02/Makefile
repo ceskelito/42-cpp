@@ -1,4 +1,4 @@
-NAME      = ScavTrap
+NAME      = FragTrap
 CC        = g++
 MKDIR     = mkdir -p
 RM        = rm -f
