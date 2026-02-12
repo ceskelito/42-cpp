@@ -1,14 +1,12 @@
-#include "ClapTrap.class.hpp"
+#include "ScavTrap.class.hpp"
 
-int main(void) {
-	ClapTrap	bob("Bob");
-	ClapTrap	clappp("Clappp");
-	ClapTrap	bob2(bob);
-	ClapTrap	clappp2("Clappp2");
+int main (void) {
 
-	clappp2 = clappp;
+    ScavTrap ash( "Ash" );
+    ScavTrap ash2( ash );
 
-	clappp.attack("Bob");
-	bob.takeDamage(5);
-	bob.beRepaired(3);
+    ash.attack( "the air" );
+    ash.takeDamage( 10 );
+    ash.beRepaired( 10 );
+    ash.guardGate();
 }
