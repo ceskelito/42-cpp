@@ -1,4 +1,4 @@
-NAME      = FragTrap
+NAME      = DiamondTrap
 CC        = g++
 MKDIR     = mkdir -p
 RM        = rm -f
@@ -8,7 +8,7 @@ IFLAGS    = -Iincludes
 FILES     = main \
 			ClapTrap.class \
 			ScavTrap.class \
-			FragTrap.class
+			DiamondTrap.class
 
 SRCS_DIR  = srcs
 OBJS_DIR  = objs
