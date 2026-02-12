@@ -6,7 +6,7 @@ using std::string;
 
 class ClapTrap {
 
-private:
+protected:
 	string	_name;
 	int		_hitPoints;
 	int		_energyPoints;

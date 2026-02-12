@@ -6,7 +6,7 @@ CFLAGS    = -Wall -Wextra -Werror --std=c++98
 IFLAGS    = -Iincludes
 
 FILES     = main \
-			ClapTrap.class
+			ClapTrap.class \
 			ScavTrap.class
 
 SRCS_DIR  = srcs
