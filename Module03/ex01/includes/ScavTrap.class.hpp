@@ -3,12 +3,17 @@
 #include "ClapTrap.class.hpp"
 
 class ScavTrap : public ClapTrap {
+
+private:
+	ScavTrap(void);
 	
 public:
-	ScavTrap(void);
+
+	// Constructors / Destructor
 	ScavTrap(string name);
 	~ScavTrap(void);
 
 	// Member Functions
 	void	guardGate(void);
+	void	attack(string const &target);
 };

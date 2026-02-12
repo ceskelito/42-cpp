@@ -40,19 +40,19 @@ ClapTrap&   ClapTrap::operator=(const ClapTrap& other) {
 
 // Private Member Functions
 
-void	ClapTrap::_subEnergy(unsigned int amount = 1) {
+void	ClapTrap::_subEnergy(unsigned int amount) {
 	_energyPoints -= amount;
 }
 
-void	ClapTrap::_subHit(unsigned int amount = 1) {
+void	ClapTrap::_subHit(unsigned int amount) {
 	_hitPoints -= amount;
 }
 
-void	ClapTrap::_gainEnergy(unsigned int amount = 1) {
+void	ClapTrap::_gainEnergy(unsigned int amount) {
 	_energyPoints += amount;
 }
 
-void	ClapTrap::_gainHit(unsigned int amount = 1) {
+void	ClapTrap::_gainHit(unsigned int amount) {
 	_hitPoints += amount;
 }
 

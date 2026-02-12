@@ -12,11 +12,11 @@ protected:
 	unsigned int	_energyPoints;
 	unsigned int	_attackDamage;
 
-	void	_subEnergy(unsigned int amount);
-	void	_subHit(unsigned int amount);
+	void	_subEnergy(unsigned int amount = 1);
+	void	_subHit(unsigned int amount = 1);
 
-	void	_gainEnergy(unsigned int amount);
-	void	_gainHit(unsigned int amount);
+	void	_gainEnergy(unsigned int amount = 1);
+	void	_gainHit(unsigned int amount = 1);
 	
 	ClapTrap(void);
 
@@ -27,7 +27,7 @@ public:
 	~ClapTrap(void);
 
 	ClapTrap(const ClapTrap &other);
-	ClapTrap	&operator=(const ClapTrap &other);
+	ClapTrap&	operator=(const ClapTrap &other);
 
 	// Member functions
 	void	attack(const string &target);

@@ -1,10 +1,14 @@
 #include "ClapTrap.class.hpp"
 
 int main(void) {
-	ClapTrap	example;
-	ClapTrap	clap("clap");
+	ClapTrap	bob("Bob");
+	ClapTrap	clappp("Clappp");
+	ClapTrap	bob2(bob);
+	ClapTrap	clappp2("Clappp2");
 
-	clap.attack("NoNameSelected");
-	example.takeDamage(5);
-	example.beRepaired(3);
+	clappp2 = clappp;
+
+	clappp.attack("Bob");
+	bob.takeDamage(5);
+	bob.beRepaired(3);
 }
