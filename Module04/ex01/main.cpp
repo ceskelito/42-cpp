@@ -24,9 +24,34 @@ int main( void ) {
 			animals[i] = new Dog();
 	}
 	
+	cout << endl;
 	for (int i = 0; i < e_maxAnimals; i++) {
 		cout << animals[i]->getType() << ": ";
 		animals[i]->makeSound();
 		cout << endl;
+	}
+
+	Animal *copies[e_maxAnimals];
+
+	cout << "Creating copies of animals..." << endl;
+	for (int i = 0; i < e_maxAnimals; i++) {
+		copies[i] = new Animal(*animals[i]);
+	}
+	cout << endl;
+	for (int i = 0; i < e_maxAnimals; i++){
+		cout << "Index [" << i << "]" << endl;
+		cout << "Original memory address: " << animals[i] << endl;
+		cout << "Copy     memory address: " << copies[i] << endl;
+		cout << endl;
+	}
+
+	cout << "Deliting originals..." << endl;
+	for (int i = 0; i < e_maxAnimals; i++) {
+		delete animals[i];
+	}
+	cout << endl;
+	cout << "Deliting copies..." << endl;
+	for (int i = 0; i < e_maxAnimals; i++) {
+		delete copies[i];
 	}
 }
