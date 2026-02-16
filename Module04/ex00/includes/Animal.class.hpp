@@ -18,4 +18,5 @@ public:
 	~Animal( void );
 
 	void	makeSound( void );
+	void	getType( void );
 };
