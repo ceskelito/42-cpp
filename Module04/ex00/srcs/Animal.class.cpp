@@ -1,9 +1,14 @@
 #include "Animal.class.hpp"
 
 #include <iostream>
+#include <iomanip>
 
-void	Animal::_announceMethod(std::string methodName) {
-	std::cout << "[" << this->_type << "] " << methodName << " Called." << std::endl;
+void	Animal::_announceMethod(std::string methodName, std::string className) {
+	int wid1 = (10 - className.length()) / 2;
+	int wid2 = ((10 - className.length()) % 2) ? wid1 + 1: wid1;
+
+	std::cout << std::setw(wid1) << std::left << "|" << className << std::setw(wid2) << std::right <<  "|";
+	std::cout << " - [" << this->_type << "] " << methodName << " Called." << std::endl;
 }
 
 Animal::Animal( void ): _type("genericAnimal") {
@@ -11,7 +16,7 @@ Animal::Animal( void ): _type("genericAnimal") {
 }
 
 Animal::Animal( std::string type ): _type(type) {
-	_announceMethod("Constructor from base class");
+	_announceMethod("Constructor");
 }
 
 Animal::~Animal( void ) {
