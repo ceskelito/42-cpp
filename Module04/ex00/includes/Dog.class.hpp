@@ -2,7 +2,7 @@
 
 #include "Animal.class.hpp"
 
-class Cat: virtual public Animal {
+class Dog: virtual public Animal {
 
 private:
 	using	Animal::_announceMethod;
@@ -10,9 +10,9 @@ private:
 public:
 	using Animal::operator=;
 	
-	Cat( void );
-	~Cat( void );
-	Cat( Cat &other );
+	Dog( void );
+	~Dog( void );
+	Dog( Dog &other );
 	
 	void	makeSound( void );
 };

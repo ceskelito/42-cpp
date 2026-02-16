@@ -9,8 +9,8 @@ int main( void ) {
 	meta->getType();
 	meta->makeSound();
 
-	// Cat newCat = *cat;
-	// newCat.makeSound();
+	Cat newCat = *cat;
+	newCat.makeSound();
 
 	delete cat;
 	delete meta;
