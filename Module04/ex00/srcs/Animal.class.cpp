@@ -4,8 +4,9 @@
 #include <iomanip>
 
 void	Animal::_announceMethod(std::string methodName, std::string className) {
-	int wid1 = (10 - className.length()) / 2;
-	int wid2 = ((10 - className.length()) % 2) ? wid1 + 1: wid1;
+	int delta = 10 - className.length();
+	int wid1 = delta / 2;
+	int wid2 = (delta % 2 == 0) ? wid1 : wid1 + 1;
 
 	std::cout << std::setw(wid1) << std::left << "|" << className << std::setw(wid2) << std::right <<  "|";
 	std::cout << " - [" << this->_type << "] " << methodName << " Called." << std::endl;
