@@ -23,3 +23,7 @@ Animal& Animal::operator=( Animal &other ) {
 	_type = other._type;
 	return (*this);
 }
+
+void	Animal::makeSound( void ) {
+	std::cout << "genericAnimal is not a real animal and do not make any sound." << std::endl;
+}

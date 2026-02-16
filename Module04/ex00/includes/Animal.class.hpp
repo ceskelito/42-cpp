@@ -15,4 +15,5 @@ public:
 	Animal( Animal &other );
 	Animal &operator=( Animal &other );
 
+	void	makeSound( void );
 };
