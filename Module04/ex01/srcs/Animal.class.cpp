@@ -34,10 +34,10 @@ Animal& Animal::operator=( Animal &other ) {
 	return (*this);
 }
 
-void	Animal::makeSound( void ) {
+void	Animal::makeSound( void ) const {
 	std::cout << "genericAnimal is not a real animal and do not make any sound." << std::endl;
 }
 
-std::string	Animal::getType( void ) {
+std::string	Animal::getType( void ) const {
 	return ( _type );
 }
