@@ -38,6 +38,6 @@ void	Animal::makeSound( void ) {
 	std::cout << "genericAnimal is not a real animal and do not make any sound." << std::endl;
 }
 
-void	Animal::getType( void ) {
-	std::cout << _type << std::endl;
+std::string	Animal::getType( void ) {
+	return ( _type );
 }

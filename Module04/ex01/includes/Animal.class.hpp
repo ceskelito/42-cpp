@@ -18,6 +18,6 @@ public:
 	Animal( void );
 	virtual ~Animal( void );
 
-	void virtual	makeSound( void );
-	void			getType( void );
+	void virtual	makeSound( void ) const;
+	std::string		getType( void ) const;
 };
