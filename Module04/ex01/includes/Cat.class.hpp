@@ -17,5 +17,5 @@ public:
 	Cat( Cat &other );
 
 	Cat&	operator=( Cat &other );
-	void	makeSound( void );
+	void	makeSound( void ) const;
 };

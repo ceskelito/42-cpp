@@ -17,5 +17,5 @@ public:
 	Dog( Dog &other );
 
 	Dog&	operator=( Dog &other );
-	void	makeSound( void );
+	void	makeSound( void ) const;
 };
