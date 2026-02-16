@@ -18,4 +18,6 @@ public:
 
 	Cat&	operator=( Cat &other );
 	void	makeSound( void ) const;
+
+	Animal*	clone( void ) const;
 };
