@@ -3,29 +3,30 @@
 
 #include <iostream>
 
+using std::cout;
+using std::endl;
+
+enum { e_maxAnimals = 2 };
+
 int main( void ) {
-	Animal	*meta = new Animal();
-	Animal	*cat = new Cat();
-	Animal	*dog = new Dog();
 
-	std::cout << std::endl;
+	Animal *animals[e_maxAnimals];
+
+	if (e_maxAnimals % 2 != 0) {
+		cout << "Please set a pair numer of animals" << endl;
+		return 1;
+	}
+
+	for (int i = 0; i < e_maxAnimals; i++) {
+		if (i % 2)
+			animals[i] = new Cat();
+		else 
+			animals[i] = new Dog();
+	}
 	
-	cat->getType();
-	cat->makeSound();
-
-	std::cout << std::endl;
-
-	meta->getType();
-	meta->makeSound();
-
-	std::cout << std::endl;
-
-	dog->getType();
-	dog->makeSound();
-	
-	std::cout << std::endl;
-
-	delete cat;
-	delete dog;
-	delete meta;
+	for (int i = 0; i < e_maxAnimals; i++) {
+		cout << animals[i]->getType() << ": ";
+		animals[i]->makeSound();
+		cout << endl;
+	}
 }
