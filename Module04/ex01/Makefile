@@ -1,4 +1,4 @@
-NAME      = Animal
+NAME      = Brain
 CC        = g++
 MKDIR     = mkdir -p
 RM        = rm -f
@@ -8,7 +8,8 @@ IFLAGS    = -Iincludes
 FILES     = main 			\
 			Animal.class 	\
 			Cat.class 		\
-			Dog.class 		
+			Dog.class 		\
+			Brain.class
 
 
 SRCS_DIR  = srcs
