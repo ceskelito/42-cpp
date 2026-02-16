@@ -16,8 +16,8 @@ protected:
 
 public:
 	Animal( void );
-	~Animal( void );
+	virtual ~Animal( void );
 
-	void	makeSound( void );
-	void	getType( void );
+	void virtual	makeSound( void );
+	void			getType( void );
 };
