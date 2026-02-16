@@ -3,7 +3,7 @@
 #include <iostream>
 
 void	Animal::_announceMethod(std::string methodName) {
-	std::cout << "[ " << this->_type << " ]" << methodName << " Called." << std::endl;
+	std::cout << "[" << this->_type << "] " << methodName << " Called." << std::endl;
 }
 
 Animal::Animal( void ): _type("genericAnimal") {
