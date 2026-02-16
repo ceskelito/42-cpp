@@ -11,6 +11,7 @@ private:
 	Brain& operator=(Brain &other);
 	
 	void	_announceMethod(std::string methodName);
+
 protected:
 	std::string	ideas[_maxIdeas];
 
