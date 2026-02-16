@@ -17,11 +17,14 @@ int main( void ) {
 		return 1;
 	}
 
+	cout << "Constructing animals..." << endl;
+	cout << "- - -" << endl;
 	for (int i = 0; i < e_maxAnimals; i++) {
 		if (i % 2)
 			animals[i] = new Cat();
 		else 
 			animals[i] = new Dog();
+		cout << "- - -" << endl;
 	}
 	
 	cout << endl;
@@ -35,8 +38,10 @@ int main( void ) {
 
 	cout << "Creating copies of animals..." << endl;
 	for (int i = 0; i < e_maxAnimals; i++) {
-		copies[i] = new Animal(*animals[i]);
+		// copies[i] = new Animal(*animals[i]);
 	}
+
+	// Demostrating that copies are deep copies
 	cout << endl;
 	for (int i = 0; i < e_maxAnimals; i++){
 		cout << "Index [" << i << "]" << endl;
@@ -46,12 +51,16 @@ int main( void ) {
 	}
 
 	cout << "Deliting originals..." << endl;
+	cout << "- - -" << endl;
 	for (int i = 0; i < e_maxAnimals; i++) {
 		delete animals[i];
+		cout << "- - -" << endl;
 	}
 	cout << endl;
 	cout << "Deliting copies..." << endl;
+	cout << "- - -" << endl;
 	for (int i = 0; i < e_maxAnimals; i++) {
 		delete copies[i];
+		cout << "- - -" << endl;
 	}
 }
