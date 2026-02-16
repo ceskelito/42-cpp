@@ -10,6 +10,10 @@ Animal::Animal( void ): _type("genericAnimal") {
 	_announceMethod("Constructor");
 }
 
+Animal::Animal( std::string type ): _type(type) {
+	_announceMethod("Constructor from base class");
+}
+
 Animal::~Animal( void ) {
 	_announceMethod("Destructor");
 }

@@ -6,14 +6,16 @@ class Animal {
 
 protected:
 	std::string	_type;
-	void		_announceMethod(std::string methodName);
+
+	Animal( std::string type );
+	Animal( Animal &other );
+	
+	Animal	&operator=( Animal &other );
+	void	_announceMethod(std::string methodName);
 
 public:
 	Animal( void );
 	~Animal( void );
-
-	Animal( Animal &other );
-	Animal &operator=( Animal &other );
 
 	void	makeSound( void );
 };
