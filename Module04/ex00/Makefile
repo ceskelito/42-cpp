@@ -7,7 +7,8 @@ IFLAGS    = -Iincludes
 
 FILES     = main 			\
 			Animal.class 	\
-			Cat.class 		
+			Cat.class 		\
+			Dog.class 		
 
 
 SRCS_DIR  = srcs
