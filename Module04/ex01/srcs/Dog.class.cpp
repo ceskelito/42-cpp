@@ -14,17 +14,20 @@ Dog::~Dog( void ) {
 
 Dog::Dog( Dog &other ): Animal(other) {
 	_announceMethod("Copy Constructor", "Dog");
-	_brain = other._brain;
+	_brain = new Brain(*other._brain);
 }
 
 Dog&	Dog::operator=( Dog &other ) {
 	_announceMethod("Copy operator", "Dog");
 
-	_type = other._type;
-	_brain = other._brain;
+	if (this != &other) {
+		_type = other._type;
+		delete _brain;
+		_brain = new Brain(*other._brain);
+	}
 	return ( *this );
 }
 
 void	Dog::makeSound( void ) const {
-	std::cout << "Bau!" << std::endl;
+	std::cout << "Meow" << std::endl;
 }

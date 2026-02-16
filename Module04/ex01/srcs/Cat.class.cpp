@@ -14,14 +14,17 @@ Cat::~Cat( void ) {
 
 Cat::Cat( Cat &other ): Animal(other) {
 	_announceMethod("Copy Constructor", "Cat");
-	_brain = other._brain;
+	_brain = new Brain(*other._brain);
 }
 
 Cat&	Cat::operator=( Cat &other ) {
 	_announceMethod("Copy operator", "Cat");
 
-	_type = other._type;
-	_brain = other._brain;
+	if (this != &other) {
+		_type = other._type;
+		delete _brain;
+		_brain = new Brain(*other._brain);
+	}
 	return ( *this );
 }
 
