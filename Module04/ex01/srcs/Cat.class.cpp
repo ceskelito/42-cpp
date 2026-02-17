@@ -12,12 +12,12 @@ Cat::~Cat( void ) {
 	delete _brain;
 }
 
-Cat::Cat( Cat &other ): Animal(other) {
+Cat::Cat( Cat const &other ): Animal(other) {
 	_announceMethod("Copy Constructor", "Cat");
 	_brain = new Brain(*other._brain);
 }
 
-Cat&	Cat::operator=( Cat &other ) {
+Cat&	Cat::operator=( Cat const &other ) {
 	_announceMethod("Copy operator", "Cat");
 
 	if (this != &other) {
@@ -33,5 +33,5 @@ void	Cat::makeSound( void ) const {
 }
 
 Animal*	Cat::clone( void ) const {
-	return static_cast<Cat> (new Cat( *this ));	
+	return new Cat( *this );	
 }

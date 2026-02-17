@@ -14,9 +14,9 @@ public:
 	
 	Cat( void );
 	~Cat( void );
-	Cat( Cat &other );
+	Cat( Cat const &other );
 
-	Cat&	operator=( Cat &other );
+	Cat&	operator=( Cat const &other );
 	void	makeSound( void ) const;
 
 	Animal*	clone( void ) const;
