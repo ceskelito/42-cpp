@@ -12,12 +12,12 @@ Dog::~Dog( void ) {
 	delete _brain;
 }
 
-Dog::Dog( Dog &other ): Animal(other) {
+Dog::Dog( Dog const &other ): Animal(other) {
 	_announceMethod("Copy Constructor", "Dog");
 	_brain = new Brain(*other._brain);
 }
 
-Dog&	Dog::operator=( Dog &other ) {
+Dog&	Dog::operator=( Dog const &other ) {
 	_announceMethod("Copy operator", "Dog");
 
 	if (this != &other) {
