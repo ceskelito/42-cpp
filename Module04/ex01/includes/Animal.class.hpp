@@ -8,9 +8,9 @@ protected:
 	std::string	_type;
 
 	Animal( std::string type );
-	Animal( Animal &other );
+	Animal( Animal const &other );
 	
-	Animal	&operator=( Animal &other );
+	Animal	&operator=( Animal const &other );
 	void	_announceMethod(std::string methodName,
 					  std::string className = "Animal");
 

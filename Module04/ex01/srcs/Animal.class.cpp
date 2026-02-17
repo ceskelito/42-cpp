@@ -24,11 +24,11 @@ Animal::~Animal( void ) {
 	_announceMethod("Destructor");
 }
 
-Animal::Animal( Animal &other ): _type(other._type) {
+Animal::Animal( Animal const &other ): _type(other._type) {
 	_announceMethod("Copy Constructor");
 }
 
-Animal& Animal::operator=( Animal &other ) {
+Animal& Animal::operator=( Animal const &other ) {
 	_announceMethod("Copy Operator");
 	_type = other._type;
 	return (*this);
