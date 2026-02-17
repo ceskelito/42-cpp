@@ -48,7 +48,7 @@ int main( void ) {
 		cout << endl;
 		cout << "Index [" << i << "]" << endl;
 		cout << "Original memory address: " << animals[i] << endl;
-		cout << "Copy   memory   address: " << copies[i] << endl;
+		cout << "  Copy   memory address: " << copies[i] << endl;
 	}
 	cout << "- - - - - -" << endl << endl;
 
