@@ -41,3 +41,7 @@ void	Animal::makeSound( void ) const {
 std::string	Animal::getType( void ) const {
 	return ( _type );
 }
+
+Animal*	Animal::clone( void ) const {
+	return new Animal( *this );
+}
