@@ -33,5 +33,5 @@ void	Cat::makeSound( void ) const {
 }
 
 Animal*	Cat::clone( void ) const {
-	return new Cat( *this );	
+	return new Cat( *this );
 }
