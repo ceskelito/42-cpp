@@ -31,3 +31,7 @@ Dog&	Dog::operator=( Dog const &other ) {
 void	Dog::makeSound( void ) const {
 	std::cout << "Bau!" << std::endl;
 }
+
+Animal*	Dog::clone( void ) const {
+	return new Dog( *this );
+}

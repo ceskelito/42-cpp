@@ -18,4 +18,6 @@ public:
 
 	Dog&	operator=( Dog const &other );
 	void	makeSound( void ) const;
+
+	Animal*	clone( void ) const;
 };
