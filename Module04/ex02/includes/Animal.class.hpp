@@ -18,7 +18,6 @@ public:
 	Animal( void );
 	virtual ~Animal( void );
 
-	virtual void	makeSound( void ) const;
-	virtual Animal*	clone( void ) const;
+	virtual void	makeSound( void ) const = 0;
 	std::string		getType( void ) const;
 };

@@ -37,7 +37,7 @@ int main( void ) {
 	cout << "Creating copies of animals..." << endl;
 	cout << "- - - - - -" << endl;
 	for (int i = 0; i < e_maxAnimals; i++){
-		copies[i] = animals[i]->clone();
+		copies[i] = animals[i];
 		cout << "- - - - - -" << endl;
 	}
 	cout << endl;

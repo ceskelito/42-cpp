@@ -34,14 +34,6 @@ Animal& Animal::operator=( Animal const &other ) {
 	return (*this);
 }
 
-void	Animal::makeSound( void ) const {
-	std::cout << "genericAnimal is not a real animal and do not make any sound." << std::endl;
-}
-
 std::string	Animal::getType( void ) const {
 	return ( _type );
-}
-
-Animal*	Animal::clone( void ) const {
-	return new Animal( *this );
 }

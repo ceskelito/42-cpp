@@ -31,7 +31,3 @@ Cat&	Cat::operator=( Cat const &other ) {
 void	Cat::makeSound( void ) const {
 	std::cout << "Meow" << std::endl;
 }
-
-Animal*	Cat::clone( void ) const {
-	return new Cat( *this );
-}

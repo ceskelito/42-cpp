@@ -19,5 +19,4 @@ public:
 	Cat&	operator=( Cat const &other );
 	void	makeSound( void ) const;
 
-	Animal*	clone( void ) const;
 };
