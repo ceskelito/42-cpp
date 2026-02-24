@@ -24,20 +24,20 @@ Animal::~Animal( void ) {
 	_announceMethod("Destructor");
 }
 
-Animal::Animal( Animal &other ): _type(other._type) {
+Animal::Animal( Animal const &other ): _type(other._type) {
 	_announceMethod("Copy Constructor");
 }
 
-Animal& Animal::operator=( Animal &other ) {
+Animal& Animal::operator=( Animal const &other ) {
 	_announceMethod("Copy Operator");
 	_type = other._type;
 	return (*this);
 }
 
-void	Animal::makeSound( void ) {
+void	Animal::makeSound( void ) const {
 	std::cout << "genericAnimal is not a real animal and do not make any sound." << std::endl;
 }
 
-void	Animal::getType( void ) {
+void	Animal::getType( void ) const {
 	std::cout << _type << std::endl;
 }

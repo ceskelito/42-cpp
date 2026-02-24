@@ -8,9 +8,9 @@ protected:
 	std::string	_type;
 
 	Animal( std::string type );
-	Animal( Animal &other );
+	Animal( Animal const &other );
 	
-	Animal	&operator=( Animal &other );
+	Animal	&operator=( Animal const &other );
 	void	_announceMethod(std::string methodName,
 					  std::string className = "Animal");
 
@@ -18,6 +18,6 @@ public:
 	Animal( void );
 	virtual ~Animal( void );
 
-	void virtual	makeSound( void );
-	void			getType( void );
+	void virtual	makeSound( void ) const;
+	void			getType( void ) const;
 };
