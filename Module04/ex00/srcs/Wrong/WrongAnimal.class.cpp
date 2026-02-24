@@ -4,7 +4,7 @@
 #include <iomanip>
 
 void	WrongAnimal::_announceMethod(std::string methodName, std::string className) {
-	int delta = 10 - className.length();
+	int delta = 15 - className.length();
 	int wid1 = delta / 2;
 	int wid2 = (delta % 2 == 0) ? wid1 : wid1 + 1;
 
