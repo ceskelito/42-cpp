@@ -3,7 +3,7 @@ CC        = g++
 MKDIR     = mkdir -p
 RM        = rm -f
 CFLAGS    = -Wall -Wextra -Werror --std=c++98
-IFLAGS    = -Iincludes
+IFLAGS    = -Iincludes -Iincludes/Wrong
 
 FILES     = main 			\
 			Animal.class 	\
@@ -17,7 +17,8 @@ OBJS_DIR  = objs
 SRCS      = $(addsuffix .cpp, $(FILES))
 OBJS      = $(addprefix $(OBJS_DIR)/, $(addsuffix .o, $(FILES)))
 
-vpath %.cpp $(SRCS_DIR)
+vpath %.cpp $(SRCS_DIR) \
+			:$(SRCS_DIR)/Wrong
 
 all: $(NAME)
 
