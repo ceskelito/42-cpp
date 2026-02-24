@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-Dog::Dog( void ): Animal("Dog") {
+Dog::Dog( void ): AAnimal("Dog") {
 	_announceMethod("Constructor", "Dog");
 	_brain = new Brain();
 }
@@ -12,7 +12,7 @@ Dog::~Dog( void ) {
 	delete _brain;
 }
 
-Dog::Dog( Dog const &other ): Animal(other) {
+Dog::Dog( Dog const &other ): AAnimal(other) {
 	_announceMethod("Copy Constructor", "Dog");
 	_brain = new Brain(*other._brain);
 }
@@ -32,3 +32,6 @@ void	Dog::makeSound( void ) const {
 	std::cout << "Bau!" << std::endl;
 }
 
+AAnimal*	Dog::clone( void ) const {
+	return new Dog( *this );
+}

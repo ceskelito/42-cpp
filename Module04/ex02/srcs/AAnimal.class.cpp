@@ -1,9 +1,11 @@
-#include "Animal.class.hpp"
+#include "AAnimal.class.hpp"
 
 #include <iostream>
 #include <iomanip>
 
-void	Animal::_announceMethod(std::string methodName, std::string className) {
+#define GENERIC_ANIMAL_TYPE "genericAAnimal"
+
+void	AAnimal::_announceMethod(std::string methodName, std::string className) {
 	int delta = 10 - className.length();
 	int wid1 = delta / 2;
 	int wid2 = (delta % 2 == 0) ? wid1 : wid1 + 1;
@@ -12,28 +14,32 @@ void	Animal::_announceMethod(std::string methodName, std::string className) {
 	std::cout << " - [" << this->_type << "] " << methodName << " Called." << std::endl;
 }
 
-Animal::Animal( void ): _type("genericAnimal") {
+AAnimal::AAnimal( void ): _type(GENERIC_ANIMAL_TYPE) {
 	_announceMethod("Constructor");
 }
 
-Animal::Animal( std::string type ): _type(type) {
+AAnimal::AAnimal( std::string type ): _type(type) {
 	_announceMethod("Constructor");
 }
 
-Animal::~Animal( void ) {
+AAnimal::~AAnimal( void ) {
 	_announceMethod("Destructor");
 }
 
-Animal::Animal( Animal const &other ): _type(other._type) {
+AAnimal::AAnimal( AAnimal const &other ): _type(other._type) {
 	_announceMethod("Copy Constructor");
 }
 
-Animal& Animal::operator=( Animal const &other ) {
+AAnimal& AAnimal::operator=( AAnimal const &other ) {
 	_announceMethod("Copy Operator");
 	_type = other._type;
 	return (*this);
 }
 
-std::string	Animal::getType( void ) const {
+void	AAnimal::makeSound( void ) const {
+	std::cout << "genericAAnimal is not a real animal and do not make any sound." << std::endl;
+}
+
+std::string	AAnimal::getType( void ) const {
 	return ( _type );
 }

@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Animal.class.hpp"
+#include "AAnimal.class.hpp"
 #include "Brain.class.hpp"
 
-class Dog: virtual public Animal {
+class Dog: virtual public AAnimal {
 
 private:
-	using	Animal::_announceMethod;
+	using	AAnimal::_announceMethod;
 
 	Brain	*_brain;
 
@@ -19,4 +19,5 @@ public:
 	Dog&	operator=( Dog const &other );
 	void	makeSound( void ) const;
 
+	AAnimal*	clone( void ) const;
 };

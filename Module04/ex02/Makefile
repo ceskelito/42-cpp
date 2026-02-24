@@ -6,7 +6,7 @@ CFLAGS    = -Wall -Wextra -Werror --std=c++98
 IFLAGS    = -Iincludes
 
 FILES     = main 			\
-			Animal.class 	\
+			AAnimal.class 	\
 			Cat.class 		\
 			Dog.class 		\
 			Brain.class
