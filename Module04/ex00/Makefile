@@ -8,7 +8,10 @@ IFLAGS    = -Iincludes -Iincludes/Wrong
 FILES     = main 			\
 			Animal.class 	\
 			Cat.class 		\
-			Dog.class 		
+			Dog.class 		\
+			WrongAnimal.class 	\
+			WrongCat.class 		\
+			WrongDog.class 		
 
 
 SRCS_DIR  = srcs
