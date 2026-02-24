@@ -3,8 +3,6 @@
 #include <iostream>
 #include <iomanip>
 
-#define GENERIC_ANIMAL_TYPE "genericAnimal"
-
 void	Animal::_announceMethod(std::string methodName, std::string className) {
 	int delta = 10 - className.length();
 	int wid1 = delta / 2;
@@ -14,7 +12,7 @@ void	Animal::_announceMethod(std::string methodName, std::string className) {
 	std::cout << " - [" << this->_type << "] " << methodName << " Called." << std::endl;
 }
 
-Animal::Animal( void ): _type(GENERIC_ANIMAL_TYPE) {
+Animal::Animal( void ): _type("genericAnimal") {
 	_announceMethod("Constructor");
 }
 
@@ -45,7 +43,5 @@ std::string	Animal::getType( void ) const {
 }
 
 Animal*	Animal::clone( void ) const {
-	if (this->_type != GENERIC_ANIMAL_TYPE)
-		return this->clone();
 	return new Animal( *this );
 }
