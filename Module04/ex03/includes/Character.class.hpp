@@ -15,13 +15,13 @@ private:
 
 	void	_archiveMateria( AMateria* m );
 
+	Character ( void );
 
 public:
-	Character ( void );
-	Character ( Character &other );
-	Character ( std::string name );
+	Character ( Character const &other );
+	Character ( std::string const name );
 	~Character ( void );
-	Character&	operator=( Character &other );
+	Character&	operator=( Character const &other );
 
 	std::string	const & getName() const ;
 
