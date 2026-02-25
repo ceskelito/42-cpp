@@ -4,6 +4,7 @@
 
 #include <string>
 
+
 class AMateria {
 
 protected:
@@ -11,10 +12,11 @@ protected:
 
 	AMateria ( void );
 	AMateria ( AMateria &other );
-	~AMateria ( void );
 	AMateria&	operator=( AMateria &other );
 
 public:
+	virtual ~AMateria ( void );
+
 	AMateria(std::string const & type);
 	//[...]
 	std::string const & getType() const; //Returns the materia type

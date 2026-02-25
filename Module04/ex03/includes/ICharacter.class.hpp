@@ -1,8 +1,8 @@
 #pragma once
 
-#include "AMateria.class.hpp"
-
 #include <string>
+
+class AMateria;
 
 class ICharacter {
 
