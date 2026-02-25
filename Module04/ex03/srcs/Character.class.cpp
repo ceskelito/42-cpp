@@ -1,5 +1,7 @@
 #include "Character.class.hpp"
 
+/* Costructors / Destructor */
+
 Character::Character( void ): _usedSlots(0), _name("defaultName") {};
 Character::Character( Character const &other ): _usedSlots(0), _name(other._name) {};
 Character::Character( std::string const name ): _usedSlots(0), _name(name) {};
@@ -9,6 +11,14 @@ Character& Character::operator=( Character const &other ) {
 	Character	*tmp = new Character(other);
 	return *tmp;
 }
+
+/* Public Member Functions */
+
+std::string const	&Character::getName( void ) const {
+	return _name;
+}
+
+/* Inventory Member Functions */
 
 void	Character::equip( AMateria* m ) {
 

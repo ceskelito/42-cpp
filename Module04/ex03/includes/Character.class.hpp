@@ -23,7 +23,7 @@ public:
 	~Character ( void );
 	Character&	operator=( Character const &other );
 
-	std::string	const & getName() const ;
+	std::string	const	&getName() const ;
 
 	void	equip(AMateria* m);
 	void	unequip(unsigned int const idx);
