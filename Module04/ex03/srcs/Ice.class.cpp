@@ -1,6 +1,6 @@
-#include "Ice.class.hpp"
-
 #include <iostream>
+
+#include "Ice.class.hpp"
 
 static std::string const g_type = "ice";
 
