@@ -1,5 +1,7 @@
 #include "Ice.class.hpp"
 
+#include <iostream>
+
 static std::string const g_type = "ice";
 
 Ice::Ice( void ) : AMateria( g_type ) {};
@@ -16,4 +18,8 @@ AMateria * Ice::clone( void ) const {
 	AMateria *tmp = new Ice( *this );
 
 	return tmp;
+}
+
+void	Ice::use( ICharacter &target ) {
+	std::cout << "* shoots an ice bolt at " << target.getName() << " *";	
 }
