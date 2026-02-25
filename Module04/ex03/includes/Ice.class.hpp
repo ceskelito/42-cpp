@@ -5,16 +5,17 @@
 class Ice: public AMateria{
 
 private:
+	using AMateria::_type;
 
 public:
 	
 	Ice( void );
-	Ice( Ice &other );
+	Ice( Ice const &other );
 	~Ice( void );
 
 	Ice& operator=( Ice &other);
 
-	AMateria*	clone( void );
+	AMateria*	clone( void ) const;
 	void		use( ICharacter& target );
 
 };
