@@ -14,15 +14,8 @@ Character::Character( Character &other ): _usedSlots(0), _name(other._name) {};
 Character::Character( std::string name ): _usedSlots(0), _name(name) {};
 Character::~Character( void ) {};
 
-
-void	Character::_archiveMateria( AMateria* m ) {
-	// idk if is needed this function, maybe -
-	// i can use a list to take track of every -
-	// unused materia present in the program.
-	//
-	// I need to study a little more to accomplish -
-	// this task int the most cpp-ish manner possible.
-	// A linked list sounds this much c-ish... ew, boomer!
+Character& Character::operator=( Character &other ) {
+	tmp = Character(other);
 }
 
 void	Character::equip( AMateria* m ) {
@@ -30,11 +23,16 @@ void	Character::equip( AMateria* m ) {
 	if ( _usedSlots < _numSlots )
 		_inventory[_usedSlots++] = m;
 	else
-	 /*save the materia somewhere (maybe a list?) */;
+		_ground.put(m);
 }
 
-void	Character::unequip( int idx ) {
-	if (_inventory[idx] /*is NULL ???*/) {
-		
-	}
+void	Character::unequip(unsigned int const idx ) {
+	if (!_inventory[idx])
+		return ;
+
+	_ground.put( _inventory[idx] );
+	_inventory[idx] = NULL;
+
+	for (unsigned int i = idx; i < _usedSlots - 1; i++)
+		_inventory[i] = _inventory[i + 1];
 }
