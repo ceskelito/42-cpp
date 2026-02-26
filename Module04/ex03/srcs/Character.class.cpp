@@ -27,6 +27,8 @@ std::string const	&Character::getName( void ) const {
 
 void	Character::equip( AMateria* m ) {
 
+	if (!m)
+		return ;
 	if ( _usedSlots < _numSlots )
 		_inventory[_usedSlots++] = m;
 	else
