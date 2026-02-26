@@ -9,6 +9,7 @@ MateriaSource::~MateriaSource( void ) {
 }
 
 void		MateriaSource::learnMateria( AMateria *m ) {
+	_ground.put(m);
 	if (_usedSlots == _numSlots)
 		return ;
 	_inventory[_usedSlots++] = m->clone();

@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "Character.class.hpp"
+#include "MateriaSource.class.hpp"
 #include "Ice.class.hpp"
 #include "Cure.class.hpp"
 
@@ -14,18 +15,20 @@ int main ( void ) {
 	Character mike("mike");
 	Character bianca("bianca");
 
-	AMateria *ice = new Ice();
-	AMateria *cure = new Cure();
+	MateriaSource src;
+
+	src.learnMateria(new Ice());
+	src.learnMateria(new Cure());
 
 	cout << mike.getName() << " is equipping Ice!" << endl;
-	mike.equip(ice);
+	mike.equip(src.createMateria("ice"));
 	cout << bianca.getName() << " equip's Cure." << endl;
-	bianca.equip(cure);
+	bianca.equip(src.createMateria("cure"));
 
 	cout << me->getName() << " is equipping Ice!" << endl;
-	me->equip(ice);
+	me->equip(src.createMateria("ice"));
 	cout << me->getName() << " equip's Cure." << endl;
-	me->equip(cure);
+	me->equip(src.createMateria("cure"));
 
 	cout << me->getName() << "'s turn: ";
 	me->use(0, mike);

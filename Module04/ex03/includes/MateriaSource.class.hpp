@@ -1,10 +1,12 @@
 #pragma once
 
 #include "IMateriaSource.class.hpp"
+#include "MateriaStorage.class.hpp"
 
 class MateriaSource : public IMateriaSource {
 
 	private:
+		MateriaStorage	_ground;
 		enum { _numSlots = 4 };
 
 		unsigned int	_usedSlots;
