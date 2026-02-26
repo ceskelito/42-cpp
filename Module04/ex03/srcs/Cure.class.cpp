@@ -6,6 +6,7 @@ static std::string const g_type = "cure";
 
 Cure::Cure( void ) : AMateria( g_type ) {};
 Cure::Cure( Cure const &other ) : AMateria( other ) {};
+Cure::~Cure( void ) {};
 
 Cure & Cure::operator=( Cure &other ) {
 	if (this != &other) {

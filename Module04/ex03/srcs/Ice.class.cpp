@@ -6,6 +6,7 @@ static std::string const g_type = "ice";
 
 Ice::Ice( void ) : AMateria( g_type ) {};
 Ice::Ice( Ice const &other ) : AMateria( other ) {};
+Ice::~Ice( void ) {};
 
 Ice & Ice::operator=( Ice &other ) {
 	if (this != &other) {

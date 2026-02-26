@@ -10,3 +10,7 @@ AMateria::~AMateria ( void ) {};
 std::string const & AMateria::getType ( void ) const {
 	return this->_type;
 }
+
+void	AMateria::use( ICharacter &target ) {
+	(void)target;
+}

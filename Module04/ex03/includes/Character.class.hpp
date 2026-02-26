@@ -6,7 +6,8 @@
 class Character: public ICharacter {
 
 private:
-	static MateriaStorage	_ground;
+	//static 
+	MateriaStorage	_ground;
 	enum { _numSlots = 4 };
 
 	AMateria*		_inventory[_numSlots];

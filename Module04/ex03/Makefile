@@ -5,7 +5,13 @@ RM        = rm -f
 CFLAGS    = -Wall -Wextra -Werror --std=c++98
 IFLAGS    = -Iincludes
 
-FILES     = main
+FILES     = main 					\
+			AMateria.class 			\
+			MateriaStorage.class 	\
+			Character.class 		\
+			Ice.class				\
+			Cure.class
+
 
 SRCS_DIR  = srcs
 OBJS_DIR  = objs
