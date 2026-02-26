@@ -66,13 +66,13 @@ Fixed	Fixed::operator*(const Fixed &other) const {
 	long long	this_raw = _rawBits;
 	long long	other_raw = other._rawBits;
 
-	result.setRawBits((this_raw * other_raw) >> 8);
+	result.setRawBits((this_raw * other_raw) >> _numFractional);
 	return (result);
 }
 
 Fixed	Fixed::operator/(const Fixed &other) const {
 	Fixed		result;
-	long long	tmp = _rawBits << 8;
+	long long	tmp = _rawBits << _numFractional;
 
 	result.setRawBits((int)(tmp / other._rawBits));
 	return (result);
