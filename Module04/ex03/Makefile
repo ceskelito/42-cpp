@@ -7,6 +7,7 @@ IFLAGS    = -Iincludes
 
 FILES     = main 					\
 			AMateria.class 			\
+			MateriaSource.class 	\
 			MateriaStorage.class 	\
 			Character.class 		\
 			Ice.class				\
