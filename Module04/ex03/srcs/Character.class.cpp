@@ -5,7 +5,12 @@
 Character::Character( void ): _usedSlots(0), _name("defaultName") {};
 Character::Character( Character const &other ): _usedSlots(0), _name(other._name) {};
 Character::Character( std::string const name ): _usedSlots(0), _name(name) {};
-Character::~Character( void ) {};
+
+Character::~Character( void ) {
+	for (unsigned int i =0; i < _usedSlots; i++) {
+		delete _inventory[i];
+	}
+};
 
 Character& Character::operator=( Character const &other ) {
 	Character	*tmp = new Character(other);
