@@ -82,6 +82,5 @@ int main ( void ) {
 	cout << endl << "---------------" << endl << endl;
 	cout << "Cloning and coping: " << endl << endl;
 	clone_and_copy();
-	clone_and_copy_2();
 	return 0;
 }
