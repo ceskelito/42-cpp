@@ -3,8 +3,14 @@
 /* Costructors / Destructor */
 
 Character::Character( void ): _usedSlots(0), _name("defaultName") {};
-Character::Character( Character const &other ): _usedSlots(0), _name(other._name) {};
 Character::Character( std::string const name ): _usedSlots(0), _name(name) {};
+
+Character::Character( Character const &other ): _usedSlots(other._usedSlots), _name(other._name) {
+
+	for (unsigned int i = 0; i < _usedSlots; i++) {
+		_inventory[i] = other._inventory[i]->clone();
+	}
+};
 
 Character::~Character( void ) {
 	for (unsigned int i =0; i < _usedSlots; i++) {
