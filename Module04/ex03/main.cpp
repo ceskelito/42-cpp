@@ -73,6 +73,8 @@ void clone_and_copy( void ) {
 	second.use(0, *third); 
 	cout << std::setw(12) << "third : ";
 	third->use(0, second);
+
+	delete third;
 }
 
 int main ( void ) {
