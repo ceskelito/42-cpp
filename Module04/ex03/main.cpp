@@ -75,17 +75,6 @@ void clone_and_copy( void ) {
 	third->use(0, second);
 }
 
-// void print_inventory(Character &c) {
-//
-// 	int const	num_of_elems = 4;
-//
-// 	cout << "Name: " << c.getName() << endl;
-// 	for (int i = 0; i < num_of_elems; i++) {
-// 		cout << c._
-//
-// 	}
-// }
-
 void clone_and_copy_2( void ) {
 	
 	Character a("ori");
