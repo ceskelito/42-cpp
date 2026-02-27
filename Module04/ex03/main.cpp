@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 
 #include "Character.class.hpp"
 #include "MateriaSource.class.hpp"
@@ -8,8 +9,8 @@
 using std::cout;
 using std::endl;
 
-int main ( void ) {
-
+void equip_use_unequip( void ) {
+	
 	ICharacter *me = new Character("rick");
 
 	Character mike("mike");
@@ -45,6 +46,24 @@ int main ( void ) {
 	me->unequip(1);
 
 	delete me;
+}
 
+void clone_and_copy( void ) {
+	ICharacter	*original = new Character("ori");
+	ICharacter	*second(original);
+	ICharacter	*third = second;
+
+	cout << std::setw(12) << "original : "<< original << endl;
+	cout << std::setw(12) << "second : "<< second << endl;
+	cout << std::setw(12) << "third : "<< third << endl;
+}
+
+int main ( void ) {
+
+	cout << "Basic usage: " << endl << endl;
+	equip_use_unequip();
+	cout << endl << "---------------" << endl << endl;
+	cout << "Cloning and coping: " << endl << endl;
+	clone_and_copy();
 	return 0;
 }
