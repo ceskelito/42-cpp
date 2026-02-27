@@ -56,7 +56,7 @@ void clone_and_copy( void ) {
 	src.learnMateria(new Ice);
 	original->equip(src.createMateria("ice"));
 
-	cout << "Creating two copies, one from the original, one from the second..." << endl;
+	cout << "Creating two copies, one from the original, one from the second..." << endl << endl;
 	Character	second = *dynamic_cast<Character*>(original);
 	ICharacter	*third = new Character(*dynamic_cast<Character*>(original));
 
@@ -65,13 +65,13 @@ void clone_and_copy( void ) {
 	cout << std::setw(12) << "second : "<< &second << " - name : " << second.getName() << endl;
 	cout << std::setw(12) << "third : "<< third << " - name : " << third->getName() << endl;
 
-	cout << endl << "Now we'll delete the original." << endl;
+	cout << endl << "Now we'll delete the original." << endl << endl;
 	delete original;
 
 	cout << "Attempting to use itmes from a copy, after deleting the original:" << endl;
 	cout << std::setw(12) << "second : ";
 	second.use(0, *third); 
-	cout << std::setw(12) << "second : ";
+	cout << std::setw(12) << "third : ";
 	third->use(0, second);
 }
 
