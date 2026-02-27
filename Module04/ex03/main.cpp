@@ -49,13 +49,49 @@ void equip_use_unequip( void ) {
 }
 
 void clone_and_copy( void ) {
-	ICharacter	*original = new Character("ori");
-	ICharacter	*second(original);
-	ICharacter	*third = second;
 
-	cout << std::setw(12) << "original : "<< original << endl;
-	cout << std::setw(12) << "second : "<< second << endl;
-	cout << std::setw(12) << "third : "<< third << endl;
+	cout << "Creating new character and equipping with ice..." << endl;
+	ICharacter	*original = new Character("ori");
+	MateriaSource src;
+	src.learnMateria(new Ice);
+	original->equip(src.createMateria("ice"));
+
+	cout << "Creating two copies, one from the original, one from the second..." << endl;
+	Character	second = *dynamic_cast<Character*>(original);
+	ICharacter	*third = new Character(*dynamic_cast<Character*>(original));
+
+	cout << "Memory addresses of the three Characters: " << endl;
+	cout << std::setw(12) << "original : "<< original << " - name : " << original->getName() << endl;
+	cout << std::setw(12) << "second : "<< &second << " - name : " << second.getName() << endl;
+	cout << std::setw(12) << "third : "<< third << " - name : " << third->getName() << endl;
+
+	cout << endl << "Now we'll delete the original." << endl;
+	delete original;
+
+	cout << "Attempting to use itmes from a copy, after deleting the original:" << endl;
+	cout << std::setw(12) << "second : ";
+	second.use(0, *third); 
+	cout << std::setw(12) << "second : ";
+	third->use(0, second);
+}
+
+// void print_inventory(Character &c) {
+//
+// 	int const	num_of_elems = 4;
+//
+// 	cout << "Name: " << c.getName() << endl;
+// 	for (int i = 0; i < num_of_elems; i++) {
+// 		cout << c._
+//
+// 	}
+// }
+
+void clone_and_copy_2( void ) {
+	
+	Character a("ori");
+	Character b(a);
+	Character c = b;
+
 }
 
 int main ( void ) {
@@ -65,5 +101,6 @@ int main ( void ) {
 	cout << endl << "---------------" << endl << endl;
 	cout << "Cloning and coping: " << endl << endl;
 	clone_and_copy();
+	clone_and_copy_2();
 	return 0;
 }
