@@ -75,14 +75,6 @@ void clone_and_copy( void ) {
 	third->use(0, second);
 }
 
-void clone_and_copy_2( void ) {
-	
-	Character a("ori");
-	Character b(a);
-	Character c = b;
-
-}
-
 int main ( void ) {
 
 	cout << "Basic usage: " << endl << endl;
