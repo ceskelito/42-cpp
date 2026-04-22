@@ -2,7 +2,8 @@
 #include <iostream>
 
 using std::string;
-using std::cout, std::endl;
+using std::cout;
+using std::endl;
 
 //	Constructors
 Bureaucrat::Bureaucrat(void): _name("BobTheChairHeater"), _grade(150) {
@@ -27,7 +28,7 @@ Bureaucrat::~Bureaucrat() {
 
 // Overloaded Operators
 Bureaucrat &Bureaucrat::operator=(const Bureaucrat &other) {
-	if (this == &other)
+	if (this != &other)
 	{
 		_grade = other._grade;
 	}
