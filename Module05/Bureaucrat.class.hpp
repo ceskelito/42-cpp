@@ -2,6 +2,7 @@
 
 #include <string>
 #include <exception>
+#include <ostream>
 
 class Bureaucrat {
 
@@ -38,16 +39,16 @@ class Bureaucrat {
 
 
 	// Exceptions
-	class	GradeTooHighException: std::exception
+	class	GradeTooHighException: public std::exception
 	{
 		public:
-			virtual const char *what( void ) const throw();
+			const char *what( void ) const throw();
 	};
 
-	class	GradeTooLowException: std::exception
+	class	GradeTooLowException: public std::exception
 	{
 		public:
-			virtual const char *what( void ) const throw();
+			const char *what( void ) const throw();
 	};
 };
 
