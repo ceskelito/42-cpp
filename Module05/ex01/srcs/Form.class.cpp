@@ -1,4 +1,6 @@
 #include "Form.class.hpp"
+#include "Bureaucrat.class.hpp"
+
 #include <iostream>
 #include <ostream>
 
