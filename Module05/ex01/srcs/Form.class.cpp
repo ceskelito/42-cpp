@@ -21,7 +21,18 @@ Form::Form( string const name, const int gradeToSign, const int gradeToExec, con
 	_signed(isSigned)
 {
 	cout << "Form Constructor called for " << _name << " with grades required (sign/exec): "
-		<< gradeToSign << "/" << gradeToExec << endl;
+		<< _gradeToSign << "/" << _gradeToExec << endl;
+	_checkRequiredGrades();
+};
+
+Form::Form( string const name, const int gradeToSign, const int gradeToExec):
+	_name(name),
+	_gradeToSign(gradeToSign),
+	_gradeToExec(gradeToExec),
+	_signed(false)
+{
+	cout << "Form Constructor called for " << _name << " with grades required (sign/exec): "
+		<< _gradeToSign << "/" << _gradeToExec << endl;
 	_checkRequiredGrades();
 };
 

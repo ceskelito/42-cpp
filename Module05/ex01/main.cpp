@@ -25,19 +25,19 @@ static void showcaseConstruction()
 	printFormState("defaultForm", defaultForm);
 
 	std::cout << "\nValid boundary forms:" << std::endl;
-	Form topSecurity("TopSecurity", 1, 1, false);
-	Form lowestSecurity("LowestSecurity", 150, 150, false);
+	Form topSecurity("TopSecurity", 1, 1);
+	Form lowestSecurity("LowestSecurity", 150, 150);
 	printFormState("topSecurity", topSecurity);
 	printFormState("lowestSecurity", lowestSecurity);
 
 	std::cout << "\nValid mixed requirements:" << std::endl;
-	Form mixed("MixedPolicy", 42, 100, false);
+	Form mixed("MixedPolicy", 42, 100);
 	printFormState("mixed", mixed);
 
 	std::cout << "\nInvalid construction cases (expected exceptions):" << std::endl;
 	try
 	{
-		Form badSignHigh("BadSignHigh", 0, 50, false);
+		Form badSignHigh("BadSignHigh", 0, 50);
 		(void)badSignHigh;
 	}
 	catch (const std::exception &e)
@@ -47,7 +47,7 @@ static void showcaseConstruction()
 
 	try
 	{
-		Form badExecHigh("BadExecHigh", 20, 0, false);
+		Form badExecHigh("BadExecHigh", 20, 0);
 		(void)badExecHigh;
 	}
 	catch (const std::exception &e)
@@ -57,7 +57,7 @@ static void showcaseConstruction()
 
 	try
 	{
-		Form badSignLow("BadSignLow", 151, 50, false);
+		Form badSignLow("BadSignLow", 151, 50);
 		(void)badSignLow;
 	}
 	catch (const std::exception &e)
@@ -67,7 +67,7 @@ static void showcaseConstruction()
 
 	try
 	{
-		Form badExecLow("BadExecLow", 20, 151, false);
+		Form badExecLow("BadExecLow", 20, 151);
 		(void)badExecLow;
 	}
 	catch (const std::exception &e)
@@ -80,7 +80,7 @@ static void showcaseCopyAndImmutability()
 {
 	printTitle("2) COPY + IMMUTABILITY SHOWCASE");
 
-	Form original("PermitA", 20, 15, false);
+	Form original("PermitA", 20, 15);
 	Form copy(original);
 
 	printFormState("original", original);
@@ -94,7 +94,7 @@ static void showcaseSigningWithBeSigned()
 {
 	printTitle("3) SIGNING SHOWCASE WITH Form::beSigned");
 
-	Form taxForm("TaxForm", 50, 25, false);
+	Form taxForm("TaxForm", 50, 25);
 	Bureaucrat chief("Chief", 1);
 	Bureaucrat intern("Intern", 150);
 	Bureaucrat exactSigner("ExactSigner", 50);
@@ -142,7 +142,7 @@ static void showcaseSigningWithBureaucratFacade()
 {
 	printTitle("4) INTERACTION SHOWCASE WITH Bureaucrat::signForm");
 
-	Form nda("NDA", 10, 10, false);
+	Form nda("NDA", 10, 10);
 	Bureaucrat manager("Manager", 10);
 	Bureaucrat guest("Guest", 120);
 

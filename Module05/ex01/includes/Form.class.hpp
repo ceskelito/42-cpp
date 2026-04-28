@@ -17,6 +17,9 @@ class Form {
 		const int			_gradeToSign;
 		const int			_gradeToExec;
 		bool				_signed;
+
+	// Constructor
+		Form( const std::string name, const int gradeToSign, const int gradeToExec, const bool isSigned );
 	
 	// Private Methods
 		void				_checkRequiredGrades( void ) const;
@@ -28,7 +31,7 @@ class Form {
 	public:
 	// Constructors
 		Form( void );
-		Form( const std::string name, const int gradeToSign, const int gradeToExec, const bool isSigned );
+		Form( const std::string name, const int gradeToSign, const int gradeToExec );
 		Form( const Form &other );
 
 	// Destructors
