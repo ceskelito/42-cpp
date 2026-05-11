@@ -64,12 +64,12 @@ void	Bureaucrat::_setGrade(int grade) {
 // Public Methods
 void	Bureaucrat::incrementGrade( void ) {
 	cout << "Attempting to increment grade of Bureaucrat " << _name << endl;
-	_setGrade(_rawGrade + 1);
+	_setGrade(getGrade() + 1);
 }
 
 void	Bureaucrat::decrementGrade( void ) {
 	cout << "Attempting to decrement grade of Bureaucrat " << _name << endl;
-	_setGrade(_rawGrade - 1);
+	_setGrade(getGrade() - 1);
 }
 
 //	Execptions
