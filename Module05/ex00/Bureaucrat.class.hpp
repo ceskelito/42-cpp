@@ -8,14 +8,14 @@ class Bureaucrat {
 
 	private:
 
-	enum { MaxGrade = 1, MinGrade = 150};
+	enum { MaxGrade = -1, MinGrade = -150};
 
 	// Setter
 		void	_setGrade( int grade );
 
 	// Attributes
 		const std::string	_name;
-		int					_grade;
+		int					_rawGrade;
 
 	public:
 	// Constructors

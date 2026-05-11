@@ -6,8 +6,8 @@ using std::cout;
 using std::endl;
 
 //	Constructors
-Bureaucrat::Bureaucrat(void): _name("BobTheChairHeater"), _grade(150) {
-	cout << "Bureaucrat Default Constructor called for " << _name << " with grade of " << _grade << endl;
+Bureaucrat::Bureaucrat(void): _name("BobTheChairHeater"), _rawGrade(-150) {
+	cout << "Bureaucrat Default Constructor called for " << _name << " with grade of " << getGrade() << endl;
 }
 
 Bureaucrat::Bureaucrat( string const name, int grade): _name(name) {
@@ -16,9 +16,9 @@ Bureaucrat::Bureaucrat( string const name, int grade): _name(name) {
 	_setGrade(grade);
 };
 
-Bureaucrat::Bureaucrat( const Bureaucrat &other): _name(other._name + "_copy"), _grade(other._grade) {
+Bureaucrat::Bureaucrat( const Bureaucrat &other): _name(other._name + "_copy"), _rawGrade(other._rawGrade) {
 	cout << "Bureaucrat Copy Constructor called to copy " << other._name << " into " << _name << 
-		" with grade of " << _grade << endl;
+		" with grade of " << getGrade() << endl;
 };
 
 //	Deconstructor
@@ -30,7 +30,7 @@ Bureaucrat::~Bureaucrat() {
 Bureaucrat &Bureaucrat::operator=(const Bureaucrat &other) {
 	if (this != &other)
 	{
-		_grade = other._grade;
+		_rawGrade = other._rawGrade;
 	}
 
 	return *this;
@@ -48,27 +48,28 @@ string	Bureaucrat::getName( void ) const {
 }
 
 int		Bureaucrat::getGrade( void ) const {
-	return _grade;
+	return _rawGrade * -1;
 }
 
 //	Setter
 void	Bureaucrat::_setGrade(int grade) {
-	if (grade < MaxGrade)
+	grade *= -1;
+	if (grade > MaxGrade)
 		throw GradeTooHighException();
-	else if (grade > MinGrade)
+	else if (grade < MinGrade)
 		throw GradeTooLowException();
-	_grade = grade;
+	_rawGrade = grade;
 }
 
 // Public Methods
 void	Bureaucrat::incrementGrade( void ) {
 	cout << "Attempting to increment grade of Bureaucrat " << _name << endl;
-	_setGrade(_grade - 1);
+	_setGrade(_rawGrade + 1);
 }
 
 void	Bureaucrat::decrementGrade( void ) {
 	cout << "Attempting to decrement grade of Bureaucrat " << _name << endl;
-	_setGrade(_grade + 1);
+	_setGrade(_rawGrade - 1);
 }
 
 //	Execptions
