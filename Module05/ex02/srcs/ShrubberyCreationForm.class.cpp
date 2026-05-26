@@ -1,6 +1,8 @@
 #include "ShrubberyCreationForm.class.hpp"
+#include "Bureaucrat.class.hpp"
 
 #include <iostream>
+#include <fstream>
 
 using std::cout;
 using std::endl;
@@ -28,7 +30,16 @@ ShrubberyCreationForm::~ShrubberyCreationForm( void ) {
 
 // Methods
 void	ShrubberyCreationForm::execute(Bureaucrat const & executor) const {
-	//TODO implement the real function
+	//TODO Check the executor grade
 	(void) executor;	
-	cout << "Executing ShrubberyCreationForm on " << _target << endl;
+	cout << "Executing ShrubberyCreationForm from Bureaucrat `" + executor.getName() + "` on target `" << _target << "`" <<  endl;
+    std::ofstream file((_target + "_shrubbery").c_str());
+
+    file << "       _-_       \n";
+    file << "      /~~~\\     \n";
+    file << "     /~~~~~\\    \n";
+    file << "    /~~~~~~~\\   \n";
+    file << "   /~~~~~~~~~\\  \n";
+    file << "        |||      \n";
+    file << "        |||      \n";
 }
