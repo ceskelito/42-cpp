@@ -10,22 +10,23 @@ using std::endl;
 
 // Constructors
 ShrubberyCreationForm::ShrubberyCreationForm(string target) :
-	AForm(target + "_ShrubberyCreationForm", _gradeToSign, _gradeToExec, false),
+	AForm(target + "-SCF", _gradeToSign, _gradeToExec, false),
 	_target(target)
 {
-	cout << "Constructor called for " << this->AForm::getName() << endl;
+	cout << "[ ShrubberyCreationForm ] Constructor called for " << this->AForm::getName() << endl;
 };
 
 ShrubberyCreationForm::ShrubberyCreationForm(ShrubberyCreationForm const &other) :
-	AForm("copy_" + other.AForm::getName(), other._gradeToSign, other._gradeToExec, other.AForm::isSigned()),
+	//AForm("copy_" + other.AForm::getName(), other._gradeToSign, other._gradeToExec, other.AForm::isSigned()),
+	AForm(other),
 	_target(other._target)
 {
-	cout << "Copy constructor called for " << this->AForm::getName() << endl;
+	cout << "[ ShrubberyCreationForm ] Copy constructor called for " << this->AForm::getName() << endl;
 }
 
 // Destructor
 ShrubberyCreationForm::~ShrubberyCreationForm( void ) {
-	cout << "Destructor called for "  << this->AForm::getName() << endl;
+	cout << "[ ShrubberyCreationForm ] Destructor called for "  << this->AForm::getName() << endl;
 }
 
 // Methods

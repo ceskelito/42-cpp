@@ -4,13 +4,21 @@
 #include <iostream>
 #include <ostream>
 
+#define BLD "\e[1m"
+#define ITL "\e[3m"
+#define RST "\e[0m"
+
 using std::string;
 using std::cout;
 using std::endl;
 
+static string className( void ) {
+	return (string(BLD) + ITL + "[ AForm ]" + RST);
+}
+
 //	Constructors
 AForm::AForm(void): _name("GenericForm"), _gradeToSign(MinGrade), _gradeToExec(MinGrade), _signed(false) {
-	cout << "Form Default Constructor called for " << _name << " with grades required (sign/exec): "
+	cout << className() << " Default Constructor called for " << _name << " with grades required (sign/exec): "
 		<< _gradeToSign << "/" << _gradeToExec << endl;
 }
 
@@ -20,7 +28,7 @@ AForm::AForm( string const name, const int gradeToSign, const int gradeToExec, c
 	_gradeToExec(gradeToExec),
 	_signed(isSigned)
 {
-	cout << "Form Constructor called for " << _name << " with grades required (sign/exec): "
+	cout << className() << " Constructor called for " << _name << " with grades required (sign/exec): "
 		<< _gradeToSign << "/" << _gradeToExec << endl;
 	_checkRequiredGrades();
 };
@@ -31,7 +39,7 @@ AForm::AForm( string const name, const int gradeToSign, const int gradeToExec):
 	_gradeToExec(gradeToExec),
 	_signed(false)
 {
-	cout << "Form Constructor called for " << _name << " with grades required (sign/exec): "
+	cout << className() << " Constructor called for " << _name << " with grades required (sign/exec): "
 		<< _gradeToSign << "/" << _gradeToExec << endl;
 	_checkRequiredGrades();
 };
@@ -42,13 +50,13 @@ AForm::AForm( const AForm &other):
 	_gradeToExec(other._gradeToExec),
 	_signed(other._signed)
 {
-	cout << "Form Copy Constructor called to copy " << other._name << " into " << _name
+	cout << className() << " Copy Constructor called to copy " << other._name << " into " << _name
 		<< " with grades required (sign/exec): " << _gradeToSign << "/" << _gradeToExec << endl;
 };
 
 //	Deconstructor
 AForm::~AForm() {
-	std::cout << "Form Deconstructor for " << this->getName() << " called" << std::endl;
+	std::cout << className() << " Destructor called for " << this->getName() << " called" << std::endl;
 }
 
 //	Getter

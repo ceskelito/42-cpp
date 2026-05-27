@@ -7,23 +7,23 @@ using std::endl;
 
 //	Constructors
 Bureaucrat::Bureaucrat(void): _name("BobTheChairHeater"), _grade(MinGrade) {
-	cout << "Bureaucrat Default Constructor called for " << _name << " with grade of " << _grade << endl;
+	cout << "[ Bureaucrat ] Default Constructor called for " << _name << " with grade of " << _grade << endl;
 }
 
 Bureaucrat::Bureaucrat( string const name, int grade): _name(name) {
-	cout << "Bureaucrat Constructor called for " << _name << " with grade of " << grade << endl;
+	cout << "[ Bureaucrat ] Constructor called for " << _name << " with grade of " << grade << endl;
 
 	_setGrade(grade);
 };
 
 Bureaucrat::Bureaucrat( const Bureaucrat &other): _name(other._name + "_copy"), _grade(other._grade) {
-	cout << "Bureaucrat Copy Constructor called to copy " << other._name << " into " << _name << 
+	cout << "[ Bureaucrat ] Copy Constructor called to copy " << other._name << " into " << _name << 
 		" with grade of " << _grade << endl;
 };
 
 //	Deconstructor
 Bureaucrat::~Bureaucrat() {
-	std::cout << "Bureaucrat Deconstructor for " << this->getName() << " called" << std::endl;
+	std::cout << "[ Bureaucrat ] Destructor called for " << this->getName() << " called" << std::endl;
 }
 
 // Overloaded Operators
