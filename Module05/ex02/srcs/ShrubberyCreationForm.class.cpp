@@ -7,13 +7,21 @@
 using std::cout;
 using std::endl;
 
+static string className( void ) {
+
+	const string BLD = "\e[1m";
+	const string ITL = "\e[3m";
+	const string RST = "\e[0m";
+
+	return (string(BLD) + ITL + "[ ShrubberyCreationForm ]" + RST);
+}
 
 // Constructors
 ShrubberyCreationForm::ShrubberyCreationForm(string target) :
 	AForm(target + "-SCF", _gradeToSign, _gradeToExec, false),
 	_target(target)
 {
-	cout << "[ ShrubberyCreationForm ] Constructor called for " << this->AForm::getName() << endl;
+	cout << className() << " Constructor called for " << this->AForm::getName() << endl;
 };
 
 ShrubberyCreationForm::ShrubberyCreationForm(ShrubberyCreationForm const &other) :
@@ -21,12 +29,12 @@ ShrubberyCreationForm::ShrubberyCreationForm(ShrubberyCreationForm const &other)
 	AForm(other),
 	_target(other._target)
 {
-	cout << "[ ShrubberyCreationForm ] Copy constructor called for " << this->AForm::getName() << endl;
+	cout << className() << " Copy constructor called for " << this->AForm::getName() << endl;
 }
 
 // Destructor
 ShrubberyCreationForm::~ShrubberyCreationForm( void ) {
-	cout << "[ ShrubberyCreationForm ] Destructor called for "  << this->AForm::getName() << endl;
+	cout << className() << " Destructor called for "  << this->AForm::getName() << endl;
 }
 
 // Methods

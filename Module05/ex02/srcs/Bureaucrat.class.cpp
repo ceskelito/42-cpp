@@ -5,25 +5,34 @@ using std::string;
 using std::cout;
 using std::endl;
 
+static string className( void ) {
+
+	const string BLD = "\e[1m";
+	const string ITL = "\e[3m";
+	const string RST = "\e[0m";
+
+	return (string(BLD) + ITL + "[ Bureaucrat ]" + RST);
+}
+
 //	Constructors
 Bureaucrat::Bureaucrat(void): _name("BobTheChairHeater"), _grade(MinGrade) {
-	cout << "[ Bureaucrat ] Default Constructor called for " << _name << " with grade of " << _grade << endl;
+	cout << className() << " Default Constructor called for " << _name << " with grade of " << _grade << endl;
 }
 
 Bureaucrat::Bureaucrat( string const name, int grade): _name(name) {
-	cout << "[ Bureaucrat ] Constructor called for " << _name << " with grade of " << grade << endl;
+	cout << className() << " Constructor called for " << _name << " with grade of " << grade << endl;
 
 	_setGrade(grade);
 };
 
 Bureaucrat::Bureaucrat( const Bureaucrat &other): _name(other._name + "_copy"), _grade(other._grade) {
-	cout << "[ Bureaucrat ] Copy Constructor called to copy " << other._name << " into " << _name << 
+	cout << className() << " Copy Constructor called to copy " << other._name << " into " << _name << 
 		" with grade of " << _grade << endl;
 };
 
 //	Deconstructor
 Bureaucrat::~Bureaucrat() {
-	std::cout << "[ Bureaucrat ] Destructor called for " << this->getName() << " called" << std::endl;
+	std::cout << className() << " Destructor called for " << this->getName() << " called" << std::endl;
 }
 
 // Overloaded Operators

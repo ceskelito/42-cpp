@@ -4,15 +4,16 @@
 #include <iostream>
 #include <ostream>
 
-#define BLD "\e[1m"
-#define ITL "\e[3m"
-#define RST "\e[0m"
-
 using std::string;
 using std::cout;
 using std::endl;
 
 static string className( void ) {
+
+	const string BLD = "\e[1m";
+	const string ITL = "\e[3m";
+	const string RST = "\e[0m";
+
 	return (string(BLD) + ITL + "[ AForm ]" + RST);
 }
 
