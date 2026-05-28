@@ -94,6 +94,12 @@ void	Bureaucrat::signForm( AForm &f ) const {
 	cout << _name << " signed " << f.getName();
 }
 
+void	Bureaucrat::executeForm(AForm const &f) const {
+	try {
+		f.execute(*this);
+	};
+}
+
 //	Execptions
 const char *Bureaucrat::GradeTooHighException::what( void ) const throw() {
 	return "Attempting to assign a grade higher than the maximus (1).";

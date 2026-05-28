@@ -35,10 +35,11 @@ class Bureaucrat {
 		std::string	getName( void ) const;
 		int			getGrade( void ) const;
 
-	// Public Methods
-		void		incrementGrade( void );
-		void		decrementGrade( void );
-		void		signForm( AForm &f ) const;
+	// Methods
+		void	incrementGrade( void );
+		void	decrementGrade( void );
+		void	signForm( AForm &f ) const;
+		void	executeForm( AForm const &f ) const;
 
 
 	// Exceptions

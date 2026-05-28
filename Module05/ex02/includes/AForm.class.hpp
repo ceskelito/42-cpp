@@ -31,7 +31,6 @@ class AForm {
 	
 	// Methods
 		void			_checkRequiredGrades( void ) const;
-		virtual void	execute(Bureaucrat const & executor) const = 0;
 
 	public:
 	// Getter
@@ -42,6 +41,7 @@ class AForm {
 
 	// Methods
 		void			beSigned( const Bureaucrat &b );
+		virtual void	execute(Bureaucrat const & executor) const = 0;
 
 	// Exceptions
 	class	GradeTooHighException: public std::exception
