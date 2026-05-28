@@ -1,35 +1,27 @@
 #pragma once
 
 #include "AForm.class.hpp"
+#include "Bureaucrat.class.hpp"
 
 using std::string;
 
 class ShrubberyCreationForm : public AForm {
 
 	private:
-
-	// Attributes
-		enum {
-				_gradeToSign = 145,
-				_gradeToExec = 137	};
-		bool	_signed;
+		enum { _gradeToSign = 145, _gradeToExec = 137 };
 		string	_target;
 
-	// Constructors
+		// Unused but required
 		ShrubberyCreationForm (void);
-
-	// Overloaded Operators
 		AForm	&operator= (const ShrubberyCreationForm &other);
 
 	public:
 
-	// Constructors
+	// Constructors / Destructor
 		ShrubberyCreationForm (string target);
 		ShrubberyCreationForm (ShrubberyCreationForm const &other);
-
-	// Destructor
 		~ShrubberyCreationForm (void);
 
-	// Methods
-	void	execute(Bureaucrat const & executor) const;
+		void	execute(Bureaucrat const & executor) const;
+
 };
