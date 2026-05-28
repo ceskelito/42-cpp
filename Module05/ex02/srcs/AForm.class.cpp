@@ -17,22 +17,23 @@ static string className( void ) {
 	return (string(BLD) + ITL + "[ AForm ]" + RST);
 }
 
-//	Constructors
-AForm::AForm(void): _name("GenericForm"), _gradeToSign(MinGrade), _gradeToExec(MinGrade), _signed(false) {
-	cout << className() << " Default Constructor called for " << _name << " with grades required (sign/exec): "
-		<< _gradeToSign << "/" << _gradeToExec << endl;
-}
+/*	Constructors Destructor */
 
-AForm::AForm( string const name, const int gradeToSign, const int gradeToExec, const bool isSigned):
-	_name(name),
-	_gradeToSign(gradeToSign),
-	_gradeToExec(gradeToExec),
-	_signed(isSigned)
-{
-	cout << className() << " Constructor called for " << _name << " with grades required (sign/exec): "
-		<< _gradeToSign << "/" << _gradeToExec << endl;
-	_checkRequiredGrades();
-};
+// AForm::AForm(void): _name("GenericForm"), _gradeToSign(MinGrade), _gradeToExec(MinGrade), _signed(false) {
+// 	cout << className() << " Default Constructor called for " << _name << " with grades required (sign/exec): "
+// 		<< _gradeToSign << "/" << _gradeToExec << endl;
+// }
+
+// AForm::AForm( string const name, const int gradeToSign, const int gradeToExec, const bool isSigned):
+// 	_name(name),
+// 	_gradeToSign(gradeToSign),
+// 	_gradeToExec(gradeToExec),
+// 	_signed(isSigned)
+// {
+// 	cout << className() << " Constructor called for " << _name << " with grades required (sign/exec): "
+// 		<< _gradeToSign << "/" << _gradeToExec << endl;
+// 	_checkRequiredGrades();
+// };
 
 AForm::AForm( string const name, const int gradeToSign, const int gradeToExec):
 	_name(name),
@@ -55,12 +56,12 @@ AForm::AForm( const AForm &other):
 		<< " with grades required (sign/exec): " << _gradeToSign << "/" << _gradeToExec << endl;
 };
 
-//	Deconstructor
 AForm::~AForm() {
 	std::cout << className() << " Destructor called for " << this->getName() << " called" << std::endl;
 }
 
-//	Getter
+/* Getter */
+
 string	AForm::getName( void ) const {
 	return _name;
 }
@@ -77,7 +78,8 @@ bool	AForm::isSigned( void ) const {
 	return _signed;
 }
 
-//	Stream Operators
+/* Stream Operators */
+
 std::ostream	&operator<<(std::ostream &o, const AForm &f) {
 	o << std::boolalpha
 		<< "Form " << f.getName() << ":" << endl 
@@ -87,13 +89,21 @@ std::ostream	&operator<<(std::ostream &o, const AForm &f) {
 	return o;
 }
 
-// Private Methods
+/* Private Methods */
 void	AForm::_checkRequiredGrades( void ) const {
 
 	if (_gradeToSign < MaxGrade || _gradeToExec < MaxGrade)
 		throw GradeTooHighException();
 	else if (_gradeToSign > MinGrade || _gradeToExec > MinGrade)
 		throw GradeTooLowException();
+}
+
+void AForm::execute( Bureaucrat const& exec ) const
+{
+	if (!_signed)
+		throw AForm::ExecuteUnsignedException();
+	if (exec.getGrade() > _gradeToExec)
+		throw AForm::GradeTooLowException();
 }
 
 // Public Methods
@@ -110,4 +120,8 @@ const char *AForm::GradeTooHighException::what(void) const throw() {
 
 const char *AForm::GradeTooLowException::what(void) const throw() {
     return "Form required grade is too low (value is greater than 150), or bureaucrat grade is too low to sign/execute this form.";
+}
+
+const char *AForm::ExecuteUnsignedException::what(void) const throw() {
+	return "Attempting to execute an unsigned form. Unable to continue.";
 }
