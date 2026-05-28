@@ -97,14 +97,21 @@ void	Bureaucrat::signForm( AForm &f ) const {
 void	Bureaucrat::executeForm(AForm const &f) const {
 	try {
 		f.execute(*this);
-	};
+		cout << _name << " executed " << f.getName();
+	}
+	catch (AForm::ExecuteUnsignedException &e) {
+		cout << _name << "Tried to execute " << f.getName() <<": " << e.what();
+	}
+	catch (AForm::GradeTooLowException &e) {
+		cout << _name << "Tried to execute " << f.getName() <<": " << e.what();
+	} 
 }
 
 //	Execptions
 const char *Bureaucrat::GradeTooHighException::what( void ) const throw() {
-	return "Attempting to assign a grade higher than the maximus (1).";
+    return "Bureaucrat cannot born: assigning a grade that exceeds the maximus.";
 }
 
 const char *Bureaucrat::GradeTooLowException::what( void ) const throw() {
-	return "Attempting to assign a grade lower than the minus (150).";
+    return "Bureaucrat cannot born: assigning a grade that exceeds the minimum.";
 }
