@@ -100,10 +100,10 @@ void	Bureaucrat::executeForm(AForm const &f) const {
 		cout << _name << " executed " << f.getName() << endl;
 	}
 	catch (AForm::ExecuteUnsignedException &e) {
-		cout << _name << "Tried to execute " << f.getName() <<": " << e.what() << endl;
+		cout << _name << " tried to execute " << f.getName() <<": " << e.what() << endl;
 	}
 	catch (AForm::GradeTooLowException &e) {
-		cout << _name << "Tried to execute " << f.getName() <<": " << e.what() << endl;
+		cout << _name << " tried to execute " << f.getName() <<": " << e.what() << endl;
 	} 
 }
 
