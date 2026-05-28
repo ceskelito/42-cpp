@@ -11,9 +11,9 @@ OBJS_DIR 	= objs
 SRCS		= main.cpp \
 				Bureaucrat.class.cpp 			\
 				AForm.class.cpp					\
-				ShrubberyCreationForm.class.cpp
-				# RobotomyRequestForm.class.cpp 	\
-				# PresidentialPardonForm.class.cpp
+				ShrubberyCreationForm.class.cpp \
+				RobotomyRequestForm.class.cpp 	\
+				PresidentialPardonForm.class.cpp
 
 OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS:%.cpp=%.o))
 

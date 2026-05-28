@@ -37,8 +37,6 @@ ShrubberyCreationForm::~ShrubberyCreationForm( void ) {
 void	ShrubberyCreationForm::execute(Bureaucrat const & executor) const {
 	
 	AForm::execute(executor);
-	cout << getName() << " executed from " << executor.getName();
-	// cout << "Executing ShrubberyCreationForm from Bureaucrat `" + executor.getName() + "` on target `" << _target << "`" <<  endl;
 
     std::ofstream file((_target + "_shrubbery").c_str());
 

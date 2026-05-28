@@ -98,11 +98,11 @@ void	AForm::_checkRequiredGrades( void ) const {
 		throw GradeTooLowException();
 }
 
-void AForm::execute( Bureaucrat const& exec ) const {
+void AForm::execute( Bureaucrat const& executor ) const {
 
 	if (!_signed)
 		throw AForm::ExecuteUnsignedException();
-	if (exec.getGrade() > _gradeToExec)
+	if (executor.getGrade() > _gradeToExec)
 		throw AForm::GradeTooLowException();
 }
 
@@ -120,8 +120,8 @@ const char *AForm::GradeTooHighException::what(void) const throw() {
 
 const char *AForm::GradeTooLowException::what(void) const throw() {
     return "Cannot create form: grade value exceeds the allowed minimum.\
-		\nor\n\
-		Cannot sign/execute form: Insufficient grade to perform the requested operation.";
+\nor\n\
+Cannot sign/execute form: Insufficient grade to perform the requested operation.";
 }
 
 const char *AForm::ExecuteUnsignedException::what(void) const throw() {

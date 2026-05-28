@@ -91,19 +91,19 @@ void	Bureaucrat::signForm( AForm &f ) const {
 		cout << _name << " couldn't sign " << f.getName() << " because grade too low.";
 		return;
 	}
-	cout << _name << " signed " << f.getName();
+	cout << _name << " signed " << f.getName() << endl;
 }
 
 void	Bureaucrat::executeForm(AForm const &f) const {
 	try {
 		f.execute(*this);
-		cout << _name << " executed " << f.getName();
+		cout << _name << " executed " << f.getName() << endl;
 	}
 	catch (AForm::ExecuteUnsignedException &e) {
-		cout << _name << "Tried to execute " << f.getName() <<": " << e.what();
+		cout << _name << "Tried to execute " << f.getName() <<": " << e.what() << endl;
 	}
 	catch (AForm::GradeTooLowException &e) {
-		cout << _name << "Tried to execute " << f.getName() <<": " << e.what();
+		cout << _name << "Tried to execute " << f.getName() <<": " << e.what() << endl;
 	} 
 }
 
