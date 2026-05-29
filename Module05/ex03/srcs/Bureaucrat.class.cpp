@@ -1,0 +1,117 @@
+#include "Bureaucrat.class.hpp"
+#include <iostream>
+
+using std::string;
+using std::cout;
+using std::endl;
+
+static string className( void ) {
+
+	const string BLD = "\e[1m";
+	const string ITL = "\e[3m";
+	const string RST = "\e[0m";
+
+	return (string(BLD) + ITL + "[ Bureaucrat ]" + RST);
+}
+
+//	Constructors
+Bureaucrat::Bureaucrat(void): _name("BobTheChairHeater"), _grade(MinGrade) {
+	cout << className() << " Default Constructor called for " << _name << " with grade of " << _grade << endl;
+}
+
+Bureaucrat::Bureaucrat( string const name, int grade): _name(name) {
+	cout << className() << " Constructor called for " << _name << " with grade of " << grade << endl;
+
+	_setGrade(grade);
+};
+
+Bureaucrat::Bureaucrat( const Bureaucrat &other): _name(other._name + "_copy"), _grade(other._grade) {
+	cout << className() << " Copy Constructor called to copy " << other._name << " into " << _name << 
+		" with grade of " << _grade << endl;
+};
+
+//	Deconstructor
+Bureaucrat::~Bureaucrat() {
+	std::cout << className() << " Destructor called for " << this->getName() << " called" << std::endl;
+}
+
+// Overloaded Operators
+Bureaucrat &Bureaucrat::operator=(const Bureaucrat &other) {
+	if (this != &other)
+	{
+		_grade = other._grade;
+	}
+
+	return *this;
+}
+
+//	Stream Operators
+std::ostream	&operator<<(std::ostream &o, const Bureaucrat &b) {
+	o << b.getName() << ", bureaucrat grade " << b.getGrade();
+	return o;
+}
+
+//	Getter
+string	Bureaucrat::getName( void ) const {
+	return _name;
+}
+
+int		Bureaucrat::getGrade( void ) const {
+	return _grade;
+}
+
+//	Setter
+void	Bureaucrat::_setGrade(int grade) {
+	if (grade < MaxGrade)
+		throw GradeTooHighException();
+	else if (grade > MinGrade)
+		throw GradeTooLowException();
+	_grade = grade;
+}
+
+// Public Methods
+void	Bureaucrat::incrementGrade( void ) {
+	cout << "Attempting to increment grade of Bureaucrat " << _name << endl;
+	_setGrade(_grade - 1);
+}
+
+void	Bureaucrat::decrementGrade( void ) {
+	cout << "Attempting to decrement grade of Bureaucrat " << _name << endl;
+	_setGrade(_grade + 1);
+}
+
+void	Bureaucrat::signForm( AForm &f ) const {
+	
+	try
+	{
+		f.beSigned(*this);
+	}
+	catch (AForm::GradeTooLowException &e)
+	{
+		cout << _name << " couldn't sign " << f.getName() << " because grade too low.";
+		return;
+	}
+	cout << _name << " signed " << f.getName() << endl;
+}
+
+void	Bureaucrat::executeForm(AForm const &f) const {
+	try {
+		f.execute(*this);
+		cout << _name << " executed " << f.getName() << endl;
+	}
+	catch (AForm::ExecuteUnsignedException &e) {
+		cout << _name << " tried to execute " << f.getName() <<": " << e.what() << endl;
+	}
+	catch (AForm::GradeTooLowException &e) {
+		cout << _name << " tried to execute " << f.getName() <<": " << e.what() << endl;
+	} 
+}
+
+//	Execptions
+const char *Bureaucrat::GradeTooHighException::what( void ) const throw() {
+    return "Bureaucrat cannot born: assigning a grade that exceeds the maximus.";
+}
+
+const char *Bureaucrat::GradeTooLowException::what( void ) const throw() {
+    return "Bureaucrat cannot born: assigning a grade that exceeds the minimum.";
+}
