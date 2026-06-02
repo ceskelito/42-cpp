@@ -258,7 +258,8 @@ void ScalarConverter::convert( std::string literal) {
 	errno = 0;
 	switch (typeFound) {
 		case CHAR:
-			final[CHAR].data = new char(literal[0]);
+			// final[CHAR].data = new char(literal[0]);
+			final[CHAR].data = &literal[0];
 			break;
 		case INT:
 			asLong = std::strtol(literal.c_str(), NULL, 10);
@@ -266,15 +267,18 @@ void ScalarConverter::convert( std::string literal) {
 				errno = 1;
 				break;
 			}
-			final[INT].data = new int(asLong);
+			// final[INT].data = new int(asLong);
+			final[INT].data = &asLong;
 			break;
 		case FLOAT:
 			asFloat = std::strtof(literal.c_str(), NULL);
-			final[FLOAT].data = new float(asFloat);
+			// final[FLOAT].data = new float(asFloat);
+			final[FLOAT].data = &asFloat;
 			break;
 		case DOUBLE:
 			asDouble = std::strtod(literal.c_str(), NULL);
-			final[DOUBLE].data = new double(asDouble);
+			// final[DOUBLE].data = new double(asDouble);
+			final[DOUBLE].data = &asDouble;
 		  	break;
 		default:
 			break;
