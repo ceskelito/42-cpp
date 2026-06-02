@@ -50,7 +50,7 @@ static bool isDouble( std::string l ) {
 	if (l[0] == '-')
 		i = 1;
 
-	for (; i < l.length(); i++) {cpp
+	for (; i < l.length(); i++) {
 		if ( l[i] == '.' ) {
 			if ( hasDecimal )
 				return false;
@@ -79,6 +79,49 @@ static e_type identify_type ( std::string l) {
 }
 
 #include <sstream>
+template <e_type Type>
+static std::string testToString(void *ptr);
+
+template <>
+std::string testToString<CHAR>(void *ptr) {
+    std::ostringstream oss;
+    char value = *static_cast<char*>(ptr);
+    if (!std::isprint(value))
+        oss << "not displayable";
+    else
+        oss << "'" << value << "'";
+    return oss.str();
+}
+
+template <>
+std::string testToString<INT>(void *ptr) {
+    std::ostringstream oss;
+    int value = *static_cast<int*>(ptr);
+    oss << value;
+    return oss.str();
+}
+
+template <>
+std::string testToString<FLOAT>(void *ptr) {
+    std::ostringstream oss;
+    float value = *static_cast<float*>(ptr);
+    oss << value;
+    if (value - static_cast<int>(value) == 0)
+        oss << ".0";
+    oss << "f";
+    return oss.str();
+}
+
+template <>
+std::string testToString<DOUBLE>(void *ptr) {
+    std::ostringstream oss;
+    double value = *static_cast<double*>(ptr);
+    oss << value;
+    if (value - static_cast<int>(value) == 0)
+        oss << ".0";
+    return oss.str();
+}
+
 template <typename T>
 static std::string toString(const T& value) {
     std::ostringstream oss;
@@ -138,6 +181,21 @@ typedef struct s_final {
 	void		*data = NULL;
 	std::string strRep;
 	void*		(*cast)(void*);
+
+	std::string toStringValue() const {
+        switch (type) {
+            case CHAR:
+                return testToString<CHAR>(data);
+            case INT:
+                return testToString<INT>(data);
+            case FLOAT:
+                return testToString<FLOAT>(data);
+            case DOUBLE:
+                return testToString<DOUBLE>(data);
+            default:
+                return "undefined";
+        }
+    }
 } t_final;
 
 #include <limits.h>
@@ -168,7 +226,7 @@ void ScalarConverter::convert( std::string literal) {
 	errno = 0;
 	switch (type) {
 		case CHAR:
-			final[CHAR].data = &literal[0];
+			final[CHAR].data = &literal[0];void* (*castFunc)(void*);
 			break;
 		case INT:
 			asInt = std::strtol(literal.c_str(), NULL, 10);
@@ -200,7 +258,7 @@ void ScalarConverter::convert( std::string literal) {
 		for (int i = 0; i < UNDEFINED; i++) {
 			if ( i != type )
 				final[i].data = final[i].cast(final[type].data);
-			final[i].strRep = toString(final[type]);
+			final[i].strRep = final[i].toStringValue();
 		}
 	}
 	else {
@@ -260,6 +318,7 @@ void ScalarConverter::convert( std::string literal) {
 	std::cout <<
 	"char: " << final[CHAR].strRep << std::endl <<
 	"int: " << final[INT].strRep<< std::endl <<
+	// "int: " << (final[INT].data)) << std::endl <<
 	"float: " << final[FLOAT].strRep << std::endl <<
 	"double: " << final[DOUBLE].strRep << std::endl;
 }
