@@ -83,13 +83,13 @@ static e_type identify_type ( std::string l) {
 }
 
 template <e_type Type>
-static std::string toString(void *data);
+static std::string toString(double data);
 
 template <>
-std::string toString<CHAR>(void *data) {
+std::string toString<CHAR>(double data) {
 
     std::ostringstream	oss;
-	int					value = *static_cast<int*>(data);
+	int					value = static_cast<int>(data);
 
 	if ( value < 0 || value > 127 )
 		oss << "impossible";
@@ -101,20 +101,20 @@ std::string toString<CHAR>(void *data) {
 }
 
 template <>
-std::string toString<INT>(void *data) {
+std::string toString<INT>(double data) {
 
     std::ostringstream	oss;
-    int					value = *static_cast<int*>(data);
+    int					value = static_cast<int>(data);
 
     oss << value;
     return oss.str();
 }
 
 template <>
-std::string toString<FLOAT>(void *data) {
+std::string toString<FLOAT>(double data) {
 
     std::ostringstream	oss;
-    float				value = *static_cast<float*>(data);
+    float				value = static_cast<float>(data);
 
     oss << value;
     if (value - static_cast<int>(value) == 0)
@@ -124,9 +124,9 @@ std::string toString<FLOAT>(void *data) {
 }
 
 template <>
-std::string toString<DOUBLE>(void *data) {
+std::string toString<DOUBLE>(double data) {
     std::ostringstream oss;
-    double value = *static_cast<double*>(data);
+    double value = static_cast<double>(data);
     oss << value;
     if (value - static_cast<int>(value) == 0)
         oss << ".0";
@@ -171,45 +171,45 @@ std::string toString<DOUBLE>(void *data) {
 //
 
 // Helper function to extract value as double from any type
-static double getDoubleValue(e_type type, void *ref) {
+static double getDoubleValue(e_type type, double ref) {
     switch(type) {
-        case CHAR: return static_cast<double>(*static_cast<char*>(ref));
-        case INT: return static_cast<double>(*static_cast<int*>(ref));
-        case FLOAT: return static_cast<double>(*static_cast<float*>(ref));
-        case DOUBLE: return *static_cast<double*>(ref);
+        case CHAR: return static_cast<double>(static_cast<char>(ref));
+        case INT: return static_cast<double>(static_cast<int>(ref));
+        case FLOAT: return static_cast<double>(static_cast<float>(ref));
+        case DOUBLE: return static_cast<double>(ref);
         default: return 0.0;
     }
 }
 
 template <e_type Type>
-static void*	cast(e_type srcType, void *ref);
+static double	cast(e_type srcType, double ref);
 
 template<>
-void	*cast<CHAR>(e_type srcType, void *ref) {
-    return new char(static_cast<char>(getDoubleValue(srcType, ref)));
+double	cast<CHAR>(e_type srcType, double ref) {
+    return static_cast<char>(getDoubleValue(srcType, ref));
 }
 
 template<>
-void*	cast<INT>(e_type srcType, void* ref) {
-    return new int(static_cast<int>(getDoubleValue(srcType, ref)));
+double	cast<INT>(e_type srcType, double ref) {
+    return static_cast<int>(getDoubleValue(srcType, ref));
 }
 
 template<>
-void*	cast<FLOAT>(e_type srcType, void* ref) {
-    return new float(static_cast<float>(getDoubleValue(srcType, ref)));
+double	cast<FLOAT>(e_type srcType, double ref) {
+    return static_cast<float>(getDoubleValue(srcType, ref));
 }
 template<>
-void*	cast<DOUBLE>(e_type srcType, void* ref) {
-    return new double(getDoubleValue(srcType, ref));
+double	cast<DOUBLE>(e_type srcType, double ref) {
+    return getDoubleValue(srcType, ref);
 }
 
 typedef struct s_final {
 
 	e_type		type;
-	void		*data;
+	double		data; // Using a double since is the biggest type possible (between int, char, float and double)
 	std::string strRep;
 
-	void*	castValue(e_type srcType, void *ref) const {
+	double	castValue(e_type srcType, double ref) const {
 		switch (type) {
 			case CHAR:
 				return cast<CHAR>(srcType, ref);
@@ -220,7 +220,7 @@ typedef struct s_final {
 			case DOUBLE:
 				return cast<DOUBLE>(srcType, ref);
 			default:
-				return ( NULL );
+				return 0.0;
 		}
 	};
 
@@ -259,7 +259,7 @@ void ScalarConverter::convert( std::string literal) {
 	switch (typeFound) {
 		case CHAR:
 			// final[CHAR].data = new char(literal[0]);
-			final[CHAR].data = &literal[0];
+			final[CHAR].data = literal[0];
 			break;
 		case INT:
 			asLong = std::strtol(literal.c_str(), NULL, 10);
@@ -268,17 +268,17 @@ void ScalarConverter::convert( std::string literal) {
 				break;
 			}
 			// final[INT].data = new int(asLong);
-			final[INT].data = &asLong;
+			final[INT].data = asLong;
 			break;
 		case FLOAT:
 			asFloat = std::strtof(literal.c_str(), NULL);
 			// final[FLOAT].data = new float(asFloat);
-			final[FLOAT].data = &asFloat;
+			final[FLOAT].data = asFloat;
 			break;
 		case DOUBLE:
 			asDouble = std::strtod(literal.c_str(), NULL);
 			// final[DOUBLE].data = new double(asDouble);
-			final[DOUBLE].data = &asDouble;
+			final[DOUBLE].data = asDouble;
 		  	break;
 		default:
 			break;
