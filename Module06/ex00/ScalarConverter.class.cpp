@@ -255,6 +255,7 @@ void ScalarConverter::convert( std::string literal) {
 	// TODO 
 	// - Check the results and manage errors
 	// - Manage pseudo-literals
+	// - Manage edge cases like void strings or ' ' character
 	errno = 0;
 	switch (typeFound) {
 		case CHAR:
