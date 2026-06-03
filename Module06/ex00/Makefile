@@ -9,7 +9,8 @@ FILES     = main
 OBJS_DIR  = objs
 
 SRCS      = main.cpp \
-			ScalarConverter.class.cpp
+			ScalarConverter.class.cpp \
+			ScalarConverter.utils.cpp
 
 OBJS      = $(addprefix $(OBJS_DIR)/, $(SRCS:%.cpp=%.o))
 
