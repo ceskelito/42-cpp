@@ -13,7 +13,7 @@ typedef struct s_final {
 	std::string strRep;
 
 	void	setData(double const &otherData);
-	void	setStringRep(bool pseudo = false, std::string literal = 0);
+	void	setStringRep(bool pseudo = false, std::string literal = "");
 
 }	t_final;
 

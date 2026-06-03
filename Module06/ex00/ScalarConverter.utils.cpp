@@ -71,7 +71,7 @@ e_type identify_type(std::string l)
 {
 	if (l.empty())
 		return UNDEFINED;
-	else if (l.length() == 1 && std::isalpha(l[0]))
+	else if (l.length() == 1 && !std::isdigit(l[0]))
 		return CHAR;
 	else if (isInt(l))
 		return INT;
@@ -139,7 +139,8 @@ void t_final::setData(double const &otherData)
 {
 	switch (this->type) {
 		case CHAR:
-			this->data = static_cast<char>(otherData);
+			// this->data = static_cast<char>(otherData);
+			this->data = otherData;
 			break;
 		case INT:
 			this->data = static_cast<int>(otherData);
