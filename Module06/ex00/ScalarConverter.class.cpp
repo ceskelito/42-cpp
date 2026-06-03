@@ -5,7 +5,7 @@
 #include <sstream>
 #include <limits.h>
 
-typedef enum { CHAR, INT, FLOAT, DOUBLE, UNDEFINED } e_type;
+typedef enum { CHAR, INT, FLOAT, DOUBLE, UNDEFINED, PSEUDO } e_type;
 
 static bool	isInt( std::string l ) {
 
@@ -66,6 +66,30 @@ static bool isDouble( std::string l ) {
 	return true;
 }
 
+bool testPseudoLiterals( std::string const &l )
+{
+	if ( l == "nan" || l == "+inf" || l == "-inf" || l == "inf" )
+	{
+		std::cout <<
+		"char: " << "impossible" << std::endl <<
+		"int: " << "impossible" << std::endl <<
+		"float: " << l + "f" << std::endl <<
+		"double: " << l << std::endl;
+		return true;
+	}
+	else if ( l == "nanf" || l == "+inff" || l == "-inff" || l == "inff" )
+	{
+		std::cout <<
+		"char: " << "impossible" << std::endl <<
+		"int: " << "impossible" << std::endl <<
+		"float: " << l << std::endl <<
+		"double: " << l.substr(0, l.length() - 1) << std::endl;
+		return true;
+	}
+	return false;
+
+}
+
 static e_type identify_type ( std::string l) {
 
 	if ( l.empty() )
@@ -78,43 +102,41 @@ static e_type identify_type ( std::string l) {
 		return FLOAT;
 	else if ( isDouble(l) )
 		return DOUBLE;
-	else
-		return UNDEFINED;
+	else if ( testPseudoLiterals(l) )
+		return PSEUDO;
+	return UNDEFINED;
 }
 
 template <e_type Type>
-static std::string toString(double data);
+static std::string getStringLiteral(double const &data);
 
 template <>
-std::string toString<CHAR>(double data) {
-
+std::string getStringLiteral<CHAR>(double const &data) {
     std::ostringstream	oss;
-	int					value = static_cast<int>(data);
+	char const			value = static_cast<char>(data);
 
-	if ( value < 0 || value > 127 )
+	if ( data < CHAR_MIN || data > CHAR_MAX )
 		oss << "impossible";
-	else if (!std::isprint(value))
+	else if (!std::isprint(data))
 		oss << "not displayable";
 	else
-		oss << "'" << static_cast<char>(value) << "'";
+		oss << "'" << value << "'";
     return oss.str();
 }
 
 template <>
-std::string toString<INT>(double data) {
-
+std::string getStringLiteral<INT>(double const &data) {
     std::ostringstream	oss;
-    int					value = static_cast<int>(data);
+	int const			value = static_cast<int>(data);
 
     oss << value;
     return oss.str();
 }
 
 template <>
-std::string toString<FLOAT>(double data) {
-
+std::string getStringLiteral<FLOAT>(double const &data) {
     std::ostringstream	oss;
-    float				value = static_cast<float>(data);
+    float const			value = static_cast<float>(data);
 
     oss << value;
     if (value - static_cast<int>(value) == 0)
@@ -124,83 +146,14 @@ std::string toString<FLOAT>(double data) {
 }
 
 template <>
-std::string toString<DOUBLE>(double data) {
-    std::ostringstream oss;
-    double value = static_cast<double>(data);
+std::string getStringLiteral<DOUBLE>(double const &data) {
+    std::ostringstream	oss;
+    double const		value = data;
+
     oss << value;
     if (value - static_cast<int>(value) == 0)
         oss << ".0";
     return oss.str();
-}
-
-// template <typename T>
-// static std::string toString(const T& value) {
-//     std::ostringstream oss;
-//     oss << value;
-//     return oss.str();
-// }
-//
-// template <>
-// std::string toString<float>(const float& value) {
-//     std::ostringstream oss;
-//     oss << value;
-// 	if (value - static_cast<int> ( value ) == 0)
-// 		oss << ".0";
-// 	oss << "f";
-//     return oss.str();
-// }
-//
-// template <>
-// std::string toString<double>(const double& value) {
-//     std::ostringstream oss;
-//     oss << value;
-// 	if (value - static_cast<int> ( value ) == 0)
-// 		oss << ".0";
-//     return oss.str();
-// }
-//
-// template <>
-// std::string toString<char>(const char& value) {
-//     std::ostringstream oss;
-// 	if (!std::isprint(value))
-// 		oss << "not displayable";
-// 	else
-// 		oss << "'" << value << "'";
-//     return oss.str();
-// }
-//
-
-// Helper function to extract value as double from any type
-static double getDoubleValue(e_type type, double ref) {
-    switch(type) {
-        case CHAR: return static_cast<double>(static_cast<char>(ref));
-        case INT: return static_cast<double>(static_cast<int>(ref));
-        case FLOAT: return static_cast<double>(static_cast<float>(ref));
-        case DOUBLE: return static_cast<double>(ref);
-        default: return 0.0;
-    }
-}
-
-template <e_type Type>
-static double	cast(e_type srcType, double ref);
-
-template<>
-double	cast<CHAR>(e_type srcType, double ref) {
-    return static_cast<char>(getDoubleValue(srcType, ref));
-}
-
-template<>
-double	cast<INT>(e_type srcType, double ref) {
-    return static_cast<int>(getDoubleValue(srcType, ref));
-}
-
-template<>
-double	cast<FLOAT>(e_type srcType, double ref) {
-    return static_cast<float>(getDoubleValue(srcType, ref));
-}
-template<>
-double	cast<DOUBLE>(e_type srcType, double ref) {
-    return getDoubleValue(srcType, ref);
 }
 
 typedef struct s_final {
@@ -209,31 +162,36 @@ typedef struct s_final {
 	double		data; // Using a double since is the biggest type possible (between int, char, float and double)
 	std::string strRep;
 
-	double	castValue(e_type srcType, double ref) const {
-		switch (type) {
+	void	setData(double const &otherData) {
+		switch (this->type) {
 			case CHAR:
-				return cast<CHAR>(srcType, ref);
+				this->data = static_cast<char>(otherData);
+				break;
 			case INT:
-				return cast<INT>(srcType, ref);
+				this->data = static_cast<int>(otherData);
+				break;
 			case FLOAT:
-				return cast<FLOAT>(srcType, ref);
+				this->data = static_cast<float>(otherData);
+				break;
 			case DOUBLE:
-				return cast<DOUBLE>(srcType, ref);
+				this->data = otherData;
+				break;
 			default:
-				return 0.0;
+				this->data = 0.0;
+				break;
 		}
 	};
 
-	std::string toStringValue() const {
+	std::string toString() const {
         switch (type) {
             case CHAR:
-                return toString<CHAR>(data);
+                return getStringLiteral<CHAR>(data);
             case INT:
-                return toString<INT>(data);
+                return getStringLiteral<INT>(data);
             case FLOAT:
-                return toString<FLOAT>(data);
+                return getStringLiteral<FLOAT>(data);
             case DOUBLE:
-                return toString<DOUBLE>(data);
+                return getStringLiteral<DOUBLE>(data);
             default:
                 return "undefined";
         }
@@ -244,9 +202,6 @@ void ScalarConverter::convert( std::string literal) {
 
 	e_type		typeFound = identify_type(literal);
 	
-	long int	asLong;
-	float		asFloat;
-	double		asDouble;
 	t_final		final[4];
 
 	for ( int i = 0; i < UNDEFINED; i++ )
@@ -259,28 +214,20 @@ void ScalarConverter::convert( std::string literal) {
 	errno = 0;
 	switch (typeFound) {
 		case CHAR:
-			// final[CHAR].data = new char(literal[0]);
 			final[CHAR].data = literal[0];
 			break;
 		case INT:
-			asLong = std::strtol(literal.c_str(), NULL, 10);
-			if ( asLong > INT_MAX || asLong < INT_MIN ) {
-				errno = 1;
-				break;
-			}
-			// final[INT].data = new int(asLong);
-			final[INT].data = asLong;
+			final[INT].data = std::strtol(literal.c_str(), NULL, 10);
+			errno = ( final[INT].data > INT_MAX || final[INT].data < INT_MIN );
 			break;
 		case FLOAT:
-			asFloat = std::strtof(literal.c_str(), NULL);
-			// final[FLOAT].data = new float(asFloat);
-			final[FLOAT].data = asFloat;
+			final[FLOAT].data = std::strtof(literal.c_str(), NULL);
 			break;
 		case DOUBLE:
-			asDouble = std::strtod(literal.c_str(), NULL);
-			// final[DOUBLE].data = new double(asDouble);
-			final[DOUBLE].data = asDouble;
+			final[DOUBLE].data = std::strtod(literal.c_str(), NULL);
 		  	break;
+		case PSEUDO:
+			return;
 		default:
 			break;
 	}
@@ -293,15 +240,14 @@ void ScalarConverter::convert( std::string literal) {
 	else {
 		for (int i = 0; i < UNDEFINED; i++) {
 			if ( i != typeFound )
-				final[i].data = final[i].castValue(typeFound, final[typeFound].data);
-			final[i].strRep = final[i].toStringValue();
+				final[i].setData(final[typeFound].data);
+			final[i].strRep = final[i].toString();
 		}
 	}
 
 	std::cout <<
 	"char: " << final[CHAR].strRep << std::endl <<
 	"int: " << final[INT].strRep<< std::endl <<
-	// "int: " << (final[INT].data)) << std::endl <<
 	"float: " << final[FLOAT].strRep << std::endl <<
 	"double: " << final[DOUBLE].strRep << std::endl;
 }
