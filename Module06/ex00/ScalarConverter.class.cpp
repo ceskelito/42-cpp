@@ -68,24 +68,9 @@ static bool isDouble( std::string l ) {
 
 bool testPseudoLiterals( std::string const &l )
 {
-	if ( l == "nan" || l == "+inf" || l == "-inf" || l == "inf" )
-	{
-		std::cout <<
-		"char: " << "impossible" << std::endl <<
-		"int: " << "impossible" << std::endl <<
-		"float: " << l + "f" << std::endl <<
-		"double: " << l << std::endl;
+	if ( l == "nan" || l == "+inf" || l == "-inf" || l == "inf" ||	
+		l == "nanf" || l == "+inff" || l == "-inff" || l == "inff" )
 		return true;
-	}
-	else if ( l == "nanf" || l == "+inff" || l == "-inff" || l == "inff" )
-	{
-		std::cout <<
-		"char: " << "impossible" << std::endl <<
-		"int: " << "impossible" << std::endl <<
-		"float: " << l << std::endl <<
-		"double: " << l.substr(0, l.length() - 1) << std::endl;
-		return true;
-	}
 	return false;
 
 }
@@ -111,7 +96,7 @@ template <e_type Type>
 static std::string getStringLiteral(double const &data);
 
 template <>
-std::string getStringLiteral<CHAR>(double const &data) {
+std::string	getStringLiteral<CHAR>(double const &data) {
     std::ostringstream	oss;
 	char const			value = static_cast<char>(data);
 
@@ -182,72 +167,99 @@ typedef struct s_final {
 		}
 	};
 
-	std::string toString() const {
+	void	setStringRep(bool pseudo = false, std::string literal = 0) {
+
         switch (type) {
             case CHAR:
-                return getStringLiteral<CHAR>(data);
+				if (pseudo)
+					this->strRep = "impossible";
+				else
+					this->strRep = getStringLiteral<CHAR>(data);
+				break;
             case INT:
-                return getStringLiteral<INT>(data);
+				if (pseudo)
+					this->strRep = "impossible";
+				else
+					this->strRep = getStringLiteral<INT>(data);
+				break;
             case FLOAT:
-                return getStringLiteral<FLOAT>(data);
+				if (pseudo)
+					this->strRep = literal + "f";
+				else
+					this->strRep = getStringLiteral<FLOAT>(data);
+				break;
             case DOUBLE:
-                return getStringLiteral<DOUBLE>(data);
+				if (pseudo)
+					this->strRep = literal;
+				else
+					this->strRep = getStringLiteral<DOUBLE>(data);
+				break;
             default:
-                return "undefined";
+                this->strRep = "undefined";
+				break;
         }
-    }
+    };
+
 }	t_final;
 
 void ScalarConverter::convert( std::string literal) {
 
+	t_final		types[4];
 	e_type		typeFound = identify_type(literal);
-	
-	t_final		final[4];
 
 	for ( int i = 0; i < UNDEFINED; i++ )
-		final[i].type = static_cast<e_type>(i);
+		types[i].type = static_cast<e_type>(i);
 
 	// TODO 
-	// - Check the results and manage errors
-	// - Manage pseudo-literals
 	// - Manage edge cases like void strings or ' ' character
+
+	// Set the value of the type corresponing with @literal
 	errno = 0;
 	switch (typeFound) {
 		case CHAR:
-			final[CHAR].data = literal[0];
+			types[CHAR].data = literal[0];
 			break;
 		case INT:
-			final[INT].data = std::strtol(literal.c_str(), NULL, 10);
-			errno = ( final[INT].data > INT_MAX || final[INT].data < INT_MIN );
+			types[INT].data = std::strtol(literal.c_str(), NULL, 10);
+			errno = ( types[INT].data > INT_MAX || types[INT].data < INT_MIN );
 			break;
 		case FLOAT:
-			final[FLOAT].data = std::strtof(literal.c_str(), NULL);
+			types[FLOAT].data = std::strtof(literal.c_str(), NULL);
 			break;
 		case DOUBLE:
-			final[DOUBLE].data = std::strtod(literal.c_str(), NULL);
+			types[DOUBLE].data = std::strtod(literal.c_str(), NULL);
 		  	break;
 		case PSEUDO:
-			return;
+			break;
 		default:
 			break;
 	}
 
-	if ( errno || typeFound == UNDEFINED) {
-		for (int i = 0; i < UNDEFINED; i++) {
-			final[i].strRep = "impossible";
-		}
-	}
-	else {
+	
+	/* Setting the others data and string representations */
+	if ( typeFound < UNDEFINED && !errno ) {
 		for (int i = 0; i < UNDEFINED; i++) {
 			if ( i != typeFound )
-				final[i].setData(final[typeFound].data);
-			final[i].strRep = final[i].toString();
+				types[i].setData(types[typeFound].data);
+			types[i].setStringRep();
 		}
+	}
+	else if ( typeFound == PSEUDO ) {
+		std::string	const	s = literal.substr(literal.length() - 3, 3);
+
+		if (s == "anf" || s == "nff")
+			literal.erase(literal.size() - 1);
+		for (int i = 0; i < UNDEFINED; i++)
+			types[i].setStringRep(true, literal);
+	}
+	else {
+		for (int i = 0; i < UNDEFINED; i++)
+			types[i].strRep = "impossible";
 	}
 
 	std::cout <<
-	"char: " << final[CHAR].strRep << std::endl <<
-	"int: " << final[INT].strRep<< std::endl <<
-	"float: " << final[FLOAT].strRep << std::endl <<
-	"double: " << final[DOUBLE].strRep << std::endl;
+	"char: " << types[CHAR].strRep << std::endl <<
+	"int: " << types[INT].strRep<< std::endl <<
+	"float: " << types[FLOAT].strRep << std::endl <<
+	"double: " << types[DOUBLE].strRep << std::endl;
 }
