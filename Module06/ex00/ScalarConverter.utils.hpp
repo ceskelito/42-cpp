@@ -2,7 +2,6 @@
 
 #include <string>
 #include <sstream>
-#include <cctype>
 #include <limits.h>
 
 typedef enum { CHAR, INT, FLOAT, DOUBLE, UNDEFINED, PSEUDO } e_type;

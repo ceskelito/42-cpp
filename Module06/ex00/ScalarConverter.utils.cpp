@@ -21,10 +21,11 @@ bool isFloat(std::string l)
 
 	if (l[l.length() - 1] != 'f')
 		return false;
+	if (l[l.length() - 2] == '.')
+		return false;
 	if (l[0] == '-')
 		i = 1;
-	numPart = l.substr(i, l.length() - 1);
-
+	numPart = l.substr(0, l.length() - 1);
 	for (; i < numPart.length(); i++) {
 		if (numPart[i] == '.') {
 			if (hasDecimal)
@@ -42,6 +43,8 @@ bool isDouble(std::string l)
 	bool		hasDecimal = false;
 	size_t		i = 0;
 
+	if (l[l.length() - 1] == '.')
+		return false;
 	if (l[0] == '-')
 		i = 1;
 

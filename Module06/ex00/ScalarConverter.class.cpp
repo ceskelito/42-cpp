@@ -3,14 +3,16 @@
 #include <iostream>
 #include <cstdlib>
 #include <limits.h>
+#include <errno.h>
 
 void ScalarConverter::convert(std::string literal) {
 
-	e_type typeFound = identify_type(literal);
-	double parsedValue = 0.0;
-	bool isOverflow = false;
+	e_type	typeFound = identify_type(literal);
+	double	parsedValue = 0.0;
+	bool	isOverflow = false;
 
 	// Parse the input value based on type
+	errno = 0;
 	switch (typeFound) {
 		case CHAR:
 			parsedValue = literal[0];
@@ -32,7 +34,7 @@ void ScalarConverter::convert(std::string literal) {
 	}
 
 	// Output conversions
-	if (typeFound < UNDEFINED && !isOverflow) {
+	if (typeFound < UNDEFINED && !isOverflow && !errno) {
 		std::cout << "char: " << getStringLiteral<CHAR>(parsedValue) << std::endl;
 		std::cout << "int: " << getStringLiteral<INT>(parsedValue) << std::endl;
 		std::cout << "float: " << getStringLiteral<FLOAT>(parsedValue) << std::endl;
