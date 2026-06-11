@@ -10,9 +10,10 @@ class Span {
 		std::vector<int>	_v;
 
 	public:
-		Span();
+		Span(void);
 		Span(unsigned const n);
 		Span(Span const & other);
+		~Span(void);
 		Span& operator=(Span const & other);
 
 		void		addNumber(unsigned const & n);

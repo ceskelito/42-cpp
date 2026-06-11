@@ -8,6 +8,7 @@
 Span::Span(void): _size(0), _v() {};
 Span::Span(unsigned const n): _size(n), _v() {};
 Span::Span(Span const & other): _size(other._size), _v(other._v) {};
+Span::~Span(void) {};
 
 Span& Span::operator=( Span const& other )
 {
