@@ -2,7 +2,7 @@
 
 class Span {
 
-	typedef std::vector<int>::const_iterator vec_iter;
+	typedef std::vector<int>::iterator const vec_iter;
 
 	private:
 		unsigned			_size;
