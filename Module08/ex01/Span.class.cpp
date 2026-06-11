@@ -4,7 +4,6 @@
 #include <iterator>
 #include <numeric>
 #include <stdexcept>
-#include <limits.h>
 
 Span::Span(void): _size(0), _v() {};
 Span::Span(unsigned const n): _size(n), _v() {};
@@ -20,7 +19,7 @@ Span& Span::operator=( Span const& other )
 	return *this;
 }
 
-// Append the element @n. Then sort _v
+// Add single element and sort
 void	Span::addNumber(unsigned const & n) {
 
 	if (_v.size() == _size)
@@ -30,8 +29,7 @@ void	Span::addNumber(unsigned const & n) {
 	std::sort(_v.begin(), _v.end());
 }
 
-// Append to _v the elements in the range between @begin and @end.
-// Then sort _v
+// Add range of elements and sort
 void	Span::addRange(vec_iter & begin, vec_iter & end) {
 
 	if (static_cast<long unsigned>(std::distance(begin, end)) > _size - _v.size())
@@ -41,8 +39,7 @@ void	Span::addRange(vec_iter & begin, vec_iter & end) {
 	std::sort(_v.begin(), _v.end());
 }
 
-// Append to _v @counts num of elements of value @value.
-// Then sort _v
+// Add multiple copies of a value and sort
 void	Span::addRange(unsigned const & count, int const & value) {
 
 	if (count > _size - _v.size())
@@ -52,9 +49,7 @@ void	Span::addRange(unsigned const & count, int const & value) {
 	std::sort(_v.begin(), _v.end());
 }
 
-// Obtain the shortestSpan
-// First obtain a vector containing the diffs of the adjacent elements in _v,
-// then return the min element skipping the first (that correspond at the first element of _v)
+// Find smallest span using adjacent differences
 unsigned	Span::shortestSpan() const {
 
 	std::vector<int>	diffs(_v.size());
@@ -67,8 +62,7 @@ unsigned	Span::shortestSpan() const {
 	return *std::min_element(diffs.begin() + 1, diffs.end());
 }
 
-// Since _v is sorted, the longestSpan is the difference
-// between the last and first elements of the vector _v
+// Find largest span: difference between max and min (possible because vector is sorted)
 unsigned	Span::longestSpan() const {
 
 	if (_v.size() <= 1)
