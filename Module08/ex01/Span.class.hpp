@@ -5,11 +5,11 @@ class Span {
 	typedef std::vector<int>::const_iterator vec_iter;
 
 	private:
-		
 		unsigned			_size;
 		std::vector<int>	_v;
 
 	public:
+
 		Span(void);
 		Span(unsigned const n);
 		Span(Span const & other);
