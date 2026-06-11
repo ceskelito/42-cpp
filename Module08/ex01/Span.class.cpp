@@ -18,6 +18,7 @@ Span& Span::operator=( Span const& other )
 	return *this;
 }
 
+// Append the element @n. Then sort _v
 void	Span::addNumber(unsigned const & n) {
 
 	if (_v.size() == _size)
@@ -26,12 +27,31 @@ void	Span::addNumber(unsigned const & n) {
 	_v.push_back(n);
 	std::sort(_v.cbegin(), _v.cend());
 }
-void	Span::addRange(std::vector<int>::const_iterator & begin,
-						std::vector<int>::const_iterator & end) {
-	// implement
 
+// Append to _v the elements in the range between @begin and @end.
+// Then sort _v
+void	Span::addRange(vec_iter & begin, vec_iter & end) {
+
+	if (end - begin > _size - _v.size())
+		throw std::length_error("Span cannot contain this range");
+
+	_v.insert(_v.cend(), begin, end);
+	std::sort(_v.cbegin(), _v.cend());
 }
 
+// Append to _v @counts num of elements of value @value.
+// Then sort _v
+void	Span::addRange(unsigned const & count, int const & value) {
+
+	if (count > _size - _v.size())
+		throw std::length_error("Span cannot contain this range");
+
+	_v.insert(_v.cend(), count, value);
+	std::sort(_v.cbegin(), _v.cend());
+}
+
+// Since _v is sorted, the shortestSpan is the second elements 
+// of the vector diffs, obtained with std::adjacent_difference()
 unsigned	Span::shortestSpan() const {
 
 	std::vector<int>	diffs(_v.size());
@@ -44,6 +64,8 @@ unsigned	Span::shortestSpan() const {
 	return diffs[1];
 }
 
+// Since _v is sorted, the longestSpan is the difference
+// between the last and first elements of the vector _v
 unsigned	Span::longestSpan() const {
 
 	if (_v.size() <= 1)
