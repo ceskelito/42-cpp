@@ -2,7 +2,8 @@
 #include <vector>
 #include <algorithm>
 #include <iterator>
-#include <numeric>
+// #include <numeric>
+#include <limits.h>
 #include <stdexcept>
 
 Span::Span(void): _size(0), _v(), _isSorted(false) {};
@@ -28,7 +29,6 @@ void	Span::addNumber(unsigned const & n) {
 
 	_v.push_back(n);
 	_isSorted = false;
-	// std::sort(_v.begin(), _v.end());
 }
 
 // Add range of elements and sort
@@ -39,7 +39,6 @@ void	Span::addRange(vec_iter & begin, vec_iter & end) {
 
 	_v.insert(_v.end(), begin, end);
 	_isSorted = false;
-	// std::sort(_v.begin(), _v.end());
 }
 
 // Add multiple copies of a value and sort
@@ -50,26 +49,43 @@ void	Span::addRange(unsigned const & count, int const & value) {
 
 	_v.insert(_v.end(), count, value);
 	_isSorted = false;
-	// std::sort(_v.begin(), _v.end());
 }
 
 // Find smallest span using adjacent differences
-unsigned	Span::shortestSpan() const {
+// DEPRECATED: the new version is more efficient
+// unsigned	Span::shortestSpan() {
+//
+// 	std::vector<int>	diffs(_v.size());
+//
+// 	if (_v.size() <= 1)
+// 		throw std::length_error("Span does not contain enough objects");
+//
+// 	if (!_isSorted)
+// 		std::sort(_v.begin(), _v.end());
+//
+// 	std::adjacent_difference(_v.begin(), _v.end(), diffs.begin());
+//
+// 	return *std::min_element(diffs.begin() + 1, diffs.end());
+// }
 
-	std::vector<int>	diffs(_v.size());
+// Find smallest span using adjacent differences
+unsigned	Span::shortestSpan() {
+
+	unsigned	min_span = UINT_MAX;
 
 	if (_v.size() <= 1)
 		throw std::length_error("Span does not contain enough objects");
 	if (!_isSorted)
 		std::sort(_v.begin(), _v.end());
 
-	std::adjacent_difference(_v.begin(), _v.end(), diffs.begin());
+	for (std::vector<int>::iterator it = _v.end() - 1; it != _v.begin(); --it)
+		min_span = std::min(min_span, static_cast<unsigned>(*it - *(it - 1)));
 
-	return *std::min_element(diffs.begin() + 1, diffs.end());
+	return min_span;
 }
 
-// Find largest span: difference between max and min (possible because vector is sorted)
-unsigned	Span::longestSpan() const {
+// Find largest span: difference between last and first element, cause vector is sorted
+unsigned	Span::longestSpan() {
 
 	if (_v.size() <= 1)
 		throw std::length_error("Span does not contain enough objects");
