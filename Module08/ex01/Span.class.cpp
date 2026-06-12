@@ -5,9 +5,9 @@
 #include <numeric>
 #include <stdexcept>
 
-Span::Span(void): _size(0), _v() {};
-Span::Span(unsigned const n): _size(n), _v() {};
-Span::Span(Span const & other): _size(other._size), _v(other._v) {};
+Span::Span(void): _size(0), _v(), _isSorted(false) {};
+Span::Span(unsigned const n): _size(n), _v(), _isSorted(false) {};
+Span::Span(Span const & other): _size(other._size), _v(other._v), _isSorted(false) {};
 Span::~Span(void) {};
 
 Span& Span::operator=( Span const& other )
@@ -15,6 +15,7 @@ Span& Span::operator=( Span const& other )
 	if (this != &other) {
 		_size = other._size;
 		_v = other._v;
+		_isSorted = other._isSorted;
 	}
 	return *this;
 }
@@ -26,7 +27,8 @@ void	Span::addNumber(unsigned const & n) {
 		throw std::length_error("Span is already full");
 
 	_v.push_back(n);
-	std::sort(_v.begin(), _v.end());
+	_isSorted = false;
+	// std::sort(_v.begin(), _v.end());
 }
 
 // Add range of elements and sort
@@ -36,7 +38,8 @@ void	Span::addRange(vec_iter & begin, vec_iter & end) {
 		throw std::length_error("Span cannot contain this range");
 
 	_v.insert(_v.end(), begin, end);
-	std::sort(_v.begin(), _v.end());
+	_isSorted = false;
+	// std::sort(_v.begin(), _v.end());
 }
 
 // Add multiple copies of a value and sort
@@ -46,7 +49,8 @@ void	Span::addRange(unsigned const & count, int const & value) {
 		throw std::length_error("Span cannot contain this range");
 
 	_v.insert(_v.end(), count, value);
-	std::sort(_v.begin(), _v.end());
+	_isSorted = false;
+	// std::sort(_v.begin(), _v.end());
 }
 
 // Find smallest span using adjacent differences
@@ -56,6 +60,8 @@ unsigned	Span::shortestSpan() const {
 
 	if (_v.size() <= 1)
 		throw std::length_error("Span does not contain enough objects");
+	if (!_isSorted)
+		std::sort(_v.begin(), _v.end());
 
 	std::adjacent_difference(_v.begin(), _v.end(), diffs.begin());
 
@@ -67,6 +73,7 @@ unsigned	Span::longestSpan() const {
 
 	if (_v.size() <= 1)
 		throw std::length_error("Span does not contain enough objects");
-
+	if (!_isSorted)
+		std::sort(_v.begin(), _v.end());
 	return _v[_v.size() - 1] - _v[0];
 }

@@ -7,6 +7,7 @@ class Span {
 	private:
 		unsigned			_size;
 		std::vector<int>	_v;
+		bool				_isSorted;
 
 	public:
 
@@ -19,7 +20,7 @@ class Span {
 		void		addNumber(unsigned const & n);
 		void		addRange(vec_iter & begin, vec_iter & end);
 		void		addRange(unsigned const & count, int const & value);
-		unsigned	shortestSpan() const;
-		unsigned	longestSpan() const;
+		unsigned	shortestSpan();
+		unsigned	longestSpan();
 
 };
