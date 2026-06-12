@@ -14,7 +14,7 @@ static void printHeader (
 		std::string const color = BLK,
 		std::ostream &os = std::cout) {
 
-    os << std::string(color) + background + text + CRESET << std::endl;
+    os << std::string(color) + background + text + CRESET << std::endl << std::endl;
 }
 
 int main()
@@ -38,6 +38,7 @@ int main()
 	}
 
 	// Test 2: addRange with count and value
+	cout << endl;
 	printHeader("Test 2: addRange with count and value");
 	try {
 		Span sp(10);
@@ -53,13 +54,14 @@ int main()
 	}
 
 	// Test 3: addRange with iterators
+	cout << endl;
 	printHeader("Test 3: addRange with iterators");
 	try {
 		std::vector<int> range(3);
 
 		range[0] = 100;
 		range[1] = 200;
-		range[3] = 300;
+		range[2] = 300;
 
 		Span sp(5);
 		cout << "Add range from vector: 100, 200, 300" << endl;
@@ -75,6 +77,7 @@ int main()
 	}
 
 	// Test 4: Error - Span full
+	cout << endl;
 	printHeader("Test 4: Error handling - Span full");
 	try {
 		Span sp(3);
@@ -85,10 +88,11 @@ int main()
 		sp.addNumber(4);
 	}
 	catch (std::exception &e) {
-		cout << RED << "Expected error: " << e.what() << CRESET << endl;
+		cout << BLU << "Expected error: " << e.what() << CRESET << endl;
 	}
 
 	// Test 5: Error - Not enough elements for shortestSpan
+	cout << endl;
 	printHeader("Test 5: Error handling - Not enough elements");
 	try {
 		Span sp(5);
@@ -97,10 +101,11 @@ int main()
 		sp.shortestSpan();
 	}
 	catch (std::exception &e) {
-		cout << RED << "Expected error: " << e.what() << CRESET << endl;
+		cout << BLU << "Expected error: " << e.what() << CRESET << endl;
 	}
 
 	// Test 6: Copy constructor and assignment
+	cout << endl;
 	printHeader("Test 6: Copy constructor and assignment");
 	try {
 		Span sp1(5);
@@ -108,7 +113,7 @@ int main()
 		sp1.addNumber(20);
 		sp1.addNumber(30);
 		
-		Span sp2 = sp1;  // Copy constructor
+		Span sp2(sp1);  // Copy constructor
 		cout << "Original - Shortest: " << sp1.shortestSpan() << ", Longest: " << sp1.longestSpan() << endl;
 		cout << "Copy    - Shortest: " << sp2.shortestSpan() << ", Longest: " << sp2.longestSpan() << endl;
 		
@@ -121,6 +126,7 @@ int main()
 	}
 
 	// Test 7: Large Span
+	cout << endl;
 	printHeader("Test 7: Large Span with many elements");
 	try {
 		Span sp(10000);
