@@ -1,5 +1,4 @@
 NAME	= mutatedAbomination
-NAME	= span
 CC		= g++
 MKDIR	= mkdir -p
 RM		= rm -f
