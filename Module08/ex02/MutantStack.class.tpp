@@ -3,12 +3,12 @@
 template <typename T, typename Container>
 MutantStack<T, Container>::
 	MutantStack( void ):
-		std::stack<T>() {}
+		std::stack<T, Container>() {}
 
 template <typename T, typename Container>
 MutantStack<T, Container>::
 	MutantStack( MutantStack const & other ):
-		std::stack<T>(other) {}
+		std::stack<T, Container>(other) {}
 
 template <typename T, typename Container>
 MutantStack<T, Container>::
