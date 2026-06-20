@@ -1,47 +1,80 @@
 #include "BitcoinExchange.hpp"
 
+#include <cstdlib>
 #include <limits.h>
+#include <utility> // std::make_pair
 
 typedef std::multimap<std::string, double> t_database;
 
 BitcoinExchange::BitcoinExchange( std::string const & inputFile ):
 	_priceDB(_parsePriceFile("data.csv")),
-	_inputDB(_parseInputFile(inputFile))
-{};
+	_inputDB(_parseInputFile(inputFile)) {}
 
-static std::ifstream openFile(std::string const & fileName) {
+BitcoinExchange::~BitcoinExchange( void ) {}
 
-	std::ifstream	file;
+#include <fstream>
+#include <string>
+#include <cstdlib> // for strtod
+#include <cerrno>  // for errno
+#include <cstring> // for strerror
+#include <stdexcept>
 
-	file.exceptions( std::ifstream::badbit );
-	file.open(fileName);
-	return file;
+static t_database parseFile(std::string const & fileName, char const delimiter) {
+
+    t_database		res;
+    std::ifstream	file(fileName);
+
+    if (!file.is_open())
+        throw std::runtime_error("Failed to open file: " + fileName);
+
+    std::string	line;
+    while (std::getline(file, line)) {
+        size_t delimiterPos = line.find_first_of(delimiter);
+        if (delimiterPos == std::string::npos) {
+            continue; // Skip malformed lines
+        }
+
+        std::string	key = line.substr(0, delimiterPos);
+        std::string	valueStr = line.substr(delimiterPos + 1);
+
+        char* endPtr;
+        errno = 0;
+        double value = strtod(valueStr.c_str(), &endPtr);
+        if (errno != 0 || endPtr == valueStr.c_str()) {
+            continue; // Skip lines with invalid numbers
+        }
+
+        res.insert(std::make_pair(key, value));
+    }
+    return res;
 }
+//.///.//.///
 
-static t_database parseFile(std::string const & fileName, char const & delimiter) {
-
-	t_database		res;
-	std::ifstream	file;
-	char			line[INT_MAX];
-	std::string		s;
-	std::string		key;
-	double			value;
-
-	file.exceptions( std::ifstream::badbit );
-	file.open(fileName);
-
-	while ( file.getline(line, INT_MAX - 1, '\n') ) {
-		s = line;
-		key = s.substr(0, s.find_first_of(delimiter) - 1);
-		value = std::strtod(s.substr(s.find_first_of(delimiter) + 1).c_str(), NULL);
-		// TODO Check errors from strtod
-		res.insert({key, value});
-	}
-	return res;
-}
+// static t_database parseFile(std::string const & fileName, char const delimiter) {
+//
+// 	t_database		res;
+// 	std::ifstream	file;
+// 	char			line[INT_MAX];
+// 	std::string		s;
+// 	std::string		key;
+// 	double			value;
+//
+// 	file.exceptions( std::ifstream::badbit );
+// 	file.open(fileName.c_str());
+//
+// 	while ( file.getline(line, INT_MAX - 1, '\n') ) {
+// 		s = line;
+// 		key = s.substr(0, s.find_first_of(delimiter) - 1);
+// 		value = strtod(s.substr(s.find_first_of(delimiter) + 1).c_str(), NULL);
+// 		// TODO Check errors from strtod
+// 		res.insert(std::make_pair(key, value));
+// 	}
+// 	return res;
+// }
 
 BitcoinExchange::t_database BitcoinExchange::_parsePriceFile(std::string const & priceFile) {
-	return parseFile(priceFile, ',');
+	char const d = ',';
+	return parseFile(priceFile, d);
 }
 
 BitcoinExchange::t_database BitcoinExchange::_parseInputFile(std::string const & inputFile) {

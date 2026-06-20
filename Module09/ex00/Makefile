@@ -2,13 +2,13 @@ NAME		= btc
 CC			= g++
 MKDIR		= mkdir -p
 RM			= rm -f
-CFLAGS		= -Wall -Wextra -Werror --std=c++98
+CFLAGS		= -Wall -Wextra -Werror --std=c++98 -g
 
 FILES		= main
 
 OBJS_DIR	= objs
 
-SRCS		= main.cpp #\
+SRCS		= main.cpp \
 			  BitcoinExchange.cpp
 
 OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS:%.cpp=%.o))
