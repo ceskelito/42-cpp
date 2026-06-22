@@ -1,29 +1,23 @@
 #include "BitcoinExchange.hpp"
 
-#include <cstdlib>
-#include <limits.h>
 #include <utility> // std::make_pair
+#include <iostream>
+#include <sstream>
 
-typedef std::multimap<std::string, double> t_database;
+#include <cstdlib> // for strtod
+#include <cerrno>  // for errno
+#include <cstring> // for strerror
+#include <ctime>
+
+#include <fstream>
+// #include <string>
+// #include <stdexcept>
 
 BitcoinExchange::BitcoinExchange( std::string const & inputFile ):
 	_priceDB(_parsePriceFile("data.csv")),
 	_inputDB(_parseInputFile(inputFile)) {}
 
 BitcoinExchange::~BitcoinExchange( void ) {}
-
-#include <fstream>
-#include <string>
-#include <cstdlib> // for strtod
-#include <cerrno>  // for errno
-#include <cstring> // for strerror
-#include <stdexcept>
-
-/* TODO
- * Check the date format and value validity
- * Check the btc amount in input validity
- * Coerhently manage errors and choose how
- */
 
 static std::string trim(const std::string& str)
 {
@@ -34,7 +28,43 @@ static std::string trim(const std::string& str)
     return str.substr(first, (last - first + 1));
 }
 
-static t_database parseFile(std::string const & filename, char const delimiter) {
+bool BitcoinExchange::_dateIsValid(std::string date) {
+    int		year, month, day;
+    char	dash1, dash2;
+
+	// Works beacuse istringstream save the data only if can fit the variable
+    std::istringstream iss(date);
+    iss >> year >> dash1 >> month >> dash2 >> day;
+
+    if (date.length() != 10 || iss.fail() || dash1 != '-' || dash2 != '-' || !iss.eof()) {
+        // throw std::invalid_argument("Invalide date format: " + date + ". Expected YYYY-MM-DD.");
+		return false;
+    }
+
+    struct std::tm timeStruct = {};
+	timeStruct.tm_year = year - 1900;
+	timeStruct.tm_mon = month - 1;
+	timeStruct.tm_mday = day;
+	timeStruct.tm_isdst = -1;
+
+	// Convert the struct in timestamp
+    std::time_t timestamp = std::mktime(&timeStruct);
+
+	// Obtain the normalized date string from the struct
+    char buffer[11];
+    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d", &timeStruct);
+    std::string normalizedDate(buffer);
+
+    // If the normalized differs from the original, means that the date was Invalid
+    if (timestamp == -1 || normalizedDate != date) {
+        // throw std::invalid_argument("Invalid date: " + date);
+		return false;
+    }
+
+    return true;
+}
+
+BitcoinExchange::t_database	BitcoinExchange::_parseFile(std::string const & filename, char const delimiter) {
 
     t_database		res;
     std::ifstream	file(filename.c_str());
@@ -55,68 +85,55 @@ static t_database parseFile(std::string const & filename, char const delimiter) 
 			key = line.substr(0, delimiterPos);
 			valueStr = line.substr(delimiterPos + 1);
 		}
-
+		key = trim(key);
+		valueStr = trim(valueStr);
         char*	endPtr;
         errno = 0;
-        double	value = strtod(valueStr.c_str(), &endPtr);
+        float	value = strtof(valueStr.c_str(), &endPtr);
         if (errno != 0 || endPtr == valueStr.c_str()) {
             continue; // Skip lines with invalid numbers
         }
 
-        res.insert(std::make_pair(trim(key), value));
+        res.insert(std::make_pair(key, value));
     }
     return res;
 }
 
-#include <iostream>
 void	BitcoinExchange::printInfo() {
 
-	t_database::iterator	it = _inputDB.begin();
-	t_database::iterator	found = _priceDB.end();
+	t_database::reverse_iterator	inputIt = _inputDB.rbegin();
+	std::ostringstream				output;
 
-	while (it != _inputDB.end()) {
-		found = _priceDB.find(it->first);
-		if (found == _priceDB.end())
-		{
-			// Logic to find the nearest lower number
-			std::cout << it->first << " NOT FOUND - i'll find the nearest..." <<  std::endl;
-			it++;
-			continue;
+	while (inputIt != _inputDB.rend()) {
+
+		std::string	date = inputIt->first;
+		float		amount = inputIt->second;
+
+		if (!_dateIsValid(date)) {
+			output << "Error: bad input => " << date;
 		}
-		std::cout << it->first << " => " << it->second * found->second << std::endl;
-		it++;
+		else if (amount < 0) {
+			output << "Error: not a positive number.";
+		}
+		else {
+			t_database::iterator	found = _priceDB.lower_bound(date);
+
+			if (found == _priceDB.end()) {
+				output << "Error: no data found for input => " << inputIt->first;
+			}
+			else {
+				output << inputIt->first << " => " << inputIt->second << "*" << found->second; 
+			}
+		}
+		std::cout << output.str() << std::endl;
+		inputIt++;
 	}
 }
 
-//.///.//.///
-
-// static t_database parseFile(std::string const & fileName, char const delimiter) {
-//
-// 	t_database		res;
-// 	std::ifstream	file;
-// 	char			line[INT_MAX];
-// 	std::string		s;
-// 	std::string		key;
-// 	double			value;
-//
-// 	file.exceptions( std::ifstream::badbit );
-// 	file.open(fileName.c_str());
-//
-// 	while ( file.getline(line, INT_MAX - 1, '\n') ) {
-// 		s = line;
-// 		key = s.substr(0, s.find_first_of(delimiter) - 1);
-// 		value = strtod(s.substr(s.find_first_of(delimiter) + 1).c_str(), NULL);
-// 		// TODO Check errors from strtod
-// 		res.insert(std::make_pair(key, value));
-// 	}
-// 	return res;
-// }
-
 BitcoinExchange::t_database BitcoinExchange::_parsePriceFile(std::string const & priceFile) {
-	char const d = ',';
-	return parseFile(priceFile, d);
+	return _parseFile(priceFile, ',');
 }
 
 BitcoinExchange::t_database BitcoinExchange::_parseInputFile(std::string const & inputFile) {
-	return parseFile(inputFile, '|');
+	return _parseFile(inputFile, '|');
 }
