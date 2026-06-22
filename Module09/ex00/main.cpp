@@ -9,5 +9,5 @@ int main(int ac, char **av) {
 	}
 
 	BitcoinExchange btc(av[1]);
-	btc.printInfo();
+	btc.printExchange();
 }

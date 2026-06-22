@@ -4,12 +4,8 @@
 #include <iostream>
 #include <sstream>
 
-#include <cstdlib> // for strtod
-#include <cerrno>  // for errno
-#include <cstring> // for strerror
 #include <ctime>
 
-#include <fstream>
 // #include <string>
 // #include <stdexcept>
 
@@ -19,7 +15,7 @@ BitcoinExchange::BitcoinExchange( std::string const & inputFile ):
 
 BitcoinExchange::~BitcoinExchange( void ) {}
 
-static std::string trim(const std::string& str)
+std::string trim(const std::string& str)
 {
     size_t	first = str.find_first_not_of(' ');
     if (std::string::npos == first)
@@ -64,56 +60,24 @@ bool BitcoinExchange::_dateIsValid(std::string date) {
     return true;
 }
 
-BitcoinExchange::t_database	BitcoinExchange::_parseFile(std::string const & filename, char const delimiter) {
+void	BitcoinExchange::printExchange() {
 
-    t_database		res;
-    std::ifstream	file(filename.c_str());
+	t_database::iterator	inputIt = _inputDB.begin();
 
-    if (!file.is_open())
-        throw std::runtime_error(("Failed to open file: " + filename).c_str());
+	while (inputIt != _inputDB.end()) {
 
-    std::string	line;
-    while (std::getline(file, line)) {
-        size_t delimiterPos = line.find_first_of(delimiter);
-		std::string	key;
-		std::string valueStr;
-
-		if (delimiterPos == std::string::npos) {
-			key = line;
-			valueStr = "";
-        } else {
-			key = line.substr(0, delimiterPos);
-			valueStr = line.substr(delimiterPos + 1);
-		}
-		key = trim(key);
-		valueStr = trim(valueStr);
-        char*	endPtr;
-        errno = 0;
-        float	value = strtof(valueStr.c_str(), &endPtr);
-        if (errno != 0 || endPtr == valueStr.c_str()) {
-            continue; // Skip lines with invalid numbers
-        }
-
-        res.insert(std::make_pair(key, value));
-    }
-    return res;
-}
-
-void	BitcoinExchange::printInfo() {
-
-	t_database::reverse_iterator	inputIt = _inputDB.rbegin();
-	std::ostringstream				output;
-
-	while (inputIt != _inputDB.rend()) {
-
-		std::string	date = inputIt->first;
-		float		amount = inputIt->second;
+		std::string			date = inputIt->first;
+		float				amount = inputIt->second;
+		std::ostringstream	output;
 
 		if (!_dateIsValid(date)) {
 			output << "Error: bad input => " << date;
 		}
 		else if (amount < 0) {
 			output << "Error: not a positive number.";
+		}
+		else if (amount > 1000) {
+			output << "Error: too large number.";
 		}
 		else {
 			t_database::iterator	found = _priceDB.lower_bound(date);
@@ -122,7 +86,7 @@ void	BitcoinExchange::printInfo() {
 				output << "Error: no data found for input => " << inputIt->first;
 			}
 			else {
-				output << inputIt->first << " => " << inputIt->second << "*" << found->second; 
+				output << inputIt->first << " => " << inputIt->second * found->second; 
 			}
 		}
 		std::cout << output.str() << std::endl;
@@ -131,9 +95,9 @@ void	BitcoinExchange::printInfo() {
 }
 
 BitcoinExchange::t_database BitcoinExchange::_parsePriceFile(std::string const & priceFile) {
-	return _parseFile(priceFile, ',');
+	return _parseFile<t_database>(priceFile, ',');
 }
 
-BitcoinExchange::t_database BitcoinExchange::_parseInputFile(std::string const & inputFile) {
-	return _parseFile(inputFile, '|');
+BitcoinExchange::t_unordered_database BitcoinExchange::_parseInputFile(std::string const & inputFile) {
+	return _parseFile<t_unordered_database>(inputFile, '|');
 }
