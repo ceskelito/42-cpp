@@ -19,27 +19,31 @@ BitcoinExchange::~BitcoinExchange( void ) {}
 #include <cstring> // for strerror
 #include <stdexcept>
 
-static t_database parseFile(std::string const & fileName, char const delimiter) {
+static t_database parseFile(std::string const & filename, char const delimiter) {
 
     t_database		res;
-    std::ifstream	file(fileName);
+    std::ifstream	file(filename.c_str());
 
     if (!file.is_open())
-        throw std::runtime_error("Failed to open file: " + fileName);
+        throw std::runtime_error(("Failed to open file: " + filename).c_str());
 
     std::string	line;
     while (std::getline(file, line)) {
         size_t delimiterPos = line.find_first_of(delimiter);
-        if (delimiterPos == std::string::npos) {
-            continue; // Skip malformed lines
-        }
+		std::string	key;
+		std::string valueStr;
 
-        std::string	key = line.substr(0, delimiterPos);
-        std::string	valueStr = line.substr(delimiterPos + 1);
+		if (delimiterPos == std::string::npos) {
+			key = line;
+			valueStr = "";
+        } else {
+			key = line.substr(0, delimiterPos);
+			valueStr = line.substr(delimiterPos + 1);
+		}
 
-        char* endPtr;
+        char*	endPtr;
         errno = 0;
-        double value = strtod(valueStr.c_str(), &endPtr);
+        double	value = strtod(valueStr.c_str(), &endPtr);
         if (errno != 0 || endPtr == valueStr.c_str()) {
             continue; // Skip lines with invalid numbers
         }
@@ -48,6 +52,26 @@ static t_database parseFile(std::string const & fileName, char const delimiter) 
     }
     return res;
 }
+
+#include <iostream>
+void	BitcoinExchange::printInfo() {
+
+	t_database::iterator	it = _inputDB.begin();
+	t_database::iterator	found = _inputDB.end();
+
+	while (it != _inputDB.end()) {
+		found = _priceDB.find(it->first);
+		if (found == _priceDB.end())
+		{
+			// Logic to find the nearest lower number
+			it++;
+			continue;
+		}
+		std::cout << it->first << " => " << it->second * found->second << std::endl;
+		it++;
+	}
+}
+
 //.///.//.///
 
 // static t_database parseFile(std::string const & fileName, char const delimiter) {

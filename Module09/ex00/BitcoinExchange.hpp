@@ -23,4 +23,6 @@ class BitcoinExchange {
 		BitcoinExchange( BitcoinExchange const & other );
 		~BitcoinExchange( void );
 		BitcoinExchange& operator=( BitcoinExchange const & other);
+
+		void	printInfo(); // Change name of this function
 };
