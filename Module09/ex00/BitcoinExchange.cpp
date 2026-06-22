@@ -19,6 +19,21 @@ BitcoinExchange::~BitcoinExchange( void ) {}
 #include <cstring> // for strerror
 #include <stdexcept>
 
+/* TODO
+ * Check the date format and value validity
+ * Check the btc amount in input validity
+ * Coerhently manage errors and choose how
+ */
+
+static std::string trim(const std::string& str)
+{
+    size_t	first = str.find_first_not_of(' ');
+    if (std::string::npos == first)
+        return str;
+    size_t	last = str.find_last_not_of(' ');
+    return str.substr(first, (last - first + 1));
+}
+
 static t_database parseFile(std::string const & filename, char const delimiter) {
 
     t_database		res;
@@ -48,7 +63,7 @@ static t_database parseFile(std::string const & filename, char const delimiter) 
             continue; // Skip lines with invalid numbers
         }
 
-        res.insert(std::make_pair(key, value));
+        res.insert(std::make_pair(trim(key), value));
     }
     return res;
 }
@@ -57,13 +72,14 @@ static t_database parseFile(std::string const & filename, char const delimiter) 
 void	BitcoinExchange::printInfo() {
 
 	t_database::iterator	it = _inputDB.begin();
-	t_database::iterator	found = _inputDB.end();
+	t_database::iterator	found = _priceDB.end();
 
 	while (it != _inputDB.end()) {
 		found = _priceDB.find(it->first);
 		if (found == _priceDB.end())
 		{
 			// Logic to find the nearest lower number
+			std::cout << it->first << " NOT FOUND - i'll find the nearest..." <<  std::endl;
 			it++;
 			continue;
 		}
