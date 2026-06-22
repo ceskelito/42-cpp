@@ -1,5 +1,6 @@
 #include "BitcoinExchange.hpp"
 #include <iostream>
+#include <exception>
 
 int main(int ac, char **av) {
 	if (ac != 2)
@@ -8,6 +9,11 @@ int main(int ac, char **av) {
 		return 1;
 	}
 
-	BitcoinExchange btc(av[1]);
-	btc.printExchange();
+	try {
+		BitcoinExchange btc(av[1]);
+		btc.printExchange();
+	}
+	catch (std::exception &e) {
+		std::cout << e.what() << std::endl;
+	}
 }

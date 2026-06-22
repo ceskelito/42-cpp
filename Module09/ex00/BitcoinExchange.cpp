@@ -4,10 +4,7 @@
 #include <iostream>
 #include <sstream>
 
-#include <ctime>
-
-// #include <string>
-// #include <stdexcept>
+#include <ctime> // Date validation
 
 BitcoinExchange::BitcoinExchange( std::string const & inputFile ):
 	_priceDB(_parsePriceFile("data.csv")),
@@ -95,9 +92,9 @@ void	BitcoinExchange::printExchange() {
 }
 
 BitcoinExchange::t_database BitcoinExchange::_parsePriceFile(std::string const & priceFile) {
-	return _parseFile<t_database>(priceFile, ',');
+	return _parseFile<t_database>(priceFile, ',', "date,exchange_rate");
 }
 
 BitcoinExchange::t_unordered_database BitcoinExchange::_parseInputFile(std::string const & inputFile) {
-	return _parseFile<t_unordered_database>(inputFile, '|');
+	return _parseFile<t_unordered_database>(inputFile, '|', "date | value");
 }

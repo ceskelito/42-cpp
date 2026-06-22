@@ -27,8 +27,8 @@ class BitcoinExchange {
 		t_unordered_database	_inputDB;
 	
 		
-		template <typename DB>
-		DB						_parseFile(std::string const & filename, char const delimiter);
+		template <typename Database>
+		Database				_parseFile(std::string const & filename, char const delimiter, std::string const & header);
 		t_database				_parsePriceFile(std::string const & priceFile);
 		t_unordered_database	_parseInputFile(std::string const & inputFile);
 		bool					_dateIsValid(std::string date);
@@ -46,16 +46,24 @@ class BitcoinExchange {
 
 std::string trim(const std::string& str);
 
-template <typename DB>
-DB BitcoinExchange::_parseFile(std::string const & filename, char const delimiter) {
+template <typename Database>
+Database BitcoinExchange::_parseFile(std::string const & filename, char const delimiter, std::string const & header) {
 
-    DB				res;
+	// TODO (?)
+	// I maybe need to check for the spaces in between delimiter and words? For now is not relevant
+
+    Database		res;
     std::ifstream	file(filename.c_str());
 
     if (!file.is_open())
-        throw std::runtime_error(("Failed to open file: " + filename).c_str());
+        throw std::runtime_error("Failed to open file: " + filename);
 
     std::string	line;
+
+	std::getline(file, line);
+	if (trim(line) != header)
+		throw std::invalid_argument("Invalid header in file " + filename + ". Expected: `" + header + "'");
+
     while (std::getline(file, line)) {
         size_t delimiterPos = line.find_first_of(delimiter);
 		std::string	key;
@@ -74,7 +82,6 @@ DB BitcoinExchange::_parseFile(std::string const & filename, char const delimite
         errno = 0;
         float	value = strtof(valueStr.c_str(), &endPtr);
         if (errno != 0 || endPtr == valueStr.c_str()) {
-			valueStr = "nanf";
 			continue;
         }
         res.insert(std::make_pair(key, value));
