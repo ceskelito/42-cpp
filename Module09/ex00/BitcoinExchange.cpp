@@ -22,13 +22,13 @@ std::string trim(const std::string& str)
 
 bool BitcoinExchange::_dateIsValid(std::string date) {
 
-	// Split the date in atomic variables using string stream,
-	// then create and fill the time struct
+	// Declare variables for date components and create the input stream.
+	// This variable will be used to fill the time Struct
     int					year, month, day;
     char				dash[2];
     std::istringstream	iss(date);
 
-	// Works beacuse istringstream read the stream till it match the variable type
+	// istringstream extracts values by matching their declared types
     iss >> year >> dash[0] >> month >> dash[1] >> day;
 
     if (date.length() != 10 || iss.fail() || dash[0] != '-' || dash[1] != '-' || !iss.eof()) {
@@ -44,13 +44,13 @@ bool BitcoinExchange::_dateIsValid(std::string date) {
 	// Obtain the date's timestamp, used in later checks
     std::time_t timestamp = std::mktime(&timeStruct);
 
-	// Converts the date as a string from the tm struct with the format YYYY-mm-dd.
-	// If a date is invalid, approximates it to the first valid date.
+	// Convert the tm struct to a string with the format YYYY-mm-dd.
+	// If a date is invalid, mktime/strftime will approximate it to a valid date.
     char normalizedDate[11];
     std::strftime(normalizedDate, sizeof(normalizedDate), "%Y-%m-%d", &timeStruct);
 
-    // If the normalized differs from the original, means that the date is invalid
-	// If the timestamp is equal to -1, the date is invalid
+    // If the normalized date differs from the original, or if mktime failed,
+	// the date is invalid
     if (timestamp == -1 || date != std::string(normalizedDate)) {
 		return false;
 	}
