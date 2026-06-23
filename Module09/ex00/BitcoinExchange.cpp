@@ -1,9 +1,8 @@
 #include "BitcoinExchange.hpp"
 
-#include <utility> // std::make_pair
 #include <iostream>
 #include <sstream>
-
+#include <utility> // std::make_pair
 #include <ctime> // Date validation
 
 BitcoinExchange::BitcoinExchange( std::string const & inputFile ):
@@ -22,15 +21,17 @@ std::string trim(const std::string& str)
 }
 
 bool BitcoinExchange::_dateIsValid(std::string date) {
-    int		year, month, day;
-    char	dash1, dash2;
 
-	// Works beacuse istringstream save the data only if can fit the variable
-    std::istringstream iss(date);
-    iss >> year >> dash1 >> month >> dash2 >> day;
+	// Split the date in atomic variables using string stream,
+	// then create and fill the time struct
+    int					year, month, day;
+    char				dash[2];
+    std::istringstream	iss(date);
 
-    if (date.length() != 10 || iss.fail() || dash1 != '-' || dash2 != '-' || !iss.eof()) {
-        // throw std::invalid_argument("Invalide date format: " + date + ". Expected YYYY-MM-DD.");
+	// Works beacuse istringstream read the stream till it match the variable type
+    iss >> year >> dash[0] >> month >> dash[1] >> day;
+
+    if (date.length() != 10 || iss.fail() || dash[0] != '-' || dash[1] != '-' || !iss.eof()) {
 		return false;
     }
 
@@ -40,26 +41,26 @@ bool BitcoinExchange::_dateIsValid(std::string date) {
 	timeStruct.tm_mday = day;
 	timeStruct.tm_isdst = -1;
 
-	// Convert the struct in timestamp
+	// Obtain the date's timestamp, used in later checks
     std::time_t timestamp = std::mktime(&timeStruct);
 
-	// Obtain the normalized date string from the struct
-    char buffer[11];
-    std::strftime(buffer, sizeof(buffer), "%Y-%m-%d", &timeStruct);
-    std::string normalizedDate(buffer);
+	// Converts the date as a string from the tm struct with the format YYYY-mm-dd.
+	// If a date is invalid, approximates it to the first valid date.
+    char normalizedDate[11];
+    std::strftime(normalizedDate, sizeof(normalizedDate), "%Y-%m-%d", &timeStruct);
 
-    // If the normalized differs from the original, means that the date was Invalid
-    if (timestamp == -1 || normalizedDate != date) {
-        // throw std::invalid_argument("Invalid date: " + date);
+    // If the normalized differs from the original, means that the date is invalid
+	// If the timestamp is equal to -1, the date is invalid
+    if (timestamp == -1 || date != std::string(normalizedDate)) {
 		return false;
-    }
+	}
 
     return true;
 }
 
 void	BitcoinExchange::printExchange() {
 
-	t_database::iterator	inputIt = _inputDB.begin();
+	t_btcValueDb::iterator	inputIt = _inputDB.begin();
 
 	while (inputIt != _inputDB.end()) {
 
@@ -76,8 +77,12 @@ void	BitcoinExchange::printExchange() {
 		else if (amount > 1000) {
 			output << "Error: too large number.";
 		}
+		// nan
+		else if (amount != amount) {
+			output << "Error: not a number.";
+		}
 		else {
-			t_database::iterator	found = _priceDB.lower_bound(date);
+			t_btcValueDb::iterator	found = _priceDB.lower_bound(date);
 
 			if (found == _priceDB.end()) {
 				output << "Error: no data found for input => " << inputIt->first;
@@ -91,10 +96,10 @@ void	BitcoinExchange::printExchange() {
 	}
 }
 
-BitcoinExchange::t_database BitcoinExchange::_parsePriceFile(std::string const & priceFile) {
-	return _parseFile<t_database>(priceFile, ',', "date,exchange_rate");
+BitcoinExchange::t_btcValueDb BitcoinExchange::_parsePriceFile(std::string const & priceFile) {
+	return _parseFile<t_btcValueDb>(priceFile, ',', "date,exchange_rate");
 }
 
-BitcoinExchange::t_unordered_database BitcoinExchange::_parseInputFile(std::string const & inputFile) {
-	return _parseFile<t_unordered_database>(inputFile, '|', "date | value");
+BitcoinExchange::t_inputQueryDb BitcoinExchange::_parseInputFile(std::string const & inputFile) {
+	return _parseFile<t_inputQueryDb>(inputFile, '|', "date | value");
 }
