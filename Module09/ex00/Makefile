@@ -2,7 +2,7 @@ NAME		= btc
 CC			= g++
 MKDIR		= mkdir -p
 RM			= rm -f
-CFLAGS		= -Wall -Wextra -Werror --std=c++98 -g
+CFLAGS		= -Wall -Wextra -Werror --std=c++98
 
 FILES		= main
 
