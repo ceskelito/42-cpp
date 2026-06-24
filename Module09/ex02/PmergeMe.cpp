@@ -27,6 +27,33 @@ static Couples makeCouples(std::vector<int> sequence) {
 	return couples;
 }
 
+std::vector<int> jacobsthalSequence(int n) {
+    std::vector<int> sequence;
+    if (n < 0) {
+        return sequence;
+    }
+
+    int a = 0; // J(0)
+    int b = 1; // J(1)
+
+    sequence.push_back(a);
+    if (n >= 1) {
+        sequence.push_back(b);
+    }
+
+    while (true) {
+        int next = b + 2 * a;
+        if (next > n) {
+            break;
+        }
+        sequence.push_back(next);
+        a = b;
+        b = next;
+    }
+
+    return sequence;
+}
+
 std::vector<int> ford_johnson(std::vector<int> sequence) {
 
 	if (sequence.size() < 2)
@@ -41,8 +68,21 @@ std::vector<int> ford_johnson(std::vector<int> sequence) {
 	
 	mainChain = ford_johnson(mainChain);
 	
-	mainChain.insert(mainChain.begin(), couples.begin()->second);	
+	int i = 0;
+	mainChain.insert(mainChain.begin(), couples[i++].second);
 
+	// Maybe obtain jacobsthal groups instead of the sequence ???
+	std::vector<int> jacobsthal = jacobsthalSequence(couples.size());
+/*
+ * 1. hai mainChain con le a ordinate e b₁ in testa 
+ * 2. calcola sequenza di Jacobsthal 
+ * 3. per ogni gruppo di Jacobsthal:
+       per ogni b del gruppo (a ritroso):
+           trova la posizione con ricerca binaria nella zona corretta
+           inserisci b in quella posizione 
+ * 4. se esiste elemento spaiato:
+			inseriscilo con ricerca binaria su tutta la mainChain
+ */
 	// DEBUG
 	// Couples::iterator ite = couples.begin();
 	// cout << "max min" << endl;
