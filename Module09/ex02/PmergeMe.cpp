@@ -9,6 +9,12 @@ using std::endl;
 
 typedef std::vector<std::pair<int, int> > Couples;
 
+struct Chain {
+	bool				has_orfan = false;
+	std::vector<int>	a;
+	std::vector<int>	b;
+};
+
 static Couples makeCouples(std::vector<int> sequence) {
 
 	Couples couples;
@@ -26,6 +32,10 @@ static Couples makeCouples(std::vector<int> sequence) {
 
 	return couples;
 }
+
+// static Chain makeChains(std::vector<int> sequence) {
+//
+// }
 
 std::vector<int> jacobsthalSequence(int n) {
     std::vector<int> sequence;
@@ -54,10 +64,23 @@ std::vector<int> jacobsthalSequence(int n) {
     return sequence;
 }
 
-std::vector<int> ford_johnson(std::vector<int> sequence) {
-
+Couples				ford_johnson(Couples couples);
+std::vector<int>	ford_johnson(std::vector<int> sequence) {
 	if (sequence.size() < 2)
 		return sequence;
+	Couples c = ford_johnson(makeCouples(sequence));
+	std::vector<int> v;
+	for(Couples::iterator it = c.begin(); it != c.end(); it++)
+		v.push_back(it->first);
+	return v;
+}
+
+Couples ford_johnson(Couples couples) {
+
+	if (couples.size() < 2) {
+		couples.insert(couples.begin(), std::make_pair(couples[0].second, -1));
+		return couples;
+	}
 
 	std::vector<int>	mainChain;
 	Couples				couples = makeCouples(sequence);
