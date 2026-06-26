@@ -3,6 +3,8 @@
 #include <list>
 #include <algorithm>
 
+#include "debugUtils.hpp"
+
 using std::deque;
 
 // DEBUG
@@ -18,7 +20,55 @@ struct Group {
 	Group() : even(false) {}
 };
 
-Group	getGroup(deque<int> sequence) {
+struct Container {
+	bool			isCanonical;
+	std::deque<int>	sequence;
+};
+
+std::deque<bool>	getSplitRule(deque<int> sequence) {
+
+	std::deque<bool> firstBigger;
+
+	for (deque<int>::iterator it = sequence.begin();
+			it != sequence.end() && it + 1 != sequence.end();
+			it += 2)
+		firstBigger.push_back(*it == std::max(*it, *(it + 1)));
+
+	// if (sequence.size() % 2 != 0){
+	// 	group.even = true;
+	// 	group.chainB.push_back((*(sequence.end() - 1)));
+	// }
+
+	return firstBigger;
+
+}
+
+Group	applySplitRule(deque<int> sequence, deque<bool> firstIsBigger) {
+	
+	Group		group;
+
+	for (deque<int>::iterator it = sequence.begin();
+			it != sequence.end() && it + 1 != sequence.end();
+			it += 2)
+	{
+		if (*firstIsBigger.begin()) {
+			group.chainA.push_back(*it);
+			group.chainB.push_back(*it + 1);
+		}
+		else {
+			group.chainA.push_back(*it + 1);
+			group.chainB.push_back(*it);
+		}
+		firstIsBigger.pop_front();
+	}
+	if (sequence.size() % 2 != 0){
+		group.chainB.push_back((*(sequence.end() - 1)));
+	}
+
+	return group;
+}
+
+Group	splitPairs(deque<int> sequence) {
 
 	Group		group;
 
@@ -37,46 +87,44 @@ Group	getGroup(deque<int> sequence) {
 	return group;
 }
 
-std::list<Group>	makeGroupsList(Group g) {
-
-
-	// Dont work so well
+std::list<Group>	getGroupsList(Group g) {
 
 	std::list<Group> list;
-	list.push_back(g);
 
 	if (g.chainA.size() <= 1) {
+		list.push_back(g);
 		return list;
 	}
 
-	Group grA = getGroup(g.chainA);
-	Group grB = getGroup(g.chainB);
-	std::list<Group> listA = makeGroupsList(grA);
-	std::list<Group> listB = makeGroupsList(grB);
+	static int n_iter = 0;
+
+	cout << "iter n " << ++n_iter << endl;
+	cout << "a: "; debug::printDeque(g.chainA); cout << endl;
+	cout << "b: "; debug::printDeque(g.chainB); cout << endl;
+	cout << endl;
+
+	Group group1 = splitPairs(g.chainA);
+	Group group2 = splitPairs(g.chainB);
+	std::list<Group> listA = getGroupsList(group1);
+	std::list<Group> listB = getGroupsList(group2);
 	list.splice(list.end(), listA);
 	list.splice(list.end(), listB);
-	// list.pop_front();
 
 	return list;
 }
 
-void printDeque(deque<int> d) {
-
-	for (deque<int>::iterator it = d.begin(); it != d.end(); it++)
-		cout << *it << " ";
-}
 
 deque<int>	ford_johnson(deque<int> sequence) {
 
 	deque<int>	sorted;
-	std::list<Group> groups = makeGroupsList(getGroup(sequence));
+	std::list<Group> groups = getGroupsList(splitPairs(sequence));
 
 	for (std::list<Group>::iterator it = groups.begin(); it != groups.end(); ++it)
 	{
-		cout << "a size: " << it->chainA.size() << endl;
-		cout << "b size: " << it->chainB.size() << endl;
-		cout << "a: "; printDeque(it->chainA); cout << endl;
-		cout << "b: "; printDeque(it->chainB); cout << endl;
+		// cout << "a size: " << it->chainA.size() << endl;
+		// cout << "b size: " << it->chainB.size() << endl;
+		cout << "a: "; debug::printDeque(it->chainA); cout << endl;
+		cout << "b: "; debug::printDeque(it->chainB); cout << endl;
 		cout << endl;
 	}
 
