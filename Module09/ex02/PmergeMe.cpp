@@ -39,6 +39,9 @@ Group	getGroup(deque<int> sequence) {
 
 std::list<Group>	makeGroupsList(Group g) {
 
+
+	// Dont work so well
+
 	std::list<Group> list;
 	list.push_back(g);
 
@@ -52,8 +55,15 @@ std::list<Group>	makeGroupsList(Group g) {
 	std::list<Group> listB = makeGroupsList(grB);
 	list.splice(list.end(), listA);
 	list.splice(list.end(), listB);
+	// list.pop_front();
 
 	return list;
+}
+
+void printDeque(deque<int> d) {
+
+	for (deque<int>::iterator it = d.begin(); it != d.end(); it++)
+		cout << *it << " ";
 }
 
 deque<int>	ford_johnson(deque<int> sequence) {
@@ -65,6 +75,8 @@ deque<int>	ford_johnson(deque<int> sequence) {
 	{
 		cout << "a size: " << it->chainA.size() << endl;
 		cout << "b size: " << it->chainB.size() << endl;
+		cout << "a: "; printDeque(it->chainA); cout << endl;
+		cout << "b: "; printDeque(it->chainB); cout << endl;
 		cout << endl;
 	}
 
