@@ -48,7 +48,7 @@ std::deque<int> extractNumbersDeque(const std::string& input) {
 
 #include "debugUtils.hpp"
 
-std::deque<int> dividePairsAndSort(std::deque<int> sequence, unsigned int elementSize = 1);
+std::deque<int> dividePairsAndSort(std::deque<int> sequence);
 
 int main( int ac, char **av ) {
 	if ( ac != 2 )
