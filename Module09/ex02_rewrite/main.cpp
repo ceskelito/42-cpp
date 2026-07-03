@@ -1,4 +1,4 @@
-#include "PmergeMe.hpp"
+// #include "PmergeMe.hpp"
 #include <iostream>
 #include <vector>
 #include <deque>
@@ -46,6 +46,10 @@ std::deque<int> extractNumbersDeque(const std::string& input) {
 
 // #include "PmergeMe.hpp"
 
+#include "debugUtils.hpp"
+
+std::deque<int> dividePairsAndSort(std::deque<int> sequence, unsigned int elementSize = 1);
+
 int main( int ac, char **av ) {
 	if ( ac != 2 )
 	{
@@ -60,4 +64,5 @@ int main( int ac, char **av ) {
 	// 	std::cerr << "Error: " << e.what() << std::endl;
 	// }
 	std::deque<int> firstStep = dividePairsAndSort(extractNumbersDeque(av[1]));
+	debug::printDeque(firstStep);
 }
