@@ -48,7 +48,7 @@ std::deque<int> extractNumbersDeque(const std::string& input) {
 
 #include "debugUtils.hpp"
 
-std::deque<int> dividePairsAndSort(std::deque<int> sequence);
+#include "PmergeMe.hpp"
 
 int main( int ac, char **av ) {
 	if ( ac != 2 )
@@ -63,6 +63,6 @@ int main( int ac, char **av ) {
 	// catch (std::exception &e) {
 	// 	std::cerr << "Error: " << e.what() << std::endl;
 	// }
-	std::deque<int> firstStep = dividePairsAndSort(extractNumbersDeque(av[1]));
+	std::deque<int> firstStep = ford_johnson(extractNumbersDeque(av[1]));
 	debug::printDeque(firstStep);
 }
