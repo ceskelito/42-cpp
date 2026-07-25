@@ -20,45 +20,35 @@ void	appendRange(dq &s, Range<dq::iterator> r) {
 
 void	initializeAndInsert(dq &sequence, unsigned int elementSize)
 {
-	dq				main, pend;	
+	dq				main, pend;
 
-	for (unsigned int i = elementSize; i > 0; i--) {
+	// STEP 1: Divide main and pend
+	unsigned int	pairSize = 2 * elementSize;
+	for (dq::iterator it = sequence.begin(); std::distance(it, sequence.end()) >= pairSize; it += pairSize) {
+		
+		Range<dq::iterator>	elementA = makeRange(it, it + elementSize - 1);
+		Range<dq::iterator>	elementB = makeRange(it + elementSize, it + pairSize - 1);
+		
+		if (it == sequence.begin()) 
+			appendRange(main, elementB); // Only b1 goes in main
+		else
+			appendRange(pend, elementB); // Other b's go in pending
 
-		unsigned int	pairSize = 2 * i;
-
-		for (dq::iterator it = sequence.begin(); std::distance(it, sequence.end()) >= pairSize; it += pairSize) {
-
-			Range<dq::iterator>	elementA = makeRange(it, it + elementSize - 1);
-			Range<dq::iterator>	elementB = makeRange(it + elementSize, it + pairSize - 1);
-
-			// Initialize main and pending
-			if (it == sequence.begin()) // Only b1 had to be insert
-				appendRange(main, elementB);
-			else
-				appendRange(pend, elementB);
-			appendRange(main, elementA);
-
-			if (!pend.empty()){
-				// logic to insert elements in main
-			}
-			// How to rewrite the original sequence???
-			//
-			// My elements are ranges of iterators, so i can
-			// use swap_ranges on the elements, ez.
-		}
+		appendRange(main, elementA);	// Every a goes in main
 	}
+
+	// STEP 2
 
 }
 
 static int dividePairsAndSort(dq &sequence, unsigned int elementSize = 1) {
 
-	if (2 * elementSize > sequence.size())
-		return elementSize;
-		// return sequence;
-
 	unsigned int pairSize = 2 * elementSize;
 
-	for (dq::iterator it = sequence.begin(); std::distance(it, sequence.end()) >= pairSize; it += pairSize) {
+	if (pairSize > sequence.size())
+		return elementSize;
+
+	for (dq::iterator it = sequence.begin(); pairSize <= std::distance(it, sequence.end()); it += pairSize) {
 
 		Range<dq::iterator>	elementA = makeRange(it, it + elementSize - 1);
 		Range<dq::iterator>	elementB = makeRange(it + elementSize, it + pairSize - 1);
