@@ -64,5 +64,6 @@ int main( int ac, char **av ) {
 	// 	std::cerr << "Error: " << e.what() << std::endl;
 	// }
 	std::deque<int> firstStep = ford_johnson(extractNumbersDeque(av[1]));
+	std::cout << std::endl << "MAIN" << std::endl;
 	debug::printDeque(firstStep);
 }
