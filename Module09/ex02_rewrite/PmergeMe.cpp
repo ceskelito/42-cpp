@@ -1,28 +1,23 @@
 #include <deque>
 #include <cmath>
+#include <algorithm>
 #include "Range.hpp"
-
-// Source: STEP 1 of https://dev.to/emuminov/human-explanation-and-step-by-step-visualisation-of-the-ford-johnson-algorithm-5g91
 
 typedef std::deque<int> dq;
 
-unsigned int	getJacobsthalNumber(unsigned int n) {
-	return ( (std::pow(2, n+1) + std::pow(-1, n)) / 3 );
+unsigned int	getJacobsthalNumber(unsigned int index) {
+	return ( (std::pow(2, index+1) + std::pow(-1, index)) / 3 );
 }
 
-// void	insertElement(dq &main, Range<dq::iterator> element) {
-//
-// }
-
 void	appendRange(dq &s, Range<dq::iterator> r) {
-	s.insert(s.end(), r.first, r.last);
+	s.insert(s.end(), r.first, r.last + 1);
 }
 
 void	initializeAndInsert(dq &sequence, unsigned int elementSize)
 {
 	dq				main, pend;
 
-	// STEP 1: Divide main and pend
+	// STEP 1: Divide main and pend into groups
 	unsigned int	pairSize = 2 * elementSize;
 	for (dq::iterator it = sequence.begin(); std::distance(it, sequence.end()) >= pairSize; it += pairSize) {
 		
@@ -30,15 +25,47 @@ void	initializeAndInsert(dq &sequence, unsigned int elementSize)
 		Range<dq::iterator>	elementB = makeRange(it + elementSize, it + pairSize - 1);
 		
 		if (it == sequence.begin()) 
-			appendRange(main, elementB); // Only b1 goes in main
+			appendRange(main, elementB);
 		else
-			appendRange(pend, elementB); // Other b's go in pending
+			appendRange(pend, elementB);
 
-		appendRange(main, elementA);	// Every a goes in main
+		appendRange(main, elementA);
 	}
 
-	// STEP 2
+	// Handle remaining elements
+	unsigned int processed_elements = (sequence.size() / pairSize) * pairSize;
+	for (dq::iterator it = sequence.begin() + processed_elements; it != sequence.end(); it++) {
+		main.insert(main.end(), *it);
+	}
 
+	// STEP 2: Insert pend elements into main using Jacobsthal sequence
+	unsigned int jacobsthal_index = 1;
+	unsigned int pend_index = 0;
+
+	std::sort(main.begin(), main.end());
+	
+	while (pend_index < pend.size()) {
+		unsigned int jacobsthal_num = getJacobsthalNumber(jacobsthal_index);
+		unsigned int limit = std::min(jacobsthal_num, (unsigned int)pend.size());
+		
+		for (unsigned int i = limit; i > pend_index && pend_index < pend.size(); i--) {
+			dq::iterator pos = std::lower_bound(main.begin(), main.end(), pend[pend_index]);
+			main.insert(pos, pend[pend_index]);
+			pend_index++;
+		}
+		
+		jacobsthal_index++;
+	}
+
+	// STEP 3: Copy sorted main back to sequence
+	sequence.clear();
+	if (!main.empty())
+		appendRange(sequence, makeRange(main.begin(), main.end() - 1));
+
+	// STEP 4: Recurse with next group size
+	if (elementSize > 1) {
+		initializeAndInsert(sequence, 2 * elementSize);
+	}
 }
 
 static int dividePairsAndSort(dq &sequence, unsigned int elementSize = 1) {
@@ -60,11 +87,9 @@ static int dividePairsAndSort(dq &sequence, unsigned int elementSize = 1) {
 }
 
 std::deque<int> ford_johnson(std::deque<int> sequence) {
-	unsigned int elementSize;
-
-	elementSize = dividePairsAndSort(sequence);
-	initializeAndInsert(sequence, elementSize);
+	dividePairsAndSort(sequence);
+	initializeAndInsert(sequence, 1);
 	return sequence;
 }
-	
+
 
