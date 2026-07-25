@@ -13,7 +13,7 @@ void	appendRange(dq &s, Range<dq::iterator> r) {
 	s.insert(s.end(), r.first, r.last + 1);
 }
 
-void	initializeAndInsert(dq &sequence, unsigned int elementSize)
+void	initializeAndInsertWrong(dq &sequence, unsigned int elementSize)
 {
 	dq				main, pend;
 
@@ -64,8 +64,66 @@ void	initializeAndInsert(dq &sequence, unsigned int elementSize)
 
 	// STEP 4: Recurse with next group size
 	if (elementSize > 1) {
-		initializeAndInsert(sequence, 2 * elementSize);
+		initializeAndInsertWrong(sequence, 2 * elementSize);
 	}
+}
+
+void	initializeAndInsert(dq &sequence, unsigned int elementSize)
+{
+	dq				main, pend, nonPartecipating;
+	unsigned int	pairSize = 2 * elementSize;
+
+	// STEP 1: Sort elements in main and pend groups
+	for (dq::iterator it = sequence.begin(); pairSize <= std::distance(it, sequence.end()); it += pairSize) {
+		
+		Range<dq::iterator>	elementA = makeRange(it, it + elementSize - 1);
+		Range<dq::iterator>	elementB = makeRange(it + elementSize, it + pairSize - 1);
+		
+		if (it == sequence.begin()) 
+			appendRange(main, elementB); // Only b1 goes in main
+		else
+			appendRange(pend, elementB); // Other b's goes in pens
+
+		appendRange(main, elementA); // Every a goes in main
+	}
+
+	// Handle remaining elements
+	unsigned int processedElements = (sequence.size() / pairSize) * pairSize;
+	for (dq::iterator it = sequence.begin() + processedElements; it != sequence.end(); it++) {
+		nonPartecipating.insert(nonPartecipating.end(), *it);
+	}
+
+	// STEP 2: Insert pend elements into main using Jacobsthal sequence
+	// TODO reapet this step for every b element in the pend!!
+	unsigned int jacoIndex = 1;
+	unsigned int jacoNum;
+
+	// TODO add boundaries
+	jacoNum = getJacobsthalNumber(jacoIndex);
+	dq::iterator elemEnd = pend.begin() + (jacoNum * elementSize - 1);
+	dq::iterator elemStart = elemEnd - elementSize + 1;
+
+	Range<dq::iterator> elementToInsert = makeRange(elemStart, elemEnd);
+
+	while (true) {
+		dq::iterator comparison = main.begin() + jacoNum * elementSize - 1;
+		if (*comparison > *elementToInsert.last) {
+			//insert element
+			break;
+		}
+		comparison -= elementSize;
+		// TODO add boundaries
+	}
+
+	// // STEP 3: Copy sorted main back to sequence
+	// sequence.clear();
+	// if (!main.empty())
+	// 	appendRange(sequence, makeRange(main.begin(), main.end() - 1));
+	//
+	// // STEP 4: Recurse with next group size
+	// if (elementSize > 1) {
+	// 	initializeAndInsert(sequence, 2 * elementSize);
+	// }
 }
 
 static int dividePairsAndSort(dq &sequence, unsigned int elementSize = 1) {
