@@ -117,9 +117,9 @@ void	initializeAndInsert(dq &sequence, unsigned int elementSize)
 			while (*pos > *elementB.last)
 				pos -= elementSize;
 
-			// Insert the entire range into main (and remove from pend)
+			// Insert the entire range into main (and removes it from pend)
 			main.insert(pos, elementB.first, elementB.last + 1);
-			pend.erase(elementB.first, elementB.last);
+			pend.erase(elementB.first, elementB.last );
 		}
 
 		jacoIndex++;
