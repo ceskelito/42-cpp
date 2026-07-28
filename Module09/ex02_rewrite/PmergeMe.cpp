@@ -103,26 +103,41 @@ void	initializeAndInsert(dq &sequence, unsigned int elementSize)
 		initializeAndInsert(sequence, elementSize / 2);
 }
 
-static int dividePairsAndSort(dq &sequence, unsigned int elementSize = 1) {
+/**
+ * @param sequence - The original sequence
+ * @param elementSize - The initial size of the element
+ *
+ * Divide the sequence in elements of size elementSize, doubled on every recursion;
+ * puts the smaller element of each pair before the bigger element.
+ *
+ * An element is a range of units in the sequence.
+ * The value of the element is determined by the last unit in the element.
+ *
+ * Break the recursion when the size of the sequence is smaller then the size of a pair.
+ *
+ * Return value: The latest possible size of the elements
+ * 
+ * */
+static int divideIntoAndSortPairs(dq &sequence, unsigned int elementSize = 1) {
 
 	unsigned int pairSize = 2 * elementSize;
 
 	if (pairSize > sequence.size())
-		return elementSize;
+		return elementSize / 2;
 
 	for (dq::iterator it = sequence.begin(); pairSize <= std::distance(it, sequence.end()); it += pairSize) {
 
-		Range<dq::iterator>	elementA = makeRange(it, it + elementSize - 1);
-		Range<dq::iterator>	elementB = makeRange(it + elementSize, it + pairSize - 1);
+		Range<dq::iterator>	firstElement = makeRange(it, it + elementSize - 1);
+		Range<dq::iterator>	secondElement = makeRange(it + elementSize, it + pairSize - 1);
 
-		if (*elementA.last > *elementB.last)
-			std::swap_ranges(elementA.first, elementB.first, elementB.first);
+		if (*firstElement.last > *secondElement.last)
+			std::swap_ranges(firstElement.first, secondElement.first, secondElement.first);
 	}
-	return dividePairsAndSort(sequence, 2 * elementSize);
+	return divideIntoAndSortPairs(sequence, 2 * elementSize);
 }
 
 std::deque<int> ford_johnson(std::deque<int> sequence) {
-	unsigned int elementSize = dividePairsAndSort(sequence);
+	unsigned int elementSize = divideIntoAndSortPairs(sequence);
 
 	// DEBUG
 	std::cout << "Diveded And Sorted : ";
