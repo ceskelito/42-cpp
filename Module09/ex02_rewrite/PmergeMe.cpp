@@ -16,7 +16,7 @@ void	appendRange(dq &s, Range<dq::iterator> r) {
 
 void	initializeAndInsert(dq &sequence, unsigned int elementSize)
 {
-	dq				main, pend, nonPartecipating;
+	dq				main, pend, non;
 	unsigned int	pairSize = 2 * elementSize;
 
 	std::cout << std::endl << "SIZE: " << elementSize << std::endl;
@@ -49,10 +49,10 @@ void	initializeAndInsert(dq &sequence, unsigned int elementSize)
 	// Handle remaining elements
 	unsigned int processedElements = (sequence.size() / pairSize) * pairSize;
 	for (dq::iterator it = sequence.begin() + processedElements; it != sequence.end(); it++) {
-		nonPartecipating.insert(nonPartecipating.end(), *it);
+		non.insert(non.end(), *it);
 	}
 	std::cout << "non: ";
-	debug::printDeque(nonPartecipating);
+	debug::printDeque(non);
 
 	// return; // DEBUG
 	
@@ -93,7 +93,7 @@ void	initializeAndInsert(dq &sequence, unsigned int elementSize)
 	// STEP 3: Copy sorted main + nonPartecipating back to sequence
 	sequence.clear();
 	sequence.insert(sequence.end(), main.begin(), main.end());
-	sequence.insert(sequence.end(), nonPartecipating.begin(), nonPartecipating.end());
+	sequence.insert(sequence.end(), non.begin(), non.end());
 	
 	std::cout << "PRE RECURSION: ";
 	debug::printDeque(sequence);
@@ -136,6 +136,102 @@ static int divideIntoAndSortPairs(dq &sequence, unsigned int elementSize = 1) {
 	return divideIntoAndSortPairs(sequence, 2 * elementSize);
 }
 
+static void insertPendIntoMain(dq &main, dq &pend, unsigned int elementSize);
+static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
+	
+	dq main, pend, non;
+
+	unsigned int	pairSize = 2 * elementSize;
+
+	// STEP 2: Sort elements in main and pend groups
+	for (dq::iterator it = sequence.begin(); pairSize <= std::distance(it, sequence.end()); it += pairSize)
+	{
+		Range<dq::iterator>	elementB = makeRange(it, it + elementSize - 1);
+		Range<dq::iterator>	elementA = makeRange(it + elementSize, it + pairSize - 1);
+		
+		if (it == sequence.begin()) 
+			appendRange(main, elementB); // Only b1 goes in main
+		else
+			appendRange(pend, elementB); // Other b's goes in pend
+		appendRange(main, elementA); // Every a goes in main
+	}
+
+	// Handle remaining elements
+	unsigned int processedElements = (sequence.size() / pairSize) * pairSize;
+	for (dq::iterator it = sequence.begin() + processedElements; it != sequence.end(); it++) {
+		non.insert(non.end(), *it);
+	}
+
+	// DEBUG
+	std::cout << "SIZE: " << elementSize << std::endl;
+	std::cout << "main: ";
+	debug::printDeque(main, elementSize);
+	std::cout << std::endl;
+	std::cout << "pend: ";
+	debug::printDeque(pend, elementSize);
+	std::cout << std::endl;
+	std::cout << "non: ";
+	debug::printDeque(non);
+	// END DEBUG
+
+	insertPendIntoMain(main, pend, elementSize);
+
+	sequence.clear();
+	sequence.insert(sequence.end(), main.begin(), main.end());
+	sequence.insert(sequence.end(), non.begin(), non.end());
+
+	// return; // DEBUG
+
+	if (elementSize > 1)
+		initializeMainAndPend(sequence, elementSize / 2);
+}
+
+static Range<dq::iterator> getElementAtIndex(dq &sequence, unsigned int index, unsigned int elementSize) {
+	if (elementSize == 0 || sequence.empty())
+		return makeRange(sequence.end(), sequence.end());
+
+	const unsigned int elementCount = sequence.size() / elementSize;
+	if (index >= elementCount)
+		return makeRange(sequence.end(), sequence.end());
+
+	dq::iterator first = sequence.begin() + (index * elementSize);
+	dq::iterator last = first + elementSize - 1;
+	return makeRange(first, last);
+}
+
+static void insertPendIntoMain(dq &main, dq &pend, unsigned int elementSize) {
+
+	(void) main;
+	(void) pend;
+	(void) elementSize;
+
+	// STEP 3: Insert pend elements into main using Jacobsthal sequence
+	unsigned int jacoIndex = 1;
+	unsigned int jacoNum = 0;
+	unsigned int prevJacoNum;
+
+	while (pend.size()) {
+		prevJacoNum = jacoNum;
+		jacoNum = getJacobsthalNumber(jacoIndex);
+
+		// Insert elements B from jacoNum down to prevJacoNum+1, backwards
+		for (unsigned int b_index = jacoNum; b_index > prevJacoNum; b_index--) {
+
+			// Create Range for this B element
+			Range<dq::iterator> elementB =	getElementAtIndex(pend, b_index, elementSize);
+			dq::iterator insertPosition = main.begin() + b_index * elementSize - 1;
+
+			while (*insertPosition > *elementB.last)
+				insertPosition -= elementSize;
+
+			// Insert the entire range into main (and removes it from pend)
+			main.insert(insertPosition, elementB.first, elementB.last);
+			pend.erase(elementB.first, elementB.last );
+		}
+		jacoIndex++;
+	}
+};
+
 std::deque<int> ford_johnson(std::deque<int> sequence) {
 	unsigned int elementSize = divideIntoAndSortPairs(sequence);
 
@@ -144,7 +240,7 @@ std::deque<int> ford_johnson(std::deque<int> sequence) {
 	debug::printDeque(sequence);
 	std::cout << std::endl;
 
-	initializeAndInsert(sequence, elementSize);
+	initializeMainAndPend(sequence, elementSize);
 	return sequence;
 }
 
