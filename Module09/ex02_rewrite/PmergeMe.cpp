@@ -163,7 +163,7 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 	}
 
 	// DEBUG
-	std::cout << "SIZE: " << elementSize << std::endl;
+	std::cout << std::endl << "SIZE: " << elementSize << std::endl;
 	std::cout << "main: ";
 	debug::printDeque(main, elementSize);
 	std::cout << std::endl;
@@ -201,35 +201,51 @@ static Range<dq::iterator> getElementAtIndex(dq &sequence, unsigned int index, u
 
 static void insertPendIntoMain(dq &main, dq &pend, unsigned int elementSize) {
 
-	(void) main;
-	(void) pend;
-	(void) elementSize;
+	if (elementSize == 0 || pend.empty())
+		return;
 
-	// STEP 3: Insert pend elements into main using Jacobsthal sequence
-	unsigned int jacoIndex = 1;
-	unsigned int jacoNum = 0;
-	unsigned int prevJacoNum;
+	struct Block {
+		Range<dq::iterator> range;
+		unsigned int label;
 
-	while (pend.size()) {
-		prevJacoNum = jacoNum;
-		jacoNum = getJacobsthalNumber(jacoIndex);
+		Block(Range<dq::iterator> r, unsigned int l) : range(r), label(l) {}
+	};
 
-		// Insert elements B from jacoNum down to prevJacoNum+1, backwards
-		for (unsigned int b_index = jacoNum; b_index > prevJacoNum; b_index--) {
-
-			// Create Range for this B element
-			Range<dq::iterator> elementB =	getElementAtIndex(pend, b_index, elementSize);
-			dq::iterator insertPosition = main.begin() + b_index * elementSize - 1;
-
-			while (*insertPosition > *elementB.last)
-				insertPosition -= elementSize;
-
-			// Insert the entire range into main (and removes it from pend)
-			main.insert(insertPosition, elementB.first, elementB.last);
-			pend.erase(elementB.first, elementB.last );
-		}
-		jacoIndex++;
+	std::deque<Block> pendBlocks;
+	for (dq::iterator it = pend.begin();
+		 std::distance(it, pend.end()) >= static_cast<int>(elementSize);
+		 it += elementSize) {
+		pendBlocks.push_back(Block(makeRange(it, it + elementSize - 1),
+						   static_cast<unsigned int>(pendBlocks.size() + 2)));
 	}
+
+	unsigned int jacoIndex = 1;
+	while (!pendBlocks.empty())
+	{
+		unsigned int currentLabel = getJacobsthalNumber(jacoIndex) + 1;
+		unsigned int previousLabel = (jacoIndex > 1) ? getJacobsthalNumber(jacoIndex - 1) + 1 : 1;
+
+		for (unsigned int label = currentLabel; label > previousLabel; --label)
+		{
+			std::deque<Block>::iterator block;
+			for (block = pendBlocks.begin(); block != pendBlocks.end(); ++block)
+			{
+				if (block->label == label)
+					break;
+			}
+				dq::iterator insertPosition = main.begin() + elementSize * (currentLabel - 1) - 1;
+
+				while (*insertPosition > *block->range.last)
+					insertPosition -= elementSize;
+				main.insert(insertPosition - elementSize, block->range.first, block->range.last + 1);
+				pendBlocks.erase(block);
+				break;
+		}
+
+		++jacoIndex;
+	}
+
+	pend.clear();
 };
 
 std::deque<int> ford_johnson(std::deque<int> sequence) {

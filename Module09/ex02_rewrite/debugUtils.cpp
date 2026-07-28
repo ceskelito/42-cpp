@@ -16,7 +16,7 @@ void debug::printDeque(std::deque<int> d, unsigned int elementSize) {
 
     for (std::deque<int>::iterator it = d.begin(); it != d.end(); it++) {
 
-		if (i == elementSize * 2) {
+		if (i == elementSize) {
 			i = 0;
 			color++;
 		}
