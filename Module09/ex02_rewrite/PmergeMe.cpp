@@ -48,7 +48,7 @@ static int divideIntoAndSortPairs(dq &sequence, unsigned int elementSize = 1) {
 	return divideIntoAndSortPairs(sequence, 2 * elementSize);
 }
 
-static void insertPendIntoMain(std::deque<Element<dq::iterator> > &main, std::deque<Element<dq::iterator> > &pend, unsigned int elementSize);
+static void insertPendIntoMain(std::deque<Element<dq::iterator> > &main, std::deque<Element<dq::iterator> > &pend);
 static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 	
 	dq non;
@@ -76,7 +76,7 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 		non.insert(non.end(), *it);
 	}
 
-	insertPendIntoMain(main, pend, elementSize);
+	insertPendIntoMain(main, pend);
 
 	sequence.clear();
 	for (std::deque<Element<dq::iterator> >::iterator it = main.begin(); it != main.end(); it++)
@@ -85,19 +85,6 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 
 	if (elementSize > 1)
 		initializeMainAndPend(sequence, elementSize / 2);
-}
-
-static Range<dq::iterator> getElementAtIndex(dq &sequence, unsigned int index, unsigned int elementSize) {
-	if (elementSize == 0 || sequence.empty())
-		return makeRange(sequence.end(), sequence.end());
-
-	const unsigned int elementCount = sequence.size() / elementSize;
-	if (index >= elementCount)
-		return makeRange(sequence.end(), sequence.end());
-
-	dq::iterator first = sequence.begin() + (index * elementSize);
-	dq::iterator last = first + elementSize - 1;
-	return makeRange(first, last);
 }
 
 static void insertPendIntoMain(std::deque<Element<dq::iterator> > &main, std::deque<Element<dq::iterator> > &pend) {
@@ -110,17 +97,27 @@ static void insertPendIntoMain(std::deque<Element<dq::iterator> > &main, std::de
 
 		for (unsigned int index = currentIndex; index > previousIndex; --index)
 		{
-			std::deque<Element<dq::iterator> >::iterator element;
+			std::deque<Element<dq::iterator> >::iterator elementToInsert;
+			std::deque<Element<dq::iterator> >::iterator insertPosition;
 
 			// Find the right pend element
-			for (element = pend.begin(); element != pend.end(); ++element)
-				if (element->index == index)
+			for (elementToInsert = pend.begin(); elementToInsert != pend.end(); ++elementToInsert)
+				if (elementToInsert->index == index)
 					break;
-			if (element == pend.end())
+			if (elementToInsert == pend.end())
 				break; // Manage the case !
 
-		}
+			for (insertPosition = main.begin(); insertPosition != main.end(); ++insertPosition)
+				if (insertPosition->label == 'a' && insertPosition->index == elementToInsert->index - 1)
+					break;
+			if (insertPosition == main.end())
+				break; // Manage the case !
 
+			while (insertPosition->value > elementToInsert->value)
+				insertPosition--;
+			main.insert(insertPosition, *elementToInsert);
+			pend.erase(elementToInsert);
+		}
 		++jacoIndex;
 	}
 	pend.clear();
