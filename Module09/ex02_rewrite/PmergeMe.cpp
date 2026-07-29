@@ -5,6 +5,8 @@
 #include "Element.hpp"
 #include "debugUtils.hpp"
 
+// TODO Modify Range struct to use the [first, last) c++ standard (now using [first, last] )
+
 typedef std::deque<int> dq;
 
 unsigned int	getJacobsthalNumber(unsigned int index) {
