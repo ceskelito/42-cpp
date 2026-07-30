@@ -54,6 +54,33 @@ static void insertPendIntoMain(ElementList &main, ElementList &pend);
 static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 	
 	//TODO Fix, crashes on size 1
+	/**
+	 * 
+Breakpoint 3, initializeMainAndPend (sequence=std::deque with 9 elements = {...}, elementSize=2) at PmergeMe.cpp:67
+67                      Element<dq::iterator>   elementA (makeRange(it + elementSize, it + pairSize), 'a', index);
+(gdb) print sequence
+$13 = std::deque with 9 elements = {5, 6, 3, 9, 7, 8, 5, 10, 1}
+(gdb) c
+Continuing.
+
+Breakpoint 4, initializeMainAndPend (sequence=std::deque with 9 elements = {...}, elementSize=2) at PmergeMe.cpp:69
+69                      if (it == sequence.begin())
+(gdb) print sequence
+$14 = std::deque with 9 elements = {5, 6, 3, 9, 7, 8, 5, 10, 1}
+(gdb) c
+Continuing.
+SIZE: 2
+main : 5 6 3 9 5 10
+pend : 7 8
+
+
+Breakpoint 1, initializeMainAndPend (sequence=std::deque with 9 elements = {...}, elementSize=1) at PmergeMe.cpp:66
+66                      Element<dq::iterator>   elementB (makeRange(it, it + elementSize), 'b', index);
+(gdb) print sequence
+$15 = std::deque with 9 elements = {166075, 21840, 5, 6, 3, 9, 0, 0, 1}
+(gdb)
+
+*/
 	dq			non;
 	ElementList	main, pend;
 
