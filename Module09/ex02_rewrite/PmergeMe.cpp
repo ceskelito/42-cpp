@@ -4,17 +4,17 @@
 #include "Range.hpp"
 #include "Element.hpp"
 #include "debugUtils.hpp"
-
-// TODO Modify Range struct to use the [first, last) c++ standard (now using [first, last] )
+#include <iostream>
 
 typedef std::deque<int> dq;
+typedef std::deque<Element<dq::iterator> > ElementList;
 
 unsigned int	getJacobsthalNumber(unsigned int index) {
 	return ( (std::pow(2, index+1) + std::pow(-1, index)) / 3 );
 }
 
 void	appendRange(dq &s, Range<dq::iterator> r) {
-	s.insert(s.end(), r.first, r.last + 1);
+	s.insert(s.end(), r.first, r.last); 
 }
 
 /**
@@ -50,11 +50,12 @@ static int divideIntoAndSortPairs(dq &sequence, unsigned int elementSize = 1) {
 	return divideIntoAndSortPairs(sequence, 2 * elementSize);
 }
 
-static void insertPendIntoMain(std::deque<Element<dq::iterator> > &main, std::deque<Element<dq::iterator> > &pend);
+static void insertPendIntoMain(ElementList &main, ElementList &pend);
 static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 	
-	dq non;
-	std::deque<Element<dq::iterator> > main, pend;
+	//TODO Fix, crashes on size 1
+	dq			non;
+	ElementList	main, pend;
 
 	unsigned int	pairSize = 2 * elementSize;
 
@@ -62,8 +63,8 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 	int index = 1;
 	for (dq::iterator it = sequence.begin(); pairSize <= std::distance(it, sequence.end()); it += pairSize, index++)
 	{
-		Element<dq::iterator>	elementB (makeRange(it, it + elementSize - 1), 'b', index);
-		Element<dq::iterator>	elementA (makeRange(it + elementSize, it + pairSize - 1), 'a', index);
+		Element<dq::iterator>	elementB (makeRange(it, it + elementSize), 'b', index);
+		Element<dq::iterator>	elementA (makeRange(it + elementSize, it + pairSize), 'a', index);
 		
 		if (it == sequence.begin()) 
 			main.push_back(elementB); // Only b1 goes in main
@@ -78,10 +79,28 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 		non.insert(non.end(), *it);
 	}
 
+	// DEBUG
+	std::cout << "SIZE: " << elementSize << std::endl;
+
+	std::cout << "main : ";
+	dq tmpMain;
+	for (ElementList::iterator it = main.begin(); it != main.end(); it++)
+		appendRange(tmpMain, it->range);
+	debug::printDeque(tmpMain);
+	std::cout << std::endl;
+
+	std::cout << "pend : ";
+	dq tmpPend;
+	for (ElementList::iterator it = pend.begin(); it != pend.end(); it++)
+		appendRange(tmpPend, it->range);
+	debug::printDeque(tmpPend);
+	std::cout << std::endl << std::endl;
+	// END DEBUG
+
 	insertPendIntoMain(main, pend);
 
 	sequence.clear();
-	for (std::deque<Element<dq::iterator> >::iterator it = main.begin(); it != main.end(); it++)
+	for (ElementList::iterator it = main.begin(); it != main.end(); it++)
 		appendRange(sequence, it->range);
 	sequence.insert(sequence.end(), non.begin(), non.end());
 
@@ -89,7 +108,7 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 		initializeMainAndPend(sequence, elementSize / 2);
 }
 
-static void insertPendIntoMain(std::deque<Element<dq::iterator> > &main, std::deque<Element<dq::iterator> > &pend) {
+static void insertPendIntoMain(ElementList &main, ElementList &pend) {
 
 	unsigned int jacoIndex = 1;
 	while (!pend.empty())
@@ -99,8 +118,8 @@ static void insertPendIntoMain(std::deque<Element<dq::iterator> > &main, std::de
 
 		for (unsigned int index = currentIndex; index > previousIndex; --index)
 		{
-			std::deque<Element<dq::iterator> >::iterator elementToInsert;
-			std::deque<Element<dq::iterator> >::iterator insertPosition;
+			ElementList::iterator elementToInsert;
+			ElementList::iterator insertPosition;
 
 			// Find the right pend element
 			for (elementToInsert = pend.begin(); elementToInsert != pend.end(); ++elementToInsert)
@@ -126,12 +145,14 @@ static void insertPendIntoMain(std::deque<Element<dq::iterator> > &main, std::de
 }
 
 std::deque<int> ford_johnson(std::deque<int> sequence) {
+
 	unsigned int elementSize = divideIntoAndSortPairs(sequence);
 
 	// DEBUG
 	std::cout << "Diveded And Sorted : ";
 	debug::printDeque(sequence);
 	std::cout << std::endl;
+	// END DEBUG
 
 	initializeMainAndPend(sequence, elementSize);
 	return sequence;
