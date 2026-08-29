@@ -37,7 +37,7 @@ static int divideIntoAndSortPairs(dq &sequence, unsigned int elementSize = 1) {
 	unsigned int pairSize = 2 * elementSize;
 
 	if (pairSize > sequence.size())
-		return elementSize / 2;
+		return (elementSize == 1) ? 1 : elementSize / 2;
 
 	for (dq::iterator it = sequence.begin(); pairSize <= std::distance(it, sequence.end()); it += pairSize) {
 
@@ -126,10 +126,11 @@ $15 = std::deque with 9 elements = {166075, 21840, 5, 6, 3, 9, 0, 0, 1}
 
 	insertPendIntoMain(main, pend);
 
-	sequence.clear();
+	dq reordered;
 	for (ElementList::iterator it = main.begin(); it != main.end(); it++)
-		appendRange(sequence, it->range);
-	sequence.insert(sequence.end(), non.begin(), non.end());
+		appendRange(reordered, it->range);
+	reordered.insert(reordered.end(), non.begin(), non.end());
+	sequence.swap(reordered);
 
 	if (elementSize > 1)
 		initializeMainAndPend(sequence, elementSize / 2);
@@ -140,14 +141,14 @@ static void insertPendIntoMain(ElementList &main, ElementList &pend) {
 	unsigned int jacoIndex = 1;
 	while (!pend.empty())
 	{
+		ElementList::iterator elementToInsert;
+		ElementList::iterator insertPosition;
+		bool insertedThisRound = false;
 		unsigned int currentIndex = getJacobsthalNumber(jacoIndex) + 1;
 		unsigned int previousIndex = (jacoIndex > 1) ? getJacobsthalNumber(jacoIndex - 1) + 1 : 1;
 
 		for (unsigned int index = currentIndex; index > previousIndex; --index)
 		{
-			ElementList::iterator elementToInsert;
-			ElementList::iterator insertPosition;
-
 			// Find the right pend element
 			for (elementToInsert = pend.begin(); elementToInsert != pend.end(); ++elementToInsert)
 				if (elementToInsert->index == index)
@@ -161,10 +162,40 @@ static void insertPendIntoMain(ElementList &main, ElementList &pend) {
 			if (insertPosition == main.end())
 				break; // Manage the case !
 
-			while (insertPosition->value > elementToInsert->value)
-				insertPosition--;
+			while (insertPosition != main.begin()) {
+				ElementList::iterator previousPosition = insertPosition;
+				--previousPosition;
+				if (previousPosition->value <= elementToInsert->value)
+					break;
+				insertPosition = previousPosition;
+			}
 			main.insert(insertPosition, *elementToInsert);
 			pend.erase(elementToInsert);
+			insertedThisRound = true;
+		}
+
+		if (!insertedThisRound)
+		{
+			while (!pend.empty())
+			{
+				elementToInsert = pend.end();
+				--elementToInsert;
+
+				for (insertPosition = main.begin(); insertPosition != main.end(); ++insertPosition)
+					if (insertPosition->label == 'a' && insertPosition->index == elementToInsert->index - 1)
+						break;
+
+				while (insertPosition != main.begin()) {
+					ElementList::iterator previousPosition = insertPosition;
+					--previousPosition;
+					if (previousPosition->value <= elementToInsert->value)
+						break;
+					insertPosition = previousPosition;
+				}
+				main.insert(insertPosition, *elementToInsert);
+				pend.erase(elementToInsert);
+			}
+			break;
 		}
 		++jacoIndex;
 	}
