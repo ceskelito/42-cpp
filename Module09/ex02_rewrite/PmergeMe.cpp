@@ -55,25 +55,28 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 	dq			non;
 	ElementList	main, pend;
 
-	unsigned int	pairSize = 2 * elementSize;
+	//unsigned int	pairSize = 2 * elementSize;
 
 	// STEP 2: Sort elements in main and pend groups
-	int index = 1;
-	for (dq::iterator it = sequence.begin(); pairSize <= std::distance(it, sequence.end()); it += pairSize, index++)
+	int nElements = sequence.size() / elementSize;
+	for (int i = 0; i < nElements; i++)
 	{
-		Element<dq::iterator>	elementB (makeRange(it, it + elementSize), 'b', index);
-		Element<dq::iterator>	elementA (makeRange(it + elementSize, it + pairSize), 'a', index);
-		
-		if (it == sequence.begin()) 
-			main.push_back(elementB); // Only b1 goes in main
+		dq::iterator 			elementStartIt = sequence.begin() + i * elementSize;
+		dq::iterator 			elementEndIt = elementStartIt + elementSize;
+		Range<dq::iterator>		elementRange = makeRange(elementStartIt,elementEndIt);
+		int 					elementIndex = (i / 2) + 1; 
+		char 					elementLabel = (i % 2 == 0) ? 'b' : 'a';
+		Element<dq::iterator>	element (elementRange, elementLabel, elementIndex);
+
+		if (elementLabel == 'a' || elementIndex == 1)
+			main.push_back(element); // Every a's and b1 goes in main
 		else
-			pend.push_back(elementB); // Other b's goes in pend
-		main.push_back(elementA); // Every a goes in main
+			pend.push_back(element); // Other b's goes in pend
 	}
 
-	// Handle remaining elements
-	unsigned int processedElements = (sequence.size() / pairSize) * pairSize;
-	for (dq::iterator it = sequence.begin() + processedElements; it != sequence.end(); it++) {
+	// Handle remaining units that can't form an element
+	unsigned int processedUnits = (sequence.size() / elementSize) * elementSize;
+	for (dq::iterator it = sequence.begin() + processedUnits; it != sequence.end(); it++) {
 		non.insert(non.end(), *it);
 	}
 
