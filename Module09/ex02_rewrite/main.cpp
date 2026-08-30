@@ -1,4 +1,5 @@
 // #include "PmergeMe.hpp"
+#include "PmergeMe_impl.hpp"
 #include <iostream>
 #include <vector>
 #include <deque>
@@ -56,14 +57,24 @@ int main( int ac, char **av ) {
 		std::cerr << "Error: requested one argument." << std::endl;
 		return 1;
 	}
-	// try{
-	// 	time_t	timeUsed = PmergeMe(extractNumbersDeque(av[1]));
-	// 	std::cout << "Time used to order: " << timeUsed << std::endl;
-	// }
-	// catch (std::exception &e) {
-	// 	std::cerr << "Error: " << e.what() << std::endl;
-	// }
-	std::deque<int> firstStep = ford_johnson(extractNumbersDeque(av[1]));
-	std::cout << std::endl << "MAIN" << std::endl;
-	debug::printDeque(firstStep);
+	try {
+		std::deque<int> dq = extractNumbersDeque(av[1]);
+		unsigned long dqComparisons = 0;
+		std::deque<int> firstStep = ford_johnson_with_count(dq, dqComparisons);
+		std::cout << std::endl << "MAIN (deque)" << std::endl;
+		debug::printDeque(firstStep);
+		std::cout << std::endl << "Comparisons (deque): " << dqComparisons << std::endl;
+
+		std::vector<int> vec = extractNumbers(av[1]);
+		unsigned long vecComparisons = 0;
+		std::vector<int> vecResult = ford_johnson_with_count_template< std::vector, int, std::allocator<int> >(vec, vecComparisons);
+		std::cout << std::endl << "MAIN (vector)" << std::endl;
+		for (std::vector<int>::iterator it = vecResult.begin(); it != vecResult.end(); ++it)
+			std::cout << *it << " ";
+		std::cout << std::endl << "Comparisons (vector): " << vecComparisons << std::endl;
+	}
+	catch (std::exception &e) {
+		std::cerr << "Error: " << e.what() << std::endl;
+		return 1;
+	}
 }
