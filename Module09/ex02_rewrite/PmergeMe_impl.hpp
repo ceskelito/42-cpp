@@ -76,14 +76,14 @@ private:
 
     void insertPendIntoMain(ElementList &main, ElementList &pend) {
 
-        unsigned int jacoIndex = 1;
+        unsigned int jacoIndex = 2; // index 2 return the number 3
         while (!pend.empty())
         {
             typename ElementList::iterator elementToInsert;
             typename ElementList::iterator insertPosition;
             bool insertedThisRound = false;
-            unsigned int currentIndex = getJacobsthalNumber(jacoIndex) + 1;
-            unsigned int previousIndex = (jacoIndex > 1) ? getJacobsthalNumber(jacoIndex - 1) + 1 : 1;
+            unsigned int currentIndex = getJacobsthalNumber(jacoIndex);
+            unsigned int previousIndex = (jacoIndex > 1) ? getJacobsthalNumber(jacoIndex - 1) : 1;
 
             for (unsigned int index = currentIndex; index > previousIndex; --index)
             {
@@ -101,8 +101,7 @@ private:
                     break; // position not found
 
                 while (insertPosition != main.begin()) {
-                    typename ElementList::iterator previousPosition = insertPosition;
-                    --previousPosition;
+                    typename ElementList::iterator previousPosition = insertPosition - 1;
                     if (cmpLessEqual(previousPosition->value, elementToInsert->value))
                         break;
                     insertPosition = previousPosition;
@@ -116,16 +115,14 @@ private:
             {
                 while (!pend.empty())
                 {
-                    elementToInsert = pend.end();
-                    --elementToInsert;
+                    elementToInsert = pend.end() - 1;
 
                     for (insertPosition = main.begin(); insertPosition != main.end(); ++insertPosition)
                         if (insertPosition->label == 'a' && insertPosition->index == elementToInsert->index)
                             break;
 
                     while (insertPosition != main.begin()) {
-                        typename ElementList::iterator previousPosition = insertPosition;
-                        --previousPosition;
+                        typename ElementList::iterator previousPosition = insertPosition - 1;
                         if (cmpLessEqual(previousPosition->value, elementToInsert->value))
                             break;
                         insertPosition = previousPosition;

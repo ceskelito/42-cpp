@@ -45,6 +45,17 @@ std::deque<int> extractNumbersDeque(const std::string& input) {
     return numbers;
 }
 
+#include <cmath>
+int F(int n)
+{
+    int sum = 0;
+    for (int k = 1; k <= n; ++k) {
+        double value = (3.0 / 4.0) * k;
+        sum += static_cast<int>(ceil(log2(value)));
+    }
+    return sum;
+}
+
 // #include "PmergeMe.hpp"
 
 #include "debugUtils.hpp"
@@ -72,6 +83,8 @@ int main( int ac, char **av ) {
 		for (std::vector<int>::iterator it = vecResult.begin(); it != vecResult.end(); ++it)
 			std::cout << *it << " ";
 		std::cout << std::endl << "Comparisons (vector): " << vecComparisons << std::endl;
+
+		std::cout << std::endl << "Comparisons (expected): " << F(vec.size()) << std::endl;
 	}
 	catch (std::exception &e) {
 		std::cerr << "Error: " << e.what() << std::endl;
