@@ -58,8 +58,6 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 	dq			non;
 	ElementList	main, pend;
 
-	//unsigned int	pairSize = 2 * elementSize;
-
 	// STEP 2: Sort elements in main and pend groups
 	int nElements = sequence.size() / elementSize;
 	for (int i = 0; i < nElements; i++)
@@ -67,8 +65,10 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 		dq::iterator 			elementStartIt = sequence.begin() + i * elementSize;
 		dq::iterator 			elementEndIt = elementStartIt + elementSize;
 		Range<dq::iterator>		elementRange = makeRange(elementStartIt,elementEndIt);
+
 		int 					elementIndex = (i / 2) + 1; 
 		char 					elementLabel = (i % 2 == 0) ? 'b' : 'a';
+
 		Element<dq::iterator>	element (elementRange, elementLabel, elementIndex);
 
 		if (elementLabel == 'a' || elementIndex == 1)
@@ -117,71 +117,75 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 		initializeMainAndPend(sequence, elementSize / 2);
 }
 
+static void insertPendElement(ElementList &main, ElementList &pend, ElementList::iterator &elementToInsert) {
+
+	ElementList::iterator	insertPosition;
+	ElementList::iterator	previousPosition;
+
+	for (insertPosition = main.begin(); insertPosition != main.end(); ++insertPosition)
+		if (insertPosition->label == 'a' && insertPosition->index == elementToInsert->index)
+			break;
+
+	while (insertPosition != main.begin()) {
+
+		previousPosition = insertPosition - 1;
+
+		g_cmps++;
+		if (previousPosition->value <= elementToInsert->value)
+			break;
+
+		--insertPosition;
+	}
+	main.insert(insertPosition, *elementToInsert);
+	pend.erase(elementToInsert);
+}
+
 static void insertPendIntoMain(ElementList &main, ElementList &pend) {
 
-	unsigned int jacoIndex = 2;
+	unsigned int			jacoIndex = 2; // Usefull Jacobsthal numbers starts from 3
+	ElementList::iterator	elementToInsert;
+	bool					foundJacoNumInPend;
+
 	while (!pend.empty())
 	{
-		ElementList::iterator elementToInsert;
-		ElementList::iterator insertPosition;
-		bool insertedThisRound = false;
-		unsigned int currentIndex = getJacobsthalNumber(jacoIndex);
-		unsigned int previousIndex = (jacoIndex > 1) ? getJacobsthalNumber(jacoIndex - 1) : 1;
+		unsigned int	currJacoNum = getJacobsthalNumber(jacoIndex);
+		unsigned int	prevJacoNum = getJacobsthalNumber(jacoIndex - 1);
 
-		for (unsigned int index = currentIndex; index > previousIndex; --index)
+		foundJacoNumInPend = false;
+
+		// Fill main with a batch of pend's elements, from currJacoNum to prevJacoNum
+		for (unsigned int pendIndex = currJacoNum; pendIndex > prevJacoNum; --pendIndex)
 		{
-			// Find the right pend element
+			// Find the pend element with index corresponding to currJacoNum
 			for (elementToInsert = pend.begin(); elementToInsert != pend.end(); ++elementToInsert)
-				if (elementToInsert->index == index)
+				if (elementToInsert->index == pendIndex)
 					break;
+
+			// If the currJacoNum exceed the maximum pend index,
+			// break all the cycles and insert pend's element from last to first
 			if (elementToInsert == pend.end())
-				break; // Manage the case !
+				break;
 
-			for (insertPosition = main.begin(); insertPosition != main.end(); ++insertPosition)
-				if (insertPosition->label == 'a' && insertPosition->index == elementToInsert->index)
-					break;
-			if (insertPosition == main.end())
-				break; // Manage the case !
-
-			while (insertPosition != main.begin()) {
-				ElementList::iterator previousPosition = insertPosition;
-				--previousPosition;
-				g_cmps++;
-				if (previousPosition->value <= elementToInsert->value)
-					break;
-				insertPosition = previousPosition;
-			}
-			main.insert(insertPosition, *elementToInsert);
-			pend.erase(elementToInsert);
-			insertedThisRound = true;
+			// Insert the current element into the main chain
+			foundJacoNumInPend = true;
+			insertPendElement(main, pend, elementToInsert);
 		}
 
-		if (!insertedThisRound)
-		{
-			while (!pend.empty())
-			{
-				elementToInsert = pend.end();
-				--elementToInsert;
-
-				for (insertPosition = main.begin(); insertPosition != main.end(); ++insertPosition)
-					if (insertPosition->label == 'a' && insertPosition->index == elementToInsert->index)
-						break;
-
-				while (insertPosition != main.begin()) {
-					ElementList::iterator previousPosition = insertPosition;
-					--previousPosition;
-					g_cmps++;
-					if (previousPosition->value <= elementToInsert->value)
-						break;
-					insertPosition = previousPosition;
-				}
-				main.insert(insertPosition, *elementToInsert);
-				pend.erase(elementToInsert);
-			}
+		// Continue breaking all the cycles since currJacoNum was not found in pend's elements indexes
+		if (!foundJacoNumInPend)
 			break;
-		}
 		++jacoIndex;
 	}
+
+	// Insert the pend's element in the main chain proceding in reverse order
+	if (!foundJacoNumInPend) {
+		while (!pend.empty())
+		{
+			elementToInsert = pend.end() - 1;
+			insertPendElement(main, pend, elementToInsert);
+		}
+	}
+
 	pend.clear();
 }
 
