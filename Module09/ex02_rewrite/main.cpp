@@ -49,6 +49,20 @@ std::deque<int> extractNumbersDeque(const std::string& input) {
 #include "debugUtils.hpp"
 
 #include "PmergeMe.hpp"
+#include <cmath>
+#include <cstdlib>
+
+extern int g_cmps;
+
+int F(int n)
+{
+    int sum = 0;
+    for (int k = 1; k <= n; ++k) {
+        double value = (3.0 / 4.0) * k;
+        sum += static_cast<int>(ceil(log2(value)));
+    }
+    return sum;
+}
 
 int main( int ac, char **av ) {
 	if ( ac != 2 )
@@ -66,4 +80,8 @@ int main( int ac, char **av ) {
 	std::deque<int> firstStep = ford_johnson(extractNumbersDeque(av[1]));
 	std::cout << std::endl << "MAIN" << std::endl;
 	debug::printDeque(firstStep);
+
+	std::cout << std::endl << std::endl;
+	std::cout << "Expected : " << F(firstStep.size()) << std::endl;
+	std::cout << "Effective: " << g_cmps << std::endl;
 }

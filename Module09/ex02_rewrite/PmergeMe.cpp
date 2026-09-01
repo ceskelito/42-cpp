@@ -9,6 +9,8 @@
 typedef std::deque<int> dq;
 typedef std::deque<Element<dq::iterator> > ElementList;
 
+int g_cmps = 0;
+
 unsigned int	getJacobsthalNumber(unsigned int index) {
 	return ( (std::pow(2, index+1) + std::pow(-1, index)) / 3 );
 }
@@ -44,6 +46,7 @@ static int divideIntoAndSortPairs(dq &sequence, unsigned int elementSize = 1) {
 		Range<dq::iterator>	firstElement = makeRange(it, it + elementSize - 1);
 		Range<dq::iterator>	secondElement = makeRange(it + elementSize, it + pairSize - 1);
 
+		g_cmps++;
 		if (*firstElement.last > *secondElement.last)
 			std::swap_ranges(firstElement.first, secondElement.first, secondElement.first);
 	}
@@ -116,14 +119,14 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 
 static void insertPendIntoMain(ElementList &main, ElementList &pend) {
 
-	unsigned int jacoIndex = 1;
+	unsigned int jacoIndex = 2;
 	while (!pend.empty())
 	{
 		ElementList::iterator elementToInsert;
 		ElementList::iterator insertPosition;
 		bool insertedThisRound = false;
-		unsigned int currentIndex = getJacobsthalNumber(jacoIndex) + 1;
-		unsigned int previousIndex = (jacoIndex > 1) ? getJacobsthalNumber(jacoIndex - 1) + 1 : 1;
+		unsigned int currentIndex = getJacobsthalNumber(jacoIndex);
+		unsigned int previousIndex = (jacoIndex > 1) ? getJacobsthalNumber(jacoIndex - 1) : 1;
 
 		for (unsigned int index = currentIndex; index > previousIndex; --index)
 		{
@@ -143,6 +146,7 @@ static void insertPendIntoMain(ElementList &main, ElementList &pend) {
 			while (insertPosition != main.begin()) {
 				ElementList::iterator previousPosition = insertPosition;
 				--previousPosition;
+				g_cmps++;
 				if (previousPosition->value <= elementToInsert->value)
 					break;
 				insertPosition = previousPosition;
@@ -166,6 +170,7 @@ static void insertPendIntoMain(ElementList &main, ElementList &pend) {
 				while (insertPosition != main.begin()) {
 					ElementList::iterator previousPosition = insertPosition;
 					--previousPosition;
+					g_cmps++;
 					if (previousPosition->value <= elementToInsert->value)
 						break;
 					insertPosition = previousPosition;
