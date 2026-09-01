@@ -119,6 +119,7 @@ static void initializeMainAndPend(dq &sequence, unsigned int elementSize) {
 
 static void insertPendElement(ElementList &main, ElementList &pend, ElementList::iterator &elementToInsert) {
 
+<<<<<<< HEAD
 	ElementList::iterator	boundElement;
 	ElementList::iterator	previousElement;
 
@@ -138,6 +139,26 @@ static void insertPendElement(ElementList &main, ElementList &pend, ElementList:
 		--boundElement;
 	}
 	main.insert(boundElement, *elementToInsert);
+=======
+	ElementList::iterator	insertPosition;
+	ElementList::iterator	previousPosition;
+
+	for (insertPosition = main.begin(); insertPosition != main.end(); ++insertPosition)
+		if (insertPosition->label == 'a' && insertPosition->index == elementToInsert->index)
+			break;
+
+	while (insertPosition != main.begin()) {
+
+		previousPosition = insertPosition - 1;
+
+		g_cmps++;
+		if (previousPosition->value <= elementToInsert->value)
+			break;
+
+		--insertPosition;
+	}
+	main.insert(insertPosition, *elementToInsert);
+>>>>>>> bbafb24729ab7879828ef8c4f954bb29eb1fedd9
 	pend.erase(elementToInsert);
 }
 
