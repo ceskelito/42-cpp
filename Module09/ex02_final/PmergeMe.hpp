@@ -118,14 +118,17 @@ template <typename T> void PmergeMe::_initalize_main_and_pend(T &sequence, int e
 
 	typedef typename T::iterator Iterator;
 
-	T	main, pend, non;
-	int	nbr_of_elems = sequence.size() / element_size;
+	T		main, pend, non;
 
-	_push_elem(main, _next(sequence.begin(), element_size - 1), element_size); // Push b1 into main
-	_push_elem(main, _next(sequence.begin(), 2 * element_size - 1), element_size); // Push a1 into main
+	int		nbr_of_elems = sequence.size() / element_size;
+	bool	is_odd = nbr_of_elems % 2;
+
+	_push_elem(main, _next(sequence.begin(), element_size - 1), element_size);		// Push b1 into main
+	_push_elem(main, _next(sequence.begin(), 2 * element_size - 1), element_size);	// Push a1 into main
 
 	Iterator start = _next(sequence.begin(), 2 * element_size); // Starting from b2
-	Iterator end = _next(sequence.begin(), (element_size * nbr_of_elems));
+	Iterator last = _next(sequence.begin(), (element_size * nbr_of_elems));
+	Iterator end = _next(last, -(is_odd * element_size));
 	
 	for (Iterator it = start; it != end; std::advance(it, element_size)) {
 
@@ -136,8 +139,16 @@ template <typename T> void PmergeMe::_initalize_main_and_pend(T &sequence, int e
 		_push_elem(main, a_elem, element_size);
 	}
 
-	while (end != sequence.end())
-		non.push(end);
+	if (is_odd)
+	{
+		_push_elem(pend, _next(end, element_size - 1));
+	}
+
+	while (last != sequence.end())
+	{
+		non.push(last);
+		last++;
+	}
 
 	_insert_pend_into_main(main, pend, comps_counter);
 
