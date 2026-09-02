@@ -107,30 +107,33 @@ template <typename T> int PmergeMe::_split_into_pairs_and_sort(T &sequence, int 
 	return _split_into_pairs_and_sort(sequence, comps_counter, element_size * 2);
 }
 
+#include <cmath>
+// int	getJacobsthalNumber(int index);
+// int	getJacobsthalNumber(int index) {
+// 	return ( (std::pow(2, index+1) + std::pow(-1, index)) / 3 );
+// }
+#define JACO(index) ((std::pow(2, index+1) + std::pow(-1, index)) / 3 )
+
 template <typename T> void PmergeMe::_initalize_main_and_pend(T &sequence, int element_size, int &comps_counter) {
 
 	typedef typename T::iterator Iterator;
 
-	T main, pend, non;
+	T	main, pend, non;
 	int	nbr_of_elems = sequence.size() / element_size;
 
-	bool is_odd = nbr_of_elems % 2;
+	_push_elem(main, _next(sequence.begin(), element_size - 1), element_size); // Push b1 into main
+	_push_elem(main, _next(sequence.begin(), 2 * element_size - 1), element_size); // Push a1 into main
 
-	Iterator start = sequence.begin();
+	Iterator start = _next(sequence.begin(), 2 * element_size); // Starting from b2
 	Iterator end = _next(sequence.begin(), (element_size * nbr_of_elems));
-	// Iterator end = _next(last, -(is_odd * element_size));
 	
-	int inserted = 0;
 	for (Iterator it = start; it != end; std::advance(it, element_size)) {
 
-		Iterator	this_elem = _next(it, element_size - 1);
-		int			element_index = (inserted / 2) + 1;
-		char		element_label = (inserted % 2 == 0) ? 'b' : 'a';
+		Iterator	b_elem = _next(it, element_size - 1);
+		Iterator	a_elem = _next(it, 2 * element_size - 1);
 
-		if (element_label == 'a' || element_size == 1)
-			_push_elem(main, this_elem, element_size);
-		else
-			_push_elem(pend, this_elem, element_size);
+		_push_elem(pend, b_elem, element_size);
+		_push_elem(main, a_elem, element_size);
 	}
 
 	while (end != sequence.end())
@@ -147,6 +150,4 @@ template <typename T> void PmergeMe::_initalize_main_and_pend(T &sequence, int e
 
 }	
 
-template <typename T> void PmergeMe::_insert_pend_into_main(T &main, T &pend, int & comps_counter) {
-
-}
+template <typename T> void PmergeMe::_insert_pend_into_main(T &main, T &pend, int & comps_counter) {}
