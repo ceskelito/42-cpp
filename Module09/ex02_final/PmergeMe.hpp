@@ -7,12 +7,13 @@ class PmergeMe {
 
 	private:
 		template <typename T>
-		static void			 _initalize_main_and_pend(T &sequence, unsigned int pair_size);
-		template <typename T>
-		static void			_insert_pend_into_main(T &main, T &pend);
+		static void			 _initalize_main_and_pend(T &sequence, int pair_size, int &comps_counter);
 
 		template <typename T>
-		static unsigned int	_split_into_pairs_and_sort(T &sequence, int &comps_counter, unsigned int element_size = 1);
+		static void			_insert_pend_into_main(T &main, T &pend, int & comps_counter);
+
+		template <typename T>
+		static int			_split_into_pairs_and_sort(T &sequence, int &comps_counter, int element_size = 1);
 
 		template <typename It>
 		static bool			_comp(It lv, It rv, int &comps_counter);
@@ -21,7 +22,10 @@ class PmergeMe {
 		static It			_next(It it, int steps);
 
 		template <typename It>
-		static void			_swap_elems(It first_elem, unsigned int element_size);
+		static void			_swap_elems(It first_elem, int element_size);
+
+		template <typename T, typename It>
+		static void			_push_elem(T &chain, It elem, int element_size);
 
 	public:
 		template <typename T>
@@ -39,7 +43,7 @@ template <typename It> It PmergeMe::_next(It it, int steps)
     return it;
 }
 
-template <typename It> void	PmergeMe::_swap_elems(It first_elem, unsigned int element_size) {
+template <typename It> void	PmergeMe::_swap_elems(It first_elem, int element_size) {
 
 	It start = _next(first_elem, -element_size + 1);
 	It end = _next(first_elem, 1);
@@ -51,10 +55,23 @@ template <typename It> void	PmergeMe::_swap_elems(It first_elem, unsigned int el
 	}
 }
 
+template <typename T, typename It> void PmergeMe::_push_elem(T &chain, It elem, int element_size) {
+
+	It start = _next(elem, -element_size + 1);
+	It end = _next(elem, 1);
+
+	while (start != end)
+	{
+		chain.push(start);
+		start++;
+	}
+
+}
+
 
 template <typename T> T	PmergeMe::ford_johnson_merge_insertion_sort(T sequence, int &comps_counter) {
 
-	unsigned int	element_size;
+	int	element_size;
 
 	element_size = _split_into_pairs_and_sort(sequence, comps_counter);
 	(void) element_size;
@@ -63,13 +80,12 @@ template <typename T> T	PmergeMe::ford_johnson_merge_insertion_sort(T sequence, 
 	return sequence;
 }
 
-template <typename T> unsigned int PmergeMe::_split_into_pairs_and_sort(T &sequence, int &comps_counter, unsigned int element_size) {
+template <typename T> int PmergeMe::_split_into_pairs_and_sort(T &sequence, int &comps_counter, int element_size) {
 
 	typedef typename T::iterator Iterator;
 
-	unsigned int	nbr_of_elems;
+	int	nbr_of_elems = sequence.size() / element_size;
 
-	nbr_of_elems = sequence.size() / element_size;
 	if (nbr_of_elems < 2)
 		return element_size;
 
@@ -79,13 +95,58 @@ template <typename T> unsigned int PmergeMe::_split_into_pairs_and_sort(T &seque
 	Iterator last = _next(sequence.begin(), (element_size * nbr_of_elems));
 	Iterator end = _next(last, -(is_odd * element_size));
 
-	unsigned int pair_size = element_size * 2;
+	int pair_size = element_size * 2;
 	for (Iterator it = start ; it != end; std::advance(it, pair_size)) {
 
 		Iterator this_elem = _next(it, element_size - 1);
 		Iterator next_elem = _next(it, pair_size - 1);
+
 		if (_comp(next_elem, this_elem, comps_counter))
 			_swap_elems(this_elem, element_size);
 	}
 	return _split_into_pairs_and_sort(sequence, comps_counter, element_size * 2);
+}
+
+template <typename T> void PmergeMe::_initalize_main_and_pend(T &sequence, int element_size, int &comps_counter) {
+
+	typedef typename T::iterator Iterator;
+
+	T main, pend, non;
+	int	nbr_of_elems = sequence.size() / element_size;
+
+	bool is_odd = nbr_of_elems % 2;
+
+	Iterator start = sequence.begin();
+	Iterator end = _next(sequence.begin(), (element_size * nbr_of_elems));
+	// Iterator end = _next(last, -(is_odd * element_size));
+	
+	int inserted = 0;
+	for (Iterator it = start; it != end; std::advance(it, element_size)) {
+
+		Iterator	this_elem = _next(it, element_size - 1);
+		int			element_index = (inserted / 2) + 1;
+		char		element_label = (inserted % 2 == 0) ? 'b' : 'a';
+
+		if (element_label == 'a' || element_size == 1)
+			_push_elem(main, this_elem, element_size);
+		else
+			_push_elem(pend, this_elem, element_size);
+	}
+
+	while (end != sequence.end())
+		non.push(end);
+
+	_insert_pend_into_main(main, pend, comps_counter);
+
+	sequence.clear;
+	sequence.push(main);
+	sequence.push(non);
+
+	if (element_size > 1)
+		_initalize_main_and_pend(sequence, element_size / 2, comps_counter);
+
+}	
+
+template <typename T> void PmergeMe::_insert_pend_into_main(T &main, T &pend, int & comps_counter) {
+
 }
