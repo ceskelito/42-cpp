@@ -1,5 +1,6 @@
 #pragma once
 #include <iterator>
+#include <iostream>
 #include <vector>
 #include <deque>
 
@@ -62,7 +63,7 @@ template <typename T, typename It> void PmergeMe::_push_elem(T &chain, It elem, 
 
 	while (start != end)
 	{
-		chain.push(start);
+		chain.insert(chain.end(), *start);
 		start++;
 	}
 
@@ -75,7 +76,7 @@ template <typename T> T	PmergeMe::ford_johnson_merge_insertion_sort(T sequence, 
 
 	element_size = _split_into_pairs_and_sort(sequence, comps_counter);
 	(void) element_size;
-	//_initalize_main_and_pend(sequence, element_size);
+	_initalize_main_and_pend(sequence, element_size, comps_counter);
 
 	return sequence;
 }
@@ -141,24 +142,47 @@ template <typename T> void PmergeMe::_initalize_main_and_pend(T &sequence, int e
 
 	if (is_odd)
 	{
-		_push_elem(pend, _next(end, element_size - 1));
+		_push_elem(pend, _next(end, element_size - 1), element_size);
 	}
 
 	while (last != sequence.end())
 	{
-		non.push(last);
+		non.insert(non.end(), *last);
 		last++;
 	}
 
+	/* DEBUG */
+	std::cout << "main: ";
+	for (Iterator it = main.begin(); it != main.end(); std::advance(it, 1))
+		std::cout << *it;
+	std::cout << std::endl;
+	std::cout << "pend: ";
+	for (Iterator it = pend.begin(); it != pend.end(); std::advance(it, 1))
+		std::cout << *it;
+	std::cout << std::endl;
+	std::cout << "non: ";
+	for (Iterator it = non.begin(); it != non.end(); std::advance(it, 1))
+		std::cout << *it;
+	std::cout << std::endl;
+	return;
+
+	/* DEBUG END */
+
 	_insert_pend_into_main(main, pend, comps_counter);
 
-	sequence.clear;
-	sequence.push(main);
-	sequence.push(non);
+	sequence.clear();
+	for (Iterator it = main.begin(); it != main.end(); std::advance(it, 1))
+		sequence.insert(sequence.end(), *it);
+	for (Iterator it = non.begin(); it != non.end(); std::advance(it, 1))
+		sequence.insert(sequence.end(), *it);
 
 	if (element_size > 1)
 		_initalize_main_and_pend(sequence, element_size / 2, comps_counter);
 
 }	
 
-template <typename T> void PmergeMe::_insert_pend_into_main(T &main, T &pend, int & comps_counter) {}
+template <typename T> void PmergeMe::_insert_pend_into_main(T &main, T &pend, int & comps_counter) {
+	(void) main;
+	(void) pend;
+	(void) comps_counter;
+}
