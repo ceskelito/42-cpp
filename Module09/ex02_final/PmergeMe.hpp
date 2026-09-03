@@ -119,6 +119,9 @@ template <typename T> void PmergeMe::_initalize_main_and_pend(T &sequence, int e
 
 	typedef typename T::iterator Iterator;
 
+	if (sequence.size() < static_cast<size_t>(2 * element_size))
+		return;
+
 	T		main, pend, non;
 
 	int		nbr_of_elems = sequence.size() / element_size;
@@ -131,7 +134,7 @@ template <typename T> void PmergeMe::_initalize_main_and_pend(T &sequence, int e
 	Iterator last = _next(sequence.begin(), (element_size * nbr_of_elems));
 	Iterator end = _next(last, -(is_odd * element_size));
 	
-	for (Iterator it = start; it != end; std::advance(it, element_size)) {
+	for (Iterator it = start; it != end; std::advance(it, 2 * element_size)) {
 
 		Iterator	b_elem = _next(it, element_size - 1);
 		Iterator	a_elem = _next(it, 2 * element_size - 1);
