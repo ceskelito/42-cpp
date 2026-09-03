@@ -8,6 +8,9 @@
 #include <sstream>
 #include <set>
 
+#include <vector>
+#include <deque>
+
 static std::string validate_arg(std::string arg)
 {
     if (arg[0] == '-')

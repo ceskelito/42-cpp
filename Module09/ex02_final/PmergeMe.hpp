@@ -1,21 +1,9 @@
 #pragma once
 #include <iterator>
-#include <iostream>
-#include <vector>
-#include <deque>
 
 class PmergeMe {
 
 	private:
-		template <typename T>
-		static void			 _initalize_main_and_pend(T &sequence, int element_size, int &comps_counter);
-
-		template <typename T>
-		static void			_insert_pend_into_main(T &main, T &pend, int &comps_counter);
-
-		template <typename T>
-		static void			_split_into_pairs_and_sort(T &sequence, int element_size, int &comps_counter);
-
 		template <typename It>
 		static bool			_comp(It lv, It rv, int &comps_counter);
 
@@ -25,12 +13,26 @@ class PmergeMe {
 		template <typename It>
 		static void			_swap_elems(It first_elem, int element_size);
 
-		template <typename T, typename It>
-		static void			_push_elem(T &chain, It elem, int element_size);
+		template <typename T>
+		static typename T::iterator	_element_begin(T &container, int element_index, int element_size);
 
 		template <typename T>
-		static typename T::iterator
-							_get_elem_it(T &chain, int index, int element_size);
+		static typename T::iterator	_element_last(T &container, int element_index, int element_size);
+
+		template <typename T>
+		static typename T::iterator	_element_end(T &container, int element_index, int element_size);
+
+		template <typename T>
+		static int			_upper_bound_element_index(T &main, int bound_idx, T &pend, int source_idx, int element_size, int &comps_counter);
+
+		template <typename T>
+		static void			_append_element(T &dst, T &src, int source_idx, int element_size);
+
+		template <typename T>
+		static void			_insert_element_before(T &dst, int target_idx, T &src, int source_idx, int element_size);
+
+		template <typename T>
+		static void			_erase_element(T &container, int element_index, int element_size);
 
 		template <typename T>
 		static void			_ford_johnson_merge_insertion_sort(T &sequence, int element_size, int &comps_counter);
@@ -63,21 +65,61 @@ template <typename It> void	PmergeMe::_swap_elems(It first_elem, int element_siz
 	}
 }
 
-template <typename T, typename It> void PmergeMe::_push_elem(T &chain, It elem, int element_size) {
-
-	It start = _next(elem, -element_size + 1);
-	It end = _next(elem, 1);
-
-	while (start != end)
-	{
-		chain.insert(chain.end(), *start);
-		start++;
-	}
-
+template <typename T>
+typename T::iterator PmergeMe::_element_begin(T &container, int element_index, int element_size)
+{
+	return _next(container.begin(), element_index * element_size);
 }
 
-template <typename T> typename T::iterator _get_elem_it(T &chain, int index, int element_size) {
-	return _next(chain, element_size * index - 1);
+template <typename T>
+typename T::iterator PmergeMe::_element_last(T &container, int element_index, int element_size)
+{
+	return _next(container.begin(), (element_index + 1) * element_size - 1);
+}
+
+template <typename T>
+typename T::iterator PmergeMe::_element_end(T &container, int element_index, int element_size)
+{
+	return _next(container.begin(), (element_index + 1) * element_size);
+}
+
+template <typename T>
+int PmergeMe::_upper_bound_element_index(T &main, int bound_idx, T &pend, int source_idx, int element_size, int &comps_counter)
+{
+	int lo = 0;
+	int hi = bound_idx;
+	while (lo < hi)
+	{
+		int mid = lo + (hi - lo) / 2;
+		if (_comp(_element_last(pend, source_idx, element_size),
+				  _element_last(main, mid, element_size), comps_counter))
+			hi = mid;
+		else
+			lo = mid + 1;
+	}
+	return lo;
+}
+
+template <typename T>
+void PmergeMe::_append_element(T &dst, T &src, int source_idx, int element_size)
+{
+	dst.insert(dst.end(), _element_begin(src, source_idx, element_size),
+			   _element_end(src, source_idx, element_size));
+}
+
+template <typename T>
+void PmergeMe::_insert_element_before(T &dst, int target_idx, T &src, int source_idx, int element_size)
+{
+	dst.insert(_element_begin(dst, target_idx, element_size),
+			   _element_begin(src, source_idx, element_size),
+			   _element_end(src, source_idx, element_size));
+}
+
+template <typename T>
+void PmergeMe::_erase_element(T &container, int element_index, int element_size)
+{
+	container.erase(_element_begin(container, element_index, element_size),
+				_element_end(container, element_index, element_size));
 }
 
 
@@ -115,36 +157,25 @@ template <typename T> void PmergeMe::_ford_johnson_merge_insertion_sort(T &seque
 
 	_ford_johnson_merge_insertion_sort(sequence, element_size * 2, comps_counter);
 
-	T		main, pend, non;
+	int full_values = nbr_of_elems * element_size;
+	int non_values = static_cast<int>(sequence.size()) - full_values;
 
-	_push_elem(main, _next(sequence.begin(), element_size - 1), element_size);		// Push b1 into main
-	_push_elem(main, _next(sequence.begin(), 2 * element_size - 1), element_size);	// Push a1 into main
+	T main, pend, non;
 
-	start = _next(sequence.begin(), 2 * element_size); // Starting from b2
-	last = _next(sequence.begin(), (element_size * nbr_of_elems));
-	end = _next(last, -(is_odd * element_size));
-	
-	for (Iterator it = start; it != end; std::advance(it, 2 * element_size)) {
-
-		Iterator	b_elem = _next(it, element_size - 1);
-		Iterator	a_elem = _next(it, 2 * element_size - 1);
-
-		_push_elem(pend, b_elem, element_size);
-		_push_elem(main, a_elem, element_size);
-	}
-
-	if (is_odd)
+	main.insert(main.end(), sequence.begin(), _next(sequence.begin(), element_size * 2));
+	for (int element_index = 2; element_index < nbr_of_elems; element_index += 2)
 	{
-		_push_elem(pend, _next(end, element_size - 1), element_size);
+		_append_element(pend, sequence, element_index, element_size);
+		if (element_index + 1 < nbr_of_elems)
+			_append_element(main, sequence, element_index + 1, element_size);
 	}
-
-	while (last != sequence.end())
+	if (non_values > 0)
 	{
-		non.insert(non.end(), *last);
-		last++;
+		non.insert(non.end(), _next(sequence.begin(), full_values), sequence.end());
 	}
 
-	std::cout << "END STEP 2" << std::endl;
+	int nbr_main_elements = static_cast<int>(main.size() / element_size);
+	int nbr_pend_elements = static_cast<int>(pend.size() / element_size);
 
 	int	prev_jacobsthal = JACO(1);
 	int	inserted_numbers = 0;
@@ -152,143 +183,48 @@ template <typename T> void PmergeMe::_ford_johnson_merge_insertion_sort(T &seque
 	{
 		int curr_jacobsthal = JACO(k);
 		int jacobsthal_diff = curr_jacobsthal - prev_jacobsthal;
-		if (jacobsthal_diff > static_cast<int> (pend.size() / element_size)) {
-			std::cout << "PIPPA 2 !" << std::endl;
-			std::cout << jacobsthal_diff << " > " << pend.size() / element_size << std::endl;
+		int offset = 0;
+		if (jacobsthal_diff > nbr_pend_elements) {
 			break;
 		}
-		int	nbr_of_times = jacobsthal_diff;
-		Iterator bound_it = _next(main.begin(), (inserted_numbers + curr_jacobsthal) * element_size);
-		Iterator pend_it = _next(pend.begin(), (jacobsthal_diff * element_size) - 1);
+		int nbr_of_times = jacobsthal_diff;
+		int pend_index = jacobsthal_diff - 1;
+		int bound_index = curr_jacobsthal + inserted_numbers;
 		while (nbr_of_times)
 		{
-			std::cout << "WHIILEE" << std::endl;
-			Iterator idx;
-			for (idx = bound_it; !_comp(pend_it, _next(idx, -1), comps_counter); _next(idx, -element_size));
-			main.insert(idx, *pend_it);
-			--nbr_of_times;
-			pend_it = pend.erase(pend_it);
-			std::advance(pend_it, -1);
+			int source_element = pend_index;
+			int search_end = bound_index - offset;
+			if (search_end > nbr_main_elements)
+				search_end = nbr_main_elements;
+			int insert_pos = _upper_bound_element_index(main, search_end, pend, source_element, element_size, comps_counter);
+			_insert_element_before(main, insert_pos, pend, source_element, element_size);
+			_erase_element(pend, source_element, element_size);
+			nbr_of_times--;
+			nbr_main_elements++;
+			nbr_pend_elements--;
+			pend_index--;
+			offset += insert_pos == bound_index;
 		}
 		prev_jacobsthal = curr_jacobsthal;
 		inserted_numbers += jacobsthal_diff;
 	}
 
-    for (ssize_t i = pend.size() / element_size - 1; i >= 0; i -= element_size)
+	while (nbr_pend_elements > 0)
     {
-		Iterator pend_it = _next(pend.begin(), i * element_size);
-		Iterator bound_it =
-			_next(main.begin(), main.size() / element_size - pend.size() / element_size + i * element_size + is_odd * element_size);
-		Iterator idx;
-		for (idx = bound_it; !_comp(pend_it, _next(idx, -1), comps_counter); _next(idx, -element_size));
-		_push_elem(main, pend_it, element_size);
+    	int source_element = nbr_pend_elements - 1;
+		int search_end = nbr_main_elements;
+		int insert_pos = _upper_bound_element_index(main, search_end, pend, source_element, element_size, comps_counter);
+		_insert_element_before(main, insert_pos, pend, source_element, element_size);
+		_erase_element(pend, source_element, element_size);
+		nbr_main_elements++;
+		nbr_pend_elements--;
 
     }
 
 	sequence.clear();
-	for (Iterator it = main.begin(); it != main.end(); std::advance(it, 1))
-		sequence.insert(sequence.end(), *it);
-	for (Iterator it = non.begin(); it != non.end(); std::advance(it, 1))
-		sequence.insert(sequence.end(), *it);
+	sequence.insert(sequence.end(), main.begin(), main.end());
+	sequence.insert(sequence.end(), non.begin(), non.end());
 
-}
-
-template <typename T> void PmergeMe::_split_into_pairs_and_sort(T &sequence, int element_size, int &comps_counter) {
-
-	typedef typename T::iterator Iterator;
-
-	int	nbr_of_elems = sequence.size() / element_size;
-
-	bool is_odd = nbr_of_elems % 2;
-
-	Iterator start = sequence.begin();
-	Iterator last = _next(sequence.begin(), (element_size * nbr_of_elems));
-	Iterator end = _next(last, -(is_odd * element_size));
-
-	int pair_size = element_size * 2;
-	for (Iterator it = start ; it != end; std::advance(it, pair_size)) {
-
-		Iterator this_elem = _next(it, element_size - 1);
-		Iterator next_elem = _next(it, pair_size - 1);
-
-		if (_comp(next_elem, this_elem, comps_counter))
-			_swap_elems(this_elem, element_size);
-	}
-}
-
-template <typename T> void PmergeMe::_initalize_main_and_pend(T &sequence, int element_size, int &comps_counter) {
-
-	typedef typename T::iterator Iterator;
-
-	if (sequence.size() < static_cast<size_t>(2 * element_size))
-		return;
-
-	T		main, pend, non;
-
-	int		nbr_of_elems = sequence.size() / element_size;
-	bool	is_odd = nbr_of_elems % 2;
-
-	_push_elem(main, _next(sequence.begin(), element_size - 1), element_size);		// Push b1 into main
-	_push_elem(main, _next(sequence.begin(), 2 * element_size - 1), element_size);	// Push a1 into main
-
-	Iterator start = _next(sequence.begin(), 2 * element_size); // Starting from b2
-	Iterator last = _next(sequence.begin(), (element_size * nbr_of_elems));
-	Iterator end = _next(last, -(is_odd * element_size));
-	
-	for (Iterator it = start; it != end; std::advance(it, 2 * element_size)) {
-
-		Iterator	b_elem = _next(it, element_size - 1);
-		Iterator	a_elem = _next(it, 2 * element_size - 1);
-
-		_push_elem(pend, b_elem, element_size);
-		_push_elem(main, a_elem, element_size);
-	}
-
-	if (is_odd)
-	{
-		_push_elem(pend, _next(end, element_size - 1), element_size);
-	}
-
-	while (last != sequence.end())
-	{
-		non.insert(non.end(), *last);
-		last++;
-	}
-
-	/* DEBUG */
-	std::cout << "main: ";
-	for (Iterator it = main.begin(); it != main.end(); std::advance(it, 1))
-		std::cout << *it;
-	std::cout << std::endl;
-	std::cout << "pend: ";
-	for (Iterator it = pend.begin(); it != pend.end(); std::advance(it, 1))
-		std::cout << *it;
-	std::cout << std::endl;
-	std::cout << "non: ";
-	for (Iterator it = non.begin(); it != non.end(); std::advance(it, 1))
-		std::cout << *it;
-	std::cout << std::endl;
-	return;
-
-	/* DEBUG END */
-
-	_insert_pend_into_main(main, pend, comps_counter);
-
-	sequence.clear();
-	for (Iterator it = main.begin(); it != main.end(); std::advance(it, 1))
-		sequence.insert(sequence.end(), *it);
-	for (Iterator it = non.begin(); it != non.end(); std::advance(it, 1))
-		sequence.insert(sequence.end(), *it);
-
-	if (element_size > 1)
-		_initalize_main_and_pend(sequence, element_size / 2, comps_counter);
-
-}	
-
-template <typename T> void PmergeMe::_insert_pend_into_main(T &main, T &pend, int & comps_counter) {
-	(void) main;
-	(void) pend;
-	(void) comps_counter;
 }
 
 template <typename T> T PmergeMe::sort(T sequence, int &comps_counter) {

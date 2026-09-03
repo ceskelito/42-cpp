@@ -2,7 +2,7 @@ NAME		= PmergeMe
 CC			= g++
 MKDIR		= mkdir -p
 RM			= rm -f
-CFLAGS		= -Wall -Wextra -Werror --std=c++98
+CFLAGS		= -g -Wall -Wextra -Werror --std=c++98
 
 OBJS_DIR	= objs
 
