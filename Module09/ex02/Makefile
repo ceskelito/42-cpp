@@ -6,8 +6,8 @@ CFLAGS		= -g -Wall -Wextra -Werror --std=c++98
 
 OBJS_DIR	= objs
 
-SRCS		= main.cpp \
-			PmergeMe.cpp
+SRCS		= 	main.cpp \
+				PmergeMe.cpp
 
 OBJS		= $(addprefix $(OBJS_DIR)/, $(SRCS:%.cpp=%.o))
 
