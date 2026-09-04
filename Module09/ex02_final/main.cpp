@@ -135,7 +135,7 @@ int main(int argc, char** argv)
 	int nbr_of_comps_vec = 0;
     clock_t start_vec = clock();
     std::vector<int> vec = argv_to_vector(argc, argv);
-	vec = PmergeMe::sort(vec, nbr_of_comps_vec);
+	nbr_of_comps_vec = PmergeMe::sort(vec);
     clock_t end_vec = clock();
     double time_elapsed_vec = static_cast<double>(end_vec - start_vec) / CLOCKS_PER_SEC;
 
